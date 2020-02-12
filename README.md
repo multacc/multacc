@@ -2,21 +2,24 @@
 multacc
 
 ## structure
+- assets: fonts, icons, etc
 - lib
   - main.dart: sets up colors, bottom bar, navigation
-  - pages: contains files for every screen
+  - pages: contains folders for every screen
   - common: constants, styles, routes, etc
-  - components: custom widgets
 
 ## state management
-- Use the provider package to ensure there are mostly stateless widgets
-- Define a `ChangeNotifier` for all models
-- Use `ChangeNotiferProvider` and `Consumer` to access state
+- Use mobx for state management: define services for all data
+- Use GetIt.I to make data persist globally in a singleton
+- Use provider package where mobx is not suitable
 - See "lifting state up"
 
 ## conventions
 - All constants start with k
-- Dart/Prettier automatically formats the code if there are trailing commas.
+- Line length is 120
+- Single quotes for strings
+- Dart/Prettier automatically formats the code if there are trailing commas
 
 ## build & run
-Use `beta` channel of flutter and run `flutter config --enable-web` to be able to debug in Chrome.
+- Generate mobx code using build runner: `flutter packages pub run build_runner build -v`
+- Use `beta` channel of flutter and run `flutter config --enable-web` to be able to debug in Chrome
