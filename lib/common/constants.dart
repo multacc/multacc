@@ -10,9 +10,10 @@ const kYellow300 = Color(0xFFFFCF44);
 const kBlue200 = Color(0xFF72DEFF);
 const kPurple200 = Color (0xFFB15DFF);
 
-const kIconText = Colors.white;
-const kPrimaryText = Color(0xFF212121);
-const kSecondaryText = Color(0xFF757575);
+const kIconTextColor = Colors.white;
+const kPrimaryTextColor = Color(0xFF212121);
+const kSecondaryTextColor = Color(0xFF757575);
 
 const kHeaderTextStyle = TextStyle(fontSize: 26, fontWeight: FontWeight.w500, fontFamily: 'Product Sans');
+const kTabBarTextStyle = TextStyle(fontSize: 24, fontWeight: FontWeight.w500, letterSpacing: 0.5);
 const kContactListTextStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.w300, fontFamily: 'Product Sans');
