@@ -25,8 +25,8 @@ void main() async {
   services.registerSingleton(contactsData);
   await contactsData.getAllContacts();
 
-  await FlutterStatusbarcolor.setStatusBarColor(kPrimaryColor);
-  await FlutterStatusbarcolor.setNavigationBarColor(kPrimaryColorLight);
+  await FlutterStatusbarcolor.setStatusBarColor(kBackgroundColor);
+  await FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColor);
 }
 
 class MyApp extends StatelessWidget {
@@ -38,12 +38,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         appBarTheme: AppBarTheme.of(context).copyWith(
           elevation: 0,
-          color: kPrimaryColor,
+          color: kBackgroundColor,
         ),
         primaryColor: kPrimaryColor,
-        primaryColorLight: kPrimaryColorLight,
-        accentColor: kSecondaryColor,
-        scaffoldBackgroundColor: kPrimaryColor,
+        accentColor: kPrimaryColorDark,
       ),
       home: ChangeNotifierProvider(
         create: (context) => Routes(),
@@ -84,9 +82,9 @@ class HomePage extends StatelessWidget {
               height: 60,
               animationCurve: Curves.decelerate,
               animationDuration: Duration(milliseconds: 350),
-              backgroundColor: kPrimaryColor,
-              buttonBackgroundColor: kPrimaryColorLight,
-              color: kPrimaryColorLight,
+              backgroundColor: kBackgroundColor,
+              // buttonBackgroundColor: kPrimaryColorDark,
+              color: kPrimaryColor,
               items: <Widget>[
                 Icon(Icons.people, size: 30),
                 Icon(Icons.message, size: 30),

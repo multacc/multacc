@@ -35,7 +35,7 @@ class _ContactCardState extends State<ContactCard> {
           builder: (_) => ContactDetailsPage(),
           useRootNavigator: true,
           isScrollControlled:true,
-          backgroundColor: kPrimaryColor
+          // backgroundColor: kPrimaryColor
         );
       }
     });
@@ -51,7 +51,7 @@ class _ContactCardState extends State<ContactCard> {
         onLongPress: () => setState(() {
           widget.contact.isSelected = !widget.contact.isSelected;
         }),
-        color: widget.contact.isSelected ? Colors.white12 : kPrimaryColor,
+        color: widget.contact.isSelected ? Colors.white12 : Theme.of(context).scaffoldBackgroundColor,
         child: Row(
           children: <Widget>[
             Padding(
@@ -61,7 +61,7 @@ class _ContactCardState extends State<ContactCard> {
                   Icons.person,
                   color: Colors.white,
                 ),
-                backgroundColor: kPrimaryColorLight,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               ),
             ),
             Padding(
