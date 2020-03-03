@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   bool get wantKeepAlive => true;
 
   _HomePageState() {
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -46,18 +46,31 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       // ),
       body: SafeArea(
         child: Column(children: <Widget>[
-          Theme(
-            data: Theme.of(context).copyWith(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-            ),
-            child: TabBar(
-              isScrollable: true,
-              labelPadding: EdgeInsets.zero,
-              tabs: _buildTabs(),
-              controller: _tabController,
-              // indicator: UnderlineTabIndicator(borderSide: BorderSide(style: BorderStyle.none)),
-            ),
+          Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Image.asset('assets/icon.png', height: kToolbarHeight),
+              ),
+              Theme(
+                data: Theme.of(context).copyWith(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                ),
+                child: SafeArea(
+                  child: TabBar(
+                    isScrollable: true,
+                    tabs: _buildTabs(),
+                    controller: _tabController,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    indicator: UnderlineTabIndicator(
+                      insets: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      borderSide: BorderSide(color: kPrimaryColor, width: 2.0),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           Expanded(
             child: TabBarView(children: _buildTabViews(), controller: _tabController),
@@ -72,7 +85,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       _buildTab(Icons.people, "Contacts", 0),
       _buildTab(Icons.message, "Chats", 1),
       _buildTab(Icons.person, "Profile", 2),
-      _buildTab(Icons.settings, "Settings", 3),
     ];
   }
 
@@ -81,7 +93,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       ContactsPage(),
       ChatsPage(),
       ProfilePage(),
-      SettingsPage(),
     ];
   }
 
@@ -105,18 +116,12 @@ class _MultaccScreen extends StatefulWidget {
 }
 
 class _MultaccScreenState extends State<_MultaccScreen> with SingleTickerProviderStateMixin {
-  Animation<double> _titleSizeAnimation;
-  Animation<double> _titleFadeAnimation;
-  Animation<double> _iconFadeAnimation;
   AnimationController _controller;
 
   @override
   initState() {
     super.initState();
     _controller = AnimationController(duration: Duration(milliseconds: 300), vsync: this);
-    _titleSizeAnimation = CurvedAnimation(parent: Tween(begin: 0.0, end: 1.0).animate(_controller), curve: Curves.linear);
-    _titleFadeAnimation = CurvedAnimation(parent: Tween(begin: 0.0, end: 1.0).animate(_controller), curve: Curves.easeOut);
-    _iconFadeAnimation = CurvedAnimation(parent: Tween(begin: 0.6, end: 1.0).animate(_controller), curve: Curves.linear);
     if (widget.isExpanded) _controller.value = 1.0;
   }
 
@@ -131,15 +136,9 @@ class _MultaccScreenState extends State<_MultaccScreen> with SingleTickerProvide
   }
 
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-
     return SizedBox(
-      height: 56,
-      // width: width / 3.5,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Center(child: widget.titleText),
-      ),
+      height: kToolbarHeight,
+      child: Center(child: widget.titleText),
     );
   }
 
