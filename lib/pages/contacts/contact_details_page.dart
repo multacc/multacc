@@ -10,13 +10,13 @@ class ContactDetailsPage extends StatefulWidget {
 class _ContactDetailsPageState extends State<ContactDetailsPage> {
   @override
   Widget build(BuildContext context) {
-    // FlutterStatusbarcolor.setNavigationBarColor(kPrimaryColor);
+    FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColor);
     return Container(child: Center(child: Text('Details')));
   }
 
   @override
   void dispose() {
-    // FlutterStatusbarcolor.setNavigationBarColor(kPrimaryColorLight);
+    FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColorLight);
     super.dispose();
   }
 }

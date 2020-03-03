@@ -51,7 +51,7 @@ class _ContactCardState extends State<ContactCard> {
         onLongPress: () => setState(() {
           widget.contact.isSelected = !widget.contact.isSelected;
         }),
-        color: widget.contact.isSelected ? Colors.white12 : Theme.of(context).scaffoldBackgroundColor,
+        color: widget.contact.isSelected ? Colors.white12 : kBackgroundColor,
         child: Row(
           children: <Widget>[
             Padding(
@@ -61,7 +61,7 @@ class _ContactCardState extends State<ContactCard> {
                   Icons.person,
                   color: Colors.white,
                 ),
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                backgroundColor: kBackgroundColor,
               ),
             ),
             Padding(

@@ -10,11 +10,12 @@ multacc
 
 ## state management
 - Use mobx for state management: define services for all data
-- Use GetIt.I to make data persist globally in a singleton
+- Use `GetIt.I` to make data persist globally in a singleton
 - Use provider package where mobx is not suitable
 - See "lifting state up"
 
 ## conventions
+- Tab width = 2 spaces
 - All constants start with k
 - Line length is 120
 - Single quotes for strings
@@ -23,3 +24,4 @@ multacc
 ## build & run
 - Generate mobx code using build runner: `flutter packages pub run build_runner build -v`
 - Use `beta` channel of flutter and run `flutter config --enable-web` to be able to debug in Chrome
+- Run `flutter pub run flutter_launcher_icons:main` to generate app icons (see pubspec.yaml)

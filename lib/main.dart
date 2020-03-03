@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'common/constants.dart';
@@ -25,7 +26,7 @@ void main() async {
   await contactsData.getAllContacts();
 
   await FlutterStatusbarcolor.setStatusBarColor(kBackgroundColor);
-  await FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColor);
+  await FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColorLight);
 }
 
 class MyApp extends StatelessWidget {
@@ -35,13 +36,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Multacc',
       theme: ThemeData.dark().copyWith(
-        appBarTheme: AppBarTheme.of(context).copyWith(
-          elevation: 0,
-          color: kBackgroundColor,
-        ),
-        primaryColor: kPrimaryColor,
-        accentColor: kPrimaryColorDark,
-      ),
+          primaryColor: kPrimaryColor,
+          accentColor: kPrimaryColorDark,
+          appBarTheme: AppBarTheme.of(context).copyWith(elevation: 0, color: kBackgroundColor),
+          textTheme: GoogleFonts.openSansTextTheme(ThemeData.dark().textTheme)),
       home: HomePage(),
     );
   }

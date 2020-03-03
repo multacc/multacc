@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../common/constants.dart';
@@ -28,7 +29,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     super.initState();
 
     _tabController.addListener(() {
-      if (_tabController.indexIsChanging && _tabController.previousIndex != _tabController.index) {
+      if (_tabController.previousIndex != _tabController.index) {
         setState(() {});
       }
     });
@@ -37,19 +38,19 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   centerTitle: true,
-      //   title: Text(
-      //     'Multacc',
-      //     style: kHeaderTextStyle,
-      //   ),
-      // ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: kPrimaryColor,
+        child: Icon(_tabController.index == 2 ? Icons.share : Icons.add),
+        onPressed: null,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: _MultaccBottomBar(),
       body: SafeArea(
         child: Column(children: <Widget>[
           Row(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: kTabLabelPadding,
                 child: Image.asset('assets/icon.png', height: kToolbarHeight),
               ),
               Theme(
@@ -82,9 +83,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   List<Widget> _buildTabs() {
     return <Widget>[
-      _buildTab(Icons.people, "Contacts", 0),
-      _buildTab(Icons.message, "Chats", 1),
-      _buildTab(Icons.person, "Profile", 2),
+      _buildTab('Contacts', 0),
+      _buildTab('Chats', 1),
+      _buildTab('Profile', 2),
     ];
   }
 
@@ -96,19 +97,17 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     ];
   }
 
-  Widget _buildTab(IconData iconData, String title, int index) {
-    return _MultaccScreen(Icon(iconData), title, _tabController.index == index);
+  Widget _buildTab(String title, int index) {
+    return _MultaccScreen(title, _tabController.index == index);
   }
 }
 
 class _MultaccScreen extends StatefulWidget {
   Text titleText;
-  Icon icon;
   bool isExpanded;
 
-  _MultaccScreen(Icon icon, String title, bool isExpanded) {
+  _MultaccScreen(String title, bool isExpanded) {
     titleText = Text(title, style: GoogleFonts.lato(textStyle: kTabBarTextStyle));
-    this.icon = icon;
     this.isExpanded = isExpanded;
   }
 
@@ -121,7 +120,7 @@ class _MultaccScreenState extends State<_MultaccScreen> with SingleTickerProvide
   @override
   initState() {
     super.initState();
-    _controller = AnimationController(duration: Duration(milliseconds: 300), vsync: this);
+    _controller = AnimationController(duration: kTabScrollDuration, vsync: this);
     if (widget.isExpanded) _controller.value = 1.0;
   }
 
@@ -145,5 +144,72 @@ class _MultaccScreenState extends State<_MultaccScreen> with SingleTickerProvide
   dispose() {
     _controller.dispose();
     super.dispose();
+  }
+}
+
+class _MultaccBottomBar extends StatefulWidget {
+  @override
+  __MultaccBottomBarState createState() => __MultaccBottomBarState();
+}
+
+class __MultaccBottomBarState extends State<_MultaccBottomBar> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: kBottomNavigationBarHeight,
+      child: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        notchMargin: 8.0,
+        elevation: 8.0,
+        color: kBackgroundColorLight,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.menu, color: Colors.grey),
+              onPressed: () async {
+                FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColor);
+                await showNavigationSheet(context);
+                FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColorLight);
+              }
+            ),
+            IconButton(
+              icon: Icon(Icons.more_vert, color: Colors.grey),
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future showNavigationSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.security),
+              title: Text('Privacy policy'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.power_settings_new),
+              title: Text('Sign out'),
+              onTap: () {},
+            ),
+          ],
+        );
+      },
+    );
   }
 }
