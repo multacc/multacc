@@ -29,7 +29,7 @@ class MultaccContact extends Contact {
     this.prefix = baseContact.prefix;
     this.suffix = baseContact.suffix;
     // @todo Figure out how to store Multacc key in Contact
-    // @todo Figure out how IM, notes, etc. are stored in Contact
+    // @todo Get IM, notes, etc. from base contact
 
     // Multacc additional contact data
     this.clientKey = null; // Key in client-side database
