@@ -32,7 +32,7 @@ class _ContactCardState extends State<ContactCard> {
       } else {
         showModalBottomSheet(
           context: context,
-          builder: (_) => ContactDetailsPage(),
+          builder: (_) => ContactDetailsPage(widget.contact),
           useRootNavigator: true,
           isScrollControlled:true,
           // backgroundColor: kPrimaryColor
