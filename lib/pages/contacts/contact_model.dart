@@ -1,4 +1,5 @@
 import 'package:contacts_service/contacts_service.dart';
+import 'package:multacc/contact_types/item.dart';
 
 class MultaccContact extends Contact {
   bool isSelected;
@@ -38,6 +39,3 @@ class MultaccContact extends Contact {
   }
 }
 
-class MultaccItem {
-  // @todo Design MultaccItem class
-}
