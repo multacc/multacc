@@ -6,7 +6,7 @@ import 'contact_model.dart';
 import 'contacts_data.dart';
 
 class ContactCard extends StatefulWidget {
-  final ContactModel contact;
+  final MultaccContact contact;
 
   ContactCard(this.contact);
 

@@ -1,11 +1,12 @@
 import 'package:contacts_service/contacts_service.dart';
 
-class ContactModel extends Contact {
+class MultaccContact extends Contact {
   bool isSelected;
-  String multaccServerKey, multaccClientKey;
+  String serverKey, clientKey;
+  List<MultaccItem> multaccItems;
 
-  // Construct a ContactModel contact from a Contact
-  ContactModel(Contact baseContact) {
+  // Construct a Multacc contact from a Contact
+  MultaccContact(Contact baseContact) {
     // Will not be persisted
     this.isSelected = false;
 
@@ -31,7 +32,13 @@ class ContactModel extends Contact {
     // @todo Figure out how IM, notes, etc. are stored in Contact
 
     // Multacc additional contact data
-    this.multaccServerKey = null; // Key in server-side database
-    this.multaccClientKey = null; // Key in client-side database
+    this.clientKey = null; // Key in client-side database
+    this.serverKey = null; // Key in server-side database
+    // @todo Pull multacc items from database when loading a contact
+    this.multaccItems = []; // Multacc extension items
   }
+}
+
+class MultaccItem {
+  // @todo Design MultaccItem class
 }

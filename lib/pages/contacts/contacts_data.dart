@@ -8,21 +8,21 @@ class ContactsData = _ContactsData with _$ContactsData;
 
 abstract class _ContactsData with Store {
   @observable
-  List<ContactModel> allContacts;
+  List<MultaccContact> allContacts;
 
   @observable
   bool loaded = false;
 
   @observable
-  List<ContactModel> displayedContacts;
+  List<MultaccContact> displayedContacts;
   
   @computed
-  List<ContactModel> get selectedContacts => displayedContacts.where((e) => e.isSelected);
+  List<MultaccContact> get selectedContacts => displayedContacts.where((e) => e.isSelected);
 
   @action
   getAllContacts() async {
     loaded = false;
-    allContacts = (await ContactsService.getContacts()).map((e) => ContactModel(e)).toList();
+    allContacts = (await ContactsService.getContacts()).map((e) => MultaccContact(e)).toList();
     displayedContacts = allContacts;
     loaded = true;
   }
