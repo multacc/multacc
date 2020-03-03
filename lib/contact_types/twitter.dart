@@ -3,12 +3,12 @@ import 'item.dart';
 class TwitterItem extends MultaccItem {
   @override
   String getHumanReadableType() {
-    return "Twitter";
+    return 'Twitter';
   }
 
   @override
   String getHumanReadableValue() {
-    return "@" + value;
+    return '@' + value;
   }
 
   @override
