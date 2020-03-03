@@ -7,8 +7,7 @@ class MultaccContact extends Contact {
 
   // Construct a Multacc contact from a Contact
   MultaccContact(Contact baseContact) {
-    // Will not be persisted
-    this.isSelected = false;
+    this.isSelected = false; // @todo move this to ContactCard
 
     // Base contact model - stored in contacts app:
     this.androidAccountName = baseContact.androidAccountName;
