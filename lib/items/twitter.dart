@@ -1,6 +1,19 @@
 import 'item.dart';
 
 class TwitterItem extends MultaccItem {
+  String username;
+  String userId;
+
+  TwitterItem.fromJson(Map<String, dynamic> json)
+    : username = json['at'],
+      userId = json['id'];
+
+  Map<String, dynamic> toJson() =>
+    {
+      'at': username,
+      'id': userId
+    };
+
   @override
   String getHumanReadableType() {
     return 'Twitter';
@@ -8,7 +21,7 @@ class TwitterItem extends MultaccItem {
 
   @override
   String getHumanReadableValue() {
-    return '@' + value;
+    return '@' + username;
   }
 
   @override
