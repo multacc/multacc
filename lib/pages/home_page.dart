@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -53,19 +54,21 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 padding: kTabLabelPadding,
                 child: Image.asset('assets/icon.png', height: kToolbarHeight),
               ),
-              Theme(
-                data: Theme.of(context).copyWith(
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                ),
-                child: SafeArea(
+              Expanded(
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                  ),
                   child: TabBar(
-                    isScrollable: true,
+                    dragStartBehavior: DragStartBehavior.start,
+                    // isScrollable: true,
+                    labelPadding: EdgeInsets.all(0),
                     tabs: _buildTabs(),
                     controller: _tabController,
                     indicatorSize: TabBarIndicatorSize.label,
                     indicator: UnderlineTabIndicator(
-                      insets: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      insets: EdgeInsets.symmetric(horizontal: 16.0 * MediaQuery.of(context).devicePixelRatio),
                       borderSide: BorderSide(color: kPrimaryColor, width: 2.0),
                     ),
                   ),
@@ -98,23 +101,23 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   Widget _buildTab(String title, int index) {
-    return _MultaccScreen(title, _tabController.index == index);
+    return Tab(child: _MultaccTab(title, _tabController.index == index));
   }
 }
 
-class _MultaccScreen extends StatefulWidget {
+class _MultaccTab extends StatefulWidget {
   Text titleText;
   bool isExpanded;
 
-  _MultaccScreen(String title, bool isExpanded) {
+  _MultaccTab(String title, bool isExpanded) {
     titleText = Text(title, style: GoogleFonts.lato(textStyle: kTabBarTextStyle));
     this.isExpanded = isExpanded;
   }
 
-  _MultaccScreenState createState() => _MultaccScreenState();
+  _MultaccTabState createState() => _MultaccTabState();
 }
 
-class _MultaccScreenState extends State<_MultaccScreen> with SingleTickerProviderStateMixin {
+class _MultaccTabState extends State<_MultaccTab> with SingleTickerProviderStateMixin {
   AnimationController _controller;
 
   @override
@@ -125,7 +128,7 @@ class _MultaccScreenState extends State<_MultaccScreen> with SingleTickerProvide
   }
 
   @override
-  void didUpdateWidget(_MultaccScreen oldWidget) {
+  void didUpdateWidget(_MultaccTab oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.isExpanded) {
       _controller.forward();
@@ -172,7 +175,7 @@ class __MultaccBottomBarState extends State<_MultaccBottomBar> {
                 FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColor);
                 await showNavigationSheet(context);
                 FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColorLight);
-              }
+              },
             ),
             IconButton(
               icon: Icon(Icons.more_vert, color: Colors.grey),

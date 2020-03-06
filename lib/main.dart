@@ -36,10 +36,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Multacc',
       theme: ThemeData.dark().copyWith(
-          primaryColor: kPrimaryColor,
-          accentColor: kPrimaryColorDark,
-          appBarTheme: AppBarTheme.of(context).copyWith(elevation: 0, color: kBackgroundColor),
-          textTheme: GoogleFonts.openSansTextTheme(ThemeData.dark().textTheme)),
+        primaryColor: kPrimaryColor,
+        accentColor: kPrimaryColorDark,
+        appBarTheme: AppBarTheme.of(context).copyWith(elevation: 0, color: kBackgroundColor),
+        textTheme: GoogleFonts.openSansTextTheme(ThemeData.dark().textTheme),
+      ),
       home: HomePage(),
     );
   }

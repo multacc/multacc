@@ -15,9 +15,6 @@ abstract class _ContactsData with Store {
 
   @observable
   List<MultaccContact> displayedContacts;
-  
-  @computed
-  List<MultaccContact> get selectedContacts => displayedContacts.where((e) => e.isSelected);
 
   @action
   getAllContacts() async {
