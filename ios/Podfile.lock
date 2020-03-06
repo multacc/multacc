@@ -1,0 +1,46 @@
+PODS:
+  - contacts_service (0.2.1):
+    - Flutter
+  - Flutter (1.0.0)
+  - flutter_statusbarcolor (0.0.1):
+    - Flutter
+  - path_provider (0.0.1):
+    - Flutter
+  - path_provider_macos (0.0.1):
+    - Flutter
+  - permission_handler (4.3.0):
+    - Flutter
+
+DEPENDENCIES:
+  - contacts_service (from `.symlinks/plugins/contacts_service/ios`)
+  - Flutter (from `Flutter`)
+  - flutter_statusbarcolor (from `.symlinks/plugins/flutter_statusbarcolor/ios`)
+  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - path_provider_macos (from `.symlinks/plugins/path_provider_macos/ios`)
+  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+
+EXTERNAL SOURCES:
+  contacts_service:
+    :path: ".symlinks/plugins/contacts_service/ios"
+  Flutter:
+    :path: Flutter
+  flutter_statusbarcolor:
+    :path: ".symlinks/plugins/flutter_statusbarcolor/ios"
+  path_provider:
+    :path: ".symlinks/plugins/path_provider/ios"
+  path_provider_macos:
+    :path: ".symlinks/plugins/path_provider_macos/ios"
+  permission_handler:
+    :path: ".symlinks/plugins/permission_handler/ios"
+
+SPEC CHECKSUMS:
+  contacts_service: d212985196c101372bb55c42f41dae7be59ab811
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_statusbarcolor: 8afb1071ed8c58be929f1e32b36c629771fd2259
+  path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
+  path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
+  permission_handler: 5c75cfde1229eb85f22d367c093900fac03c6c9e
+
+PODFILE CHECKSUM: 083258d7f5e80b42ea9bfee905fe93049bc04c64
+
+COCOAPODS: 1.8.4
