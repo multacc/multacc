@@ -14,28 +14,15 @@ class TwitterItem extends MultaccItem {
       'id': userId
     };
 
-  @override
-  String getHumanReadableType() {
-    return 'Twitter';
-  }
+  String getHumanReadableType() => 'Twitter';
 
-  @override
-  String getHumanReadableValue() {
-    return '@$username';
-  }
+  String getHumanReadableValue() => '@$username';
 
-  @override
-  MultaccItemType getType() {
-    return MultaccItemType.Twitter;
-  }
+  MultaccItemType getType() => MultaccItemType.Twitter;
 
-  @override
   void launchApp() {
     // @todo Implement Twitter launching
   }
 
-  @override
-  bool isLaunchable() {
-    return true;
-  }
+  bool isLaunchable() => true;
 }
