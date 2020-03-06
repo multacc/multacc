@@ -21,7 +21,7 @@ class TwitterItem extends MultaccItem {
 
   @override
   String getHumanReadableValue() {
-    return '@' + username;
+    return '@$username';
   }
 
   @override
