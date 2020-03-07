@@ -5,14 +5,10 @@ class TwitterItem extends MultaccItem {
   String userId;
 
   TwitterItem.fromJson(Map<String, dynamic> json)
-    : username = json['at'],
-      userId = json['id'];
+      : username = json['at'],
+        userId = json['id'];
 
-  Map<String, dynamic> toJson() =>
-    {
-      'at': username,
-      'id': userId
-    };
+  Map<String, dynamic> toJson() => {'at': username, 'id': userId};
 
   String getHumanReadableType() => 'Twitter';
 

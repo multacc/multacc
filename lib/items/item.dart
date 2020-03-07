@@ -5,7 +5,7 @@ abstract class MultaccItem {
   /// Multacc item key for database
   String key;
 
-  MultaccItem(): key = null;
+  MultaccItem() : key = null;
 
   /// Use this constructor to create a MultaccItem using database values
   factory MultaccItem.fromDB(String key, int typeInt, Map<String, dynamic> json) {
@@ -60,14 +60,18 @@ abstract class MultaccItem {
   /// Get human-readable item type (Snapchat, etc.) to display
   String getHumanReadableValue();
 
-  // @todo Frontend team should add something like getIcon to MultaccItem
+// @todo Frontend team should add something like getIcon to MultaccItem
 }
 
+// To maintain the relationship between type and enum index, never remove things from this enum and always add new
+// things at the end pls kthx
 enum MultaccItemType {
   Twitter,
   Snapchat, // @todo Implement snapchat
   Instagram, // @todo Implement instagram
   Facebook, // @todo Implement facebook
   Discord, // @todo Implement discord
-  Dogecoin // @todo Implement dogecoin
+  Dogecoin, // @todo Implement dogecoin
+  Phone,
+  Email
 }

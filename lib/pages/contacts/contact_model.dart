@@ -1,5 +1,7 @@
 import 'package:contacts_service/contacts_service.dart';
 import 'package:multacc/items/item.dart';
+import 'package:multacc/items/phone.dart';
+import 'package:multacc/items/email.dart';
 
 class MultaccContact extends Contact {
   bool isSelected;
@@ -26,14 +28,19 @@ class MultaccContact extends Contact {
     this.postalAddresses = baseContact.postalAddresses;
     this.prefix = baseContact.prefix;
     this.suffix = baseContact.suffix;
-    // @todo Figure out how to store Multacc key in Contact
     // @todo Get IM, notes, etc. from base contact
 
     // Multacc additional contact data
-    this.clientKey = null; // Key in client-side database
-    this.serverKey = null; // Key in server-side database
-    // @todo Pull multacc items from database when loading a contact
-    this.multaccItems = []; // Multacc extension items
+    // @todo Use a field other than identifier for clientKey (#26)
+    clientKey = identifier; // Key in client-side database
+    serverKey = null; // Key in server-side database
+    multaccItems = [
+      ...phones.map((item) => PhoneItem.fromItem(item)), // create PhoneItems from phone Items
+      ...emails.map((item) => EmailItem.fromItem(item)), // create EmailItems from email Items
+      // @todo Convert addresses to Multacc items
+      // @todo Convert IM to Multacc items
+      // @todo Convert SIP to Multacc items
+      // @todo Pull multacc items from database when loading a contact
+    ];
   }
 }
-
