@@ -4,7 +4,6 @@ import 'package:multacc/items/phone.dart';
 import 'package:multacc/items/email.dart';
 
 class MultaccContact extends Contact {
-  bool isSelected; // @todo Destroy this
   String serverKey, clientKey;
   List<MultaccItem> multaccItems;
 
