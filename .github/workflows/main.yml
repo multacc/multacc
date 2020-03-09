@@ -1,4 +1,4 @@
-name: release
+name: android
 
 on:
   push:
@@ -33,5 +33,5 @@ jobs:
       
       - uses: actions/upload-artifact@v1
         with:
-          name: app-rlease.apk
+          name: app-release.apk
           path: build/app/outputs/apk/release/
