@@ -27,7 +27,7 @@ jobs:
       - name: Copy google-services.json to android/app
         uses: canastro/copy-action@0.0.2
           source: ${{ steps.write_file.outputs.filePath }}
-          target: $GITHUB_WORKSPACE/android/app/
+          target: 'android/app/'
 
       - uses: subosito/flutter-action@v1
         with:
