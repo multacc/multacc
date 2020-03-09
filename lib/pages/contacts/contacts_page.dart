@@ -16,9 +16,9 @@ class _ContactsPageState extends State<ContactsPage> {
 
   @override
   void initState() {
+    super.initState();
     contactsData = services.get<ContactsData>();
     selectedContacts = List<int>();
-    super.initState();
   }
 
   @override
@@ -35,9 +35,12 @@ class _ContactsPageState extends State<ContactsPage> {
     return Observer(
       builder: (_) => ListTileTheme(
         selectedColor: kPrimaryColor,
-        child: ListView.builder(
-          itemCount: contactsData.displayedContacts.length,
-          itemBuilder: (context, index) => _buildContactListItem(index),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView.builder(
+            itemCount: contactsData.displayedContacts.length,
+            itemBuilder: (context, index) => _buildContactListItem(index),
+          ),
         ),
       ),
     );
@@ -45,7 +48,7 @@ class _ContactsPageState extends State<ContactsPage> {
 
   ListTile _buildContactListItem(int index) {
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+      contentPadding: EdgeInsets.all(6.0),
       leading: CircleAvatar(child: Icon(Icons.person)),
       title: Text(contactsData.displayedContacts[index].displayName),
       onTap: () => _onContactPressed(index),
