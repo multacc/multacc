@@ -6,6 +6,8 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'common/constants.dart';
 
+import 'database/database_interface.dart';
+
 import 'pages/home_page.dart';
 import 'pages/contacts/contacts_data.dart';
 
@@ -13,6 +15,8 @@ GetIt services = GetIt.I;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // final dbName = "Multacc_Database.db";
 
   // request contacts permission
   PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.contacts);
@@ -24,6 +28,11 @@ void main() async {
   final contactsData = ContactsData();
   services.registerSingleton(contactsData);
   await contactsData.getAllContacts();
+
+  // initialize local database
+  DatabaseInterface db = DatabaseInterface();
+  db.initializeDatabase();
+  // db.addDummyContacts();
 
   await FlutterStatusbarcolor.setStatusBarColor(kBackgroundColor);
   await FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColorLight);
