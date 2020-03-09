@@ -1,4 +1,4 @@
-name: CI
+name: relaese
 
 on:
   push:
@@ -12,9 +12,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Build release apk
-        env:
-          ANDROID_FIREBASE_JSON: ${{ secrets.ANDROID_FIREBASE_JSON }}
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
         with:
@@ -27,6 +24,10 @@ jobs:
       - run: echo $ANDROID_FIREBASE_JSON | base64 --decode > android/app/google-services.json
       #- run: flutter test
       - run: flutter build apk
+      
+      - name: Build release apk
+        env:
+          ANDROID_FIREBASE_JSON: ${{ secrets.ANDROID_FIREBASE_JSON }}
       - uses: actions/upload-artifact@v1
         with:
           name: app-rlease.apk
