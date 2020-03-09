@@ -56,6 +56,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         if (deepLink.path == '/groupme') {
           String token = deepLink.queryParameters['access_token'];
           (await SharedPreferences.getInstance()).setString('GROUPME_TOKEN', token);
+          // @todo Refactor deeplink logic when adding more platforms
         }
       }
     }, onError: (OnLinkErrorException e) async {

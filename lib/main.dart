@@ -19,7 +19,7 @@ void main() async {
 
   // request contacts permission
   PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.contacts);
-  if (permission != PermissionStatus.granted) await PermissionHandler().requestPermissions([PermissionGroup.contacts, PermissionGroup.sms]);
+  if (permission != PermissionStatus.granted) await PermissionHandler().requestPermissions([PermissionGroup.contacts]);
 
   runApp(MyApp());
 
@@ -28,11 +28,13 @@ void main() async {
   services.registerSingleton(contactsData);
   await contactsData.getAllContacts();
 
-  // fetch groupme messages in background
+  // fetch groupme messages in background if authorized
   final chatsData = ChatsData();
   services.registerSingleton(chatsData);
-  String groupmeToken = (await SharedPreferences.getInstance()).getString('GROUPME_TOKEN');
-  chatsData.getAllChats(groupmeToken); // run in background
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey('GROUPME_TOKEN')) {
+    chatsData.getAllChats(prefs.getString('GROUPME_TOKEN')); // run in background
+  }
 
   await FlutterStatusbarcolor.setStatusBarColor(kBackgroundColor);
   await FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColorLight);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Reusable bottom sheet that takes up 70% of the screen and can be dragged to fill screen
 showDraggableSheet(BuildContext context, Widget child) {
   return showModalBottomSheet(
     context: context,

@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
 
+/// MultaccBottomBar class containing the logic for FAB, account auth, etc
 class MultaccBottomBar extends StatefulWidget {
   final FirebaseUser _user;
 
@@ -71,7 +72,7 @@ class MultaccBottomBarState extends State<MultaccBottomBar> {
                     _buildGroupmeTile(context),
                     ListTile(
                       leading: Icon(BrandIcons.discord),
-                      title: Text('Discord'), // @todo Add discord integration
+                      title: Text('Discord'), // @todo Add discord chats integration under accounts
                     ),
                     ListTile(
                       leading: Icon(Icons.power_settings_new),
