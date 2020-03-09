@@ -17,17 +17,14 @@ jobs:
         with:
           java-version: '12.x'
 
+      - name: Create google-services.json
+        run: echo ${{ secrets.ANDROID_FIREBASE_JSON }} | base64 --decode > android/app/google-services.json
+  
       - uses: subosito/flutter-action@v1
         with:
           channel: 'beta'
       - run: flutter pub get
       - run: flutter pub run build_runner build
-
-      - name: Create google-services.json
-        env:
-          ANDROID_FIREBASE_JSON: ${{ secrets.ANDROID_FIREBASE_JSON }}
-        run: echo $ANDROID_FIREBASE_JSON > android/app/google-services.json
-
       #- run: flutter test
       - run: flutter build apk
       
