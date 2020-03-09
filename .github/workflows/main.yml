@@ -26,9 +26,7 @@ jobs:
       - name: Create google-services.json
         env:
           ANDROID_FIREBASE_JSON: ${{ secrets.ANDROID_FIREBASE_JSON }}
-        run: |
-          echo $ANDROID_FIREBASE_JSON > in.txt
-          openssl enc -base64 -d -in in.txt -out android/app/google-services.json
+        run: echo $ANDROID_FIREBASE_JSON > android/app/google-services.json
 
       #- run: flutter test
       - run: flutter build apk
