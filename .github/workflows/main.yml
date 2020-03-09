@@ -18,11 +18,17 @@ jobs:
           java-version: '12.x'
 
       - name: Create google-services.json
+        id: write_file
         uses: timheuer/base64-to-file@v1.0.3
         with:
-          fileName: $GITHUB_WORKSPACE/android/app/google-services.json
+          fileName: 'google-services.json'
           encodedString: ${{ secrets.ANDROID_FIREBASE_JSON_ENCODED }}    
   
+      - name: Copy google-services.json to android/app
+        uses: canastro/copy-action@0.0.2
+          source: ${{ steps.write_file.outputs.filePath }}
+          target: $GITHUB_WORKSPACE/android/app/
+
       - uses: subosito/flutter-action@v1
         with:
           channel: 'beta'
