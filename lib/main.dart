@@ -14,6 +14,8 @@ import 'package:multacc/database/database_interface.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // final dbName = "Multacc_Database.db";
+
   // request contacts permission
   while (!await Permission.contacts.request().isGranted) {}
 
