@@ -20,7 +20,7 @@ jobs:
       - name: Create google-services.json
         uses: timheuer/base64-to-file@v1.0.3
         with:
-          fileName: android/app/google-services.json
+          fileName: $GITHUB_WORKSPACE/android/app/google-services.json
           encodedString: ${{ secrets.ANDROID_FIREBASE_JSON_ENCODED }}    
   
       - uses: subosito/flutter-action@v1
