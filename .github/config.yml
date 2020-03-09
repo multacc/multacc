@@ -1,2 +1,3 @@
 todo:
     label: false
+    autoAssign: false
