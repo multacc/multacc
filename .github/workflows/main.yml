@@ -22,7 +22,7 @@ jobs:
         uses: timheuer/base64-to-file@v1.0.3
         with:
           fileName: 'google-services.json'
-          encodedString: ${{ secrets.ANDROID_FIREBASE_JSON_ENCODED }}    
+          encodedString: ${{ secrets.ANDROID_FIREBASE_JSON_ENCODED }}
   
       - name: Copy google-services.json to android/app
         uses: canastro/copy-action@0.0.2
