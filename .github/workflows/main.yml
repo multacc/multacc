@@ -19,6 +19,7 @@ jobs:
 
       - name: Create google-services.json
         run: 'echo ${{ secrets.ANDROID_FIREBASE_JSON }} > android/app/google-services.json'
+        shell: bash
   
       - uses: subosito/flutter-action@v1
         with:
