@@ -25,9 +25,7 @@ jobs:
           encodedString: ${{ secrets.ANDROID_FIREBASE_JSON_ENCODED }}
   
       - name: Copy google-services.json to android/app
-        uses: canastro/copy-action@0.0.2
-          source: '${{ steps.write_file.outputs.filePath }}'
-          target: 'android/app/'
+        run: 'cp "${{ steps.write_file.outputs.filePath }}" "android/app/"
 
       - uses: subosito/flutter-action@v1
         with:
