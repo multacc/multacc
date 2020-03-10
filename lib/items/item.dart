@@ -1,4 +1,6 @@
 import 'twitter.dart';
+import 'phone.dart';
+import 'email.dart';
 
 /// MultaccItem interface
 abstract class MultaccItem {
