@@ -8,6 +8,7 @@ class GroupmeChat {
 
   GroupmeChat({this.threadId, this.userId, this.name, this.timestamp, this.lastMessage, this.avatarUrl});
 
+  // See: https://dev.groupme.com/docs/v3#chats
   factory GroupmeChat.fromJson(Map<String, dynamic> json) {
     return GroupmeChat(
       threadId: json['last_message']['conversation_id'],
