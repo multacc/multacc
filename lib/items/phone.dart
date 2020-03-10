@@ -9,11 +9,11 @@ class PhoneItem extends MultaccItem {
 
   PhoneItem.fromItem(Item item) : phone = item.toString();
 
-  Map<String, dynamic> toJson() => {'no': phone};
+  Map<String, dynamic> toJson() => {'type': getType().index, 'no': phone};
 
   String getHumanReadableType() => 'Phone';
 
-  String getHumanReadableValue() => phone; // @ todo Format phone numbers
+  String getHumanReadableValue() => phone; // @todo Format phone numbers
 
   MultaccItemType getType() => MultaccItemType.Phone;
 
