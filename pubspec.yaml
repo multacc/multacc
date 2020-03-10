@@ -12,13 +12,16 @@ dependencies:
 
   # UI
   cupertino_icons: any
-  curved_navigation_bar: any
   flutter_statusbarcolor : any
   google_fonts: any
+  flutter_brand_icons: any
+  flutter_svg: any
 
   # device APIs
   contacts_service: any
   permission_handler: any
+  url_launcher: any
+  shared_preferences: any
 
   # state management / data
   provider: any
@@ -27,6 +30,14 @@ dependencies:
   flutter_mobx: any
   mobx_codegen: any
   get_it: any
+
+  http: any
+  intl: any
+
+  # firebase APIs
+  google_sign_in: any
+  firebase_auth: any
+  firebase_dynamic_links: any
 
 dev_dependencies:
   build_runner: any
@@ -48,8 +59,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/logo.png
-    - assets/icon.png
+    - assets/
 
   fonts:
     - family: Product Sans

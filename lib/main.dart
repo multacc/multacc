@@ -1,8 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:multacc/pages/chats/chats_data.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'common/constants.dart';
 
@@ -24,6 +27,14 @@ void main() async {
   final contactsData = ContactsData();
   services.registerSingleton(contactsData);
   await contactsData.getAllContacts();
+
+  // fetch groupme messages in background if authorized
+  final chatsData = ChatsData();
+  services.registerSingleton(chatsData);
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey('GROUPME_TOKEN')) {
+    chatsData.getAllChats(prefs.getString('GROUPME_TOKEN')); // run in background
+  }
 
   await FlutterStatusbarcolor.setStatusBarColor(kBackgroundColor);
   await FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColorLight);
