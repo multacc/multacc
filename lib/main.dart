@@ -8,6 +8,9 @@ import 'common/constants.dart';
 
 import 'database/database_interface.dart';
 
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
+
 import 'pages/home_page.dart';
 import 'pages/contacts/contacts_data.dart';
 
@@ -22,6 +25,8 @@ void main() async {
   PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.contacts);
   if (permission != PermissionStatus.granted) await PermissionHandler().requestPermissions([PermissionGroup.contacts]);
 
+  final appDocumentDirectory = await path_provider.getApplicationDocumentsDirectory();
+  Hive.init(appDocumentDirectory.path);
   runApp(MyApp());
 
   // fetch and save contacts list
@@ -30,9 +35,12 @@ void main() async {
   await contactsData.getAllContacts();
 
   // initialize local database
-  DatabaseInterface db = DatabaseInterface();
-  db.initializeDatabase();
-  // db.addDummyContacts();
+
+  final contactsBox = await Hive.openBox('contacts');
+
+  DatabaseInterface db = DatabaseInterface(box: contactsBox);
+  // db.initializeDatabase();
+  db.addDummyContacts();
 
   await FlutterStatusbarcolor.setStatusBarColor(kBackgroundColor);
   await FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColorLight);
