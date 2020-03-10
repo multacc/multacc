@@ -9,7 +9,7 @@ class EmailItem extends MultaccItem {
 
   EmailItem.fromItem(Item item) : email = item.toString();
 
-  Map<String, dynamic> toJson() => {'email': email};
+  Map<String, dynamic> toJson() => {'type': getType().index, 'email': email};
 
   String getHumanReadableType() => 'Email';
 
