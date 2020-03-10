@@ -39,6 +39,8 @@ dependencies:
   firebase_auth: any
   firebase_dynamic_links: any
 
+  enum_to_string: ^1.0.9
+
 dev_dependencies:
   build_runner: any
 
