@@ -8,7 +8,7 @@ class TwitterItem extends MultaccItem {
       : username = json['at'],
         userId = json['id'];
 
-  Map<String, dynamic> toJson() => {'type': getType().index, 'at': username, 'id': userId};
+  Map<String, dynamic> toMap() => {'at': username, 'id': userId};
 
   String getHumanReadableType() => 'Twitter';
 
