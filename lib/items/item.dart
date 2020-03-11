@@ -1,11 +1,14 @@
 import 'twitter.dart';
 import 'email.dart';
 import 'phone.dart';
+import 'package:hive/hive.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 
 /// MultaccItem interface
+@HiveType(typeId: 0)
 abstract class MultaccItem {
   /// Multacc item key for database
+  @HiveField(0)
   String key;
 
   MultaccItem() : key = null;
@@ -80,13 +83,22 @@ abstract class MultaccItem {
 // @todo Frontend team should add something like getIcon to MultaccItem
 }
 
+@HiveType(typeId: 4)
 enum MultaccItemType {
+  @HiveField(0)
   Twitter,
+  @HiveField(1)
   Snapchat, // @todo Implement snapchat
+  @HiveField(2)
   Instagram, // @todo Implement instagram
+  @HiveField(3)
   Facebook, // @todo Implement facebook
+  @HiveField(4)
   Discord, // @todo Implement discord
+  @HiveField(5)
   Dogecoin, // @todo Implement dogecoin
+  @HiveField(6)
   Phone,
+  @HiveField(7)
   Email
 }

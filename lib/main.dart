@@ -16,6 +16,11 @@ import 'database/database_interface.dart';
 
 import 'pages/home_page.dart';
 import 'pages/contacts/contacts_data.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
+import 'items/email.dart';
+import 'items/phone.dart';
+import 'items/twitter.dart';
+
 
 import 'package:hive/hive.dart';
 
@@ -24,11 +29,17 @@ GetIt services = GetIt.I;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // final dbName = "Multacc_Database.db";
-
   // request contacts permission
   PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.contacts);
   if (permission != PermissionStatus.granted) await PermissionHandler().requestPermissions([PermissionGroup.contacts]);
+
+  final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
+  Hive.init(appDocumentDir.path);
+  Hive.registerAdapter(PhoneItemAdapter());
+  Hive.registerAdapter(EmailItemAdapter());
+  Hive.registerAdapter(TwitterItemAdapter());
+
+  print('\n\n\nTHIS IS WHERE THINGS SHOULD PRINT\n\n\n');
 
   runApp(MyApp());
 
@@ -40,18 +51,20 @@ void main() async {
   // initialize local database
 
   final contactsBox = await Hive.openBox('contacts');
+  // Hive.registerAdapter(ContactsAdapter());
 
-  DatabaseInterface db = DatabaseInterface(box: contactsBox);
-  // db.initializeDatabase();
-  db.addDummyContacts();
+  DatabaseInterface dbi = DatabaseInterface(box: contactsBox);
+  // dbi.initializeDatabase();
+  dbi.addDummyContacts();
 
-  db.print('Sean_Gillen_7777');
+  dbi.printContact('Sean_Gillen_7777');
 
-  db.addContact('David_Hall_8631');
-  MultaccItem it = new MultaccItem.fromDB("asda", jsonDecode('{\"type\": 7, \"email\": \"dwhall1@crimson.ua.edu\"}'));
-  db.addItem('David_Hall_8631', it);
+  dbi.addContact('David_Hall_8631');
+  MultaccItem it = new MultaccItem.fromDB("asda", jsonDecode('{\"_t\": \"Email\", \"email\": \"dwhall1@crimson.ua.edu\"}'));
+  dbi.addItem('David_Hall_8631', it);
 
-  db.print('David_Hall_8631');
+  dbi.printContact('David_Hall_8631');
+  
   
 
   // fetch groupme messages in background if authorized
