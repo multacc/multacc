@@ -1,9 +1,7 @@
 import 'twitter.dart';
-
 import 'email.dart';
 import 'phone.dart';
 import 'package:enum_to_string/enum_to_string.dart';
-
 
 /// MultaccItem interface
 abstract class MultaccItem {
