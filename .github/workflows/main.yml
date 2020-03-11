@@ -1,0 +1,41 @@
+name: android
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+
+      - name: Create google-services.json
+        id: write_file
+        uses: timheuer/base64-to-file@v1.0.3
+        with:
+          fileName: 'google-services.json'
+          encodedString: ${{ secrets.ANDROID_FIREBASE_JSON_ENCODED }}
+  
+      - name: Copy google-services.json to android/app
+        run: 'cp "${{ steps.write_file.outputs.filePath }}" "android/app/"'
+
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'beta'
+      - run: flutter pub get
+      - run: flutter pub run build_runner build
+      #- run: flutter test
+      - run: flutter build apk
+      
+      - uses: actions/upload-artifact@v1
+        with:
+          name: app-release.apk
+          path: build/app/outputs/apk/release/app-release.apk

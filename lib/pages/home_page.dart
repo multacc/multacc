@@ -1,14 +1,23 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:multacc/common/bottom_bar.dart';
 
-import '../common/constants.dart';
+import 'package:multacc/common/constants.dart';
 
-import 'chats/chats_page.dart';
-import 'contacts/contacts_page.dart';
-import 'profile/profile_page.dart';
-import 'settings/settings_page.dart';
+import 'package:multacc/pages/chats/chats_page.dart';
+import 'package:multacc/pages/contacts/contacts_page.dart';
+import 'package:multacc/pages/profile/profile_page.dart';
+
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+FirebaseAuth _auth = FirebaseAuth.instance;
+GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>['email']);
+
+final globalScaffoldKey = GlobalKey<ScaffoldState>();
 
 class HomePage extends StatefulWidget {
   @override
@@ -29,6 +38,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
 
+    initDynamicLinks();
+
     _tabController.addListener(() {
       if (_tabController.previousIndex != _tabController.index) {
         setState(() {});
@@ -36,16 +47,75 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     });
   }
 
+  void initDynamicLinks() async {
+    // Deep link back into app to save groupme access token
+    FirebaseDynamicLinks.instance.onLink(onSuccess: (dynamicLink) async {
+      final Uri deepLink = dynamicLink?.link;
+
+      if (deepLink != null) {
+        if (deepLink.path == '/groupme') {
+          String token = deepLink.queryParameters['access_token'];
+          (await SharedPreferences.getInstance()).setString('GROUPME_TOKEN', token);
+          // @todo Refactor deeplink logic when adding more platforms
+        }
+      }
+    }, onError: (OnLinkErrorException e) async {
+      print(e.message);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: _auth.onAuthStateChanged,
+      builder: (context, snapshot) => snapshot.hasData ? _buildHomePageBody(context, snapshot.data) : _buildLoginPage(),
+    );
+    // return _currentUser == null ? _buildLoginPage() : _buildHomePageBody(context);
+  }
+
+  Widget _buildLoginPage() {
     return Scaffold(
+      backgroundColor: kBackgroundColor,
+      body: Container(
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image.asset('assets/logo.png', height: 200),
+            SizedBox(height: 20),
+            RaisedButton(
+              padding: EdgeInsets.all(16.0),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+              color: kBackgroundColorLight,
+              child: Text('Sign in with Google', style: kHeaderTextStyle),
+              onPressed: _signinWithGoogle,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _signinWithGoogle() async {
+    final googleUser = await _googleSignIn.signIn();
+    final googleAuth = await googleUser.authentication;
+    final credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    await _auth.signInWithCredential(credential);
+  }
+
+  Scaffold _buildHomePageBody(BuildContext context, FirebaseUser user) {
+    return Scaffold(
+      key: globalScaffoldKey,
       floatingActionButton: FloatingActionButton(
         backgroundColor: kPrimaryColor,
         child: Icon(_tabController.index == 2 ? Icons.share : Icons.add),
         onPressed: null,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: _MultaccBottomBar(),
+      bottomNavigationBar: MultaccBottomBar(user),
       body: SafeArea(
         child: Column(children: <Widget>[
           Row(
@@ -54,32 +124,36 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 padding: kTabLabelPadding,
                 child: Image.asset('assets/icon.png', height: kToolbarHeight),
               ),
-              Expanded(
-                child: Theme(
-                  data: Theme.of(context).copyWith(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                  ),
-                  child: TabBar(
-                    dragStartBehavior: DragStartBehavior.start,
-                    // isScrollable: true,
-                    labelPadding: EdgeInsets.all(0),
-                    tabs: _buildTabs(),
-                    controller: _tabController,
-                    indicatorSize: TabBarIndicatorSize.label,
-                    indicator: UnderlineTabIndicator(
-                      insets: EdgeInsets.symmetric(horizontal: 16.0 * MediaQuery.of(context).devicePixelRatio),
-                      borderSide: BorderSide(color: kPrimaryColor, width: 2.0),
-                    ),
-                  ),
-                ),
-              ),
+              _buildTabBar(context),
             ],
           ),
           Expanded(
             child: TabBarView(children: _buildTabViews(), controller: _tabController),
           )
         ]),
+      ),
+    );
+  }
+
+  Expanded _buildTabBar(BuildContext context) {
+    return Expanded(
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+        ),
+        child: TabBar(
+          dragStartBehavior: DragStartBehavior.start,
+          // isScrollable: true,
+          labelPadding: EdgeInsets.all(0),
+          tabs: _buildTabs(),
+          controller: _tabController,
+          indicatorSize: TabBarIndicatorSize.label,
+          indicator: UnderlineTabIndicator(
+            insets: EdgeInsets.symmetric(horizontal: 16.0 * MediaQuery.of(context).devicePixelRatio),
+            borderSide: BorderSide(color: kPrimaryColor, width: 2.0),
+          ),
+        ),
       ),
     );
   }
@@ -147,72 +221,5 @@ class _MultaccTabState extends State<_MultaccTab> with SingleTickerProviderState
   dispose() {
     _controller.dispose();
     super.dispose();
-  }
-}
-
-class _MultaccBottomBar extends StatefulWidget {
-  @override
-  __MultaccBottomBarState createState() => __MultaccBottomBarState();
-}
-
-class __MultaccBottomBarState extends State<_MultaccBottomBar> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: kBottomNavigationBarHeight,
-      child: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        notchMargin: 8.0,
-        elevation: 8.0,
-        color: kBackgroundColorLight,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.menu, color: Colors.grey),
-              onPressed: () async {
-                FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColor);
-                await showNavigationSheet(context);
-                FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColorLight);
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.more_vert, color: Colors.grey),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future showNavigationSheet(BuildContext context) {
-    return showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.security),
-              title: Text('Privacy policy'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.power_settings_new),
-              title: Text('Sign out'),
-              onTap: () {},
-            ),
-          ],
-        );
-      },
-    );
   }
 }

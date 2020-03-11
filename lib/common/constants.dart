@@ -17,6 +17,7 @@ const kIconTextColor = Colors.white;
 const kPrimaryTextColor = Color(0xFF212121);
 const kSecondaryTextColor = Color(0xFF757575);
 
-const kHeaderTextStyle = TextStyle(fontSize: 26, fontWeight: FontWeight.w500, fontFamily: 'Product Sans');
+const kHeaderTextStyle = TextStyle(fontSize: 26, fontWeight: FontWeight.w500);
 const kTabBarTextStyle = TextStyle(fontSize: 22, fontWeight: FontWeight.w500, letterSpacing: 0.5);
-const kContactListTextStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.w300, fontFamily: 'Product Sans');
+const kBodyTextStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.w300);
+const kTinyTextStyle = TextStyle(fontSize: 12, fontWeight: FontWeight.w200, textBaseline: TextBaseline.alphabetic);
