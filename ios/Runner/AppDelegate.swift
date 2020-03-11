@@ -1,5 +1,6 @@
 import UIKit
 import Flutter
+import GoogleSignIn
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {

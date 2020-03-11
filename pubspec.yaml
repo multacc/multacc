@@ -38,8 +38,11 @@ dependencies:
   intl: any
 
   # firebase APIs
+  # Firebase Core and Auth must remain at version 0.4.4 and 0.15.4 for ios until UserAgent.h fix
+  # See https://github.com/FirebaseExtended/flutterfire/pull/2099
+  firebase_core: 0.4.4
   google_sign_in: any
-  firebase_auth: any
+  firebase_auth: 0.15.4
   firebase_dynamic_links: any
 
   enum_to_string: ^1.0.9
