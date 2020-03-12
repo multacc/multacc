@@ -29,9 +29,6 @@ void main() async {
 
   final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
-  Hive.registerAdapter(PhoneItemAdapter());
-  Hive.registerAdapter(EmailItemAdapter());
-  Hive.registerAdapter(TwitterItemAdapter());
 
 
   runApp(MyApp());
