@@ -2,10 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multacc/common/bottom_bar.dart';
 
-import 'package:multacc/common/constants.dart';
+import 'package:multacc/common/theme.dart';
 
 import 'package:multacc/pages/chats/chats_page.dart';
 import 'package:multacc/pages/contacts/contacts_page.dart';
@@ -48,6 +49,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   void initDynamicLinks() async {
+    SharedPreferences prefs = GetIt.I.get<SharedPreferences>();
+
     // Deep link back into app to save groupme access token
     FirebaseDynamicLinks.instance.onLink(onSuccess: (dynamicLink) async {
       final Uri deepLink = dynamicLink?.link;
@@ -55,7 +58,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       if (deepLink != null) {
         if (deepLink.path == '/groupme') {
           String token = deepLink.queryParameters['access_token'];
-          (await SharedPreferences.getInstance()).setString('GROUPME_TOKEN', token);
+          prefs.setString('GROUPME_TOKEN', token);
           // @todo Refactor deeplink logic when adding more platforms
         }
       }

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:mobx/mobx.dart';
 import 'package:http/http.dart' as http;
+import 'package:multacc/common/constants.dart';
 import 'package:multacc/pages/chats/chat_model.dart';
 
 part 'chats_data.g.dart';
@@ -9,8 +10,6 @@ part 'chats_data.g.dart';
 class ChatsData = _ChatsData with _$ChatsData;
 
 abstract class _ChatsData with Store {
-  static const GROUPME_URL = 'https://api.groupme.com/v3';
-
   @observable
   List<GroupmeChat> allChats;
 
@@ -26,7 +25,7 @@ abstract class _ChatsData with Store {
 
   Future<List<GroupmeChat>> fetchGroupmeChats(String groupmeToken) async {
     http.Client client = http.Client();
-    final response = await client.get('$GROUPME_URL/chats?token=$groupmeToken');
+    final response = await client.get('$GROUPME_API_URL/chats?token=$groupmeToken');
     return parseChats(response.body);
   }
 
