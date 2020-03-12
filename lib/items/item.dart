@@ -59,6 +59,7 @@ abstract class MultaccItem {
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = toMap();
     map['_t'] = EnumToString.parse(getType());
+    map['_id'] = key;
     return map;
   }
 
