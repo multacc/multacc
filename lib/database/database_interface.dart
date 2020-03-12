@@ -11,6 +11,8 @@ class DatabaseInterface {
 
   void init() async {
     Hive.init((await path_provider.getApplicationDocumentsDirectory()).path);
+    Hive.registerAdapter(MultaccContactAdapter());
+    Hive.registerAdapter(MultaccItemAdapter());
     contactsBox = await Hive.openBox<MultaccContact>('contacts');
   }
 
