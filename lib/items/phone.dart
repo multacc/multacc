@@ -52,6 +52,5 @@ class PhoneItem extends MultaccItem {
 
   bool isLaunchable() => true;
 
-  @override
   getIcon() => Icon(Icons.phone);
 }
