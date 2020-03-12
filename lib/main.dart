@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:multacc/pages/home_page.dart';
 import 'package:multacc/pages/contacts/contacts_data.dart';
-import 'package:multacc/common/common/constants.dart';
 
 import 'database/database_interface.dart';
 
