@@ -1,5 +1,4 @@
 import 'package:contacts_service/contacts_service.dart';
-
 import 'item.dart';
 
 class EmailItem extends MultaccItem {
