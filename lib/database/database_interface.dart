@@ -16,8 +16,8 @@ class DatabaseInterface {
     MultaccItem micahPhone = MultaccItem.fromDB("1532", jsonDecode('{\"_t\": \"Phone\", \"no\": \"+16159454680\"}'));
     List<MultaccItem> micahList = [micahEmail, micahPhone];
     addContact('0', micahList);
-    PhoneItem seanPhone = MultaccItem.fromDB("6436", jsonDecode('{\"_t\": \"Phone\", \"no\": \"509-555-7890\"}'));
-    TwitterItem seanTwitter = MultaccItem.fromDB("st", jsonDecode('{\"_t\": \"Twitter\", \"at\": \"wendys\", \"id\": \"59553554\"}'));
+    MultaccItem seanPhone = MultaccItem.fromDB("6436", jsonDecode('{\"_t\": \"Phone\", \"no\": \"509-555-7890\"}'));
+    MultaccItem seanTwitter = MultaccItem.fromDB("st", jsonDecode('{\"_t\": \"Twitter\", \"at\": \"wendys\", \"id\": \"59553554\"}'));
     List<MultaccItem> seanList = [seanPhone, seanTwitter];
     addContact('1', seanList);
   }
