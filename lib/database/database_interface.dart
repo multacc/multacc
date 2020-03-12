@@ -1,39 +1,46 @@
 import 'dart:convert';
 
 import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 import 'package:multacc/items/item.dart';
 import 'package:multacc/pages/contacts/contact_model.dart';
 
-
 class DatabaseInterface {
-  final Box box;
+  Box contactsBox;
 
-  DatabaseInterface({this.box});
+  void init() async {
+    Hive.init((await path_provider.getApplicationDocumentsDirectory()).path);
+    contactsBox = await Hive.openBox<MultaccContact>('contacts');
+  }
 
   void addDummyContacts() {
-    MultaccItem micahEmail = MultaccItem.fromDB("asdf", jsonDecode('{\"_t\": \"Email\", \"email\": \"mcwhite9@crimson.ua.edu\"}'));
-    MultaccItem micahPhone = MultaccItem.fromDB("1532", jsonDecode('{\"_t\": \"Phone\", \"no\": \"+16159454680\"}'));
-    List<MultaccItem> micahList = [micahEmail, micahPhone];
-    addContact('0', micahList);
-    MultaccItem seanPhone = MultaccItem.fromDB("6436", jsonDecode('{\"_t\": \"Phone\", \"no\": \"509-555-7890\"}'));
-    MultaccItem seanTwitter = MultaccItem.fromDB("st", jsonDecode('{\"_t\": \"Twitter\", \"at\": \"wendys\", \"id\": \"59553554\"}'));
-    List<MultaccItem> seanList = [seanPhone, seanTwitter];
-    addContact('1', seanList);
+    addContact(MultaccContact()
+      ..clientKey = '0'
+      ..displayName = 'Micah'
+      ..multaccItems = [
+        MultaccItem.fromDB(jsonDecode('{"_id": "asdf", "_t": "Email", "email": "mcwhite9@crimson.ua.edu"}')),
+        MultaccItem.fromDB(jsonDecode('{"_id": "1532", "_t": "Phone", "no": "+16159454680"}'))
+      ]);
+    addContact(MultaccContact()
+      ..clientKey = '1'
+      ..displayName = 'Sean'
+      ..birthday = DateTime(1999, 03, 29)
+      ..multaccItems = [
+        MultaccItem.fromDB(jsonDecode('{"_id": "6436", "_t": "Phone", "no": "509-555-7890"}')),
+        MultaccItem.fromDB(jsonDecode('{"_id": "st", "_t": "Twitter", "at": "wendys", "id": "59553554"}'))
+      ]);
   }
 
-  void addContact(String key, List<MultaccItem> items) {
-    box.put(key, items.map(jsonEncode));
+  void addContact(MultaccContact contact) {
+    contactsBox.put(contact.clientKey, contact);
   }
-  void addMultaccContact(MultaccContact contact) {
-    addContact(contact.clientKey, contact.multaccItems);
+
+  MultaccContact getContact(String key) {
+    return contactsBox.get(key);
   }
-  
-  List<MultaccItem> getContact(String key) {
-    List<dynamic> serializedItems = box.get(key, defaultValue: []);
-    // @todo Store the item id in the database
-    return serializedItems.cast<String>().map((json) => MultaccItem.fromDB(null /* id */, jsonDecode(json))); 
+
+  Iterable<MultaccContact> getAllContacts() {
+    return contactsBox.values;
   }
-  
-  
 }
