@@ -1,14 +1,40 @@
+import 'dart:typed_data';
+
 import 'package:contacts_service/contacts_service.dart';
+import 'package:hive/hive.dart';
+import 'package:multacc/database/type_ids.dart';
+
 import 'package:multacc/items/item.dart';
 import 'package:multacc/items/phone.dart';
 import 'package:multacc/items/email.dart';
 
+part 'contact_model.g.dart';
+
+@HiveType(typeId: MULTACC_CONTACT_TYPE_ID)
 class MultaccContact extends Contact {
-  String serverKey, clientKey;
+  // Stored in the database even though it is the key because this allows the Hive adapter to create a MultaccContact
+  // with the appropriate clientKey (database key is not exposed to adapter), thus preventing us from having to manually
+  // add the key whenever loading a contact from the database.
+  @HiveField(5)
+  String clientKey;
+
+  @HiveField(0)
+  String serverKey;
+  @HiveField(1)
   List<MultaccItem> multaccItems;
 
+  // Contact fields overridden so we can apply hive annotation to them
+  @HiveField(2)
+  String displayName;
+  @HiveField(3)
+  Uint8List avatar;
+  @HiveField(4)
+  DateTime birthday;
+
+  MultaccContact();
+
   // Construct a Multacc contact from a Contact
-  MultaccContact(Contact baseContact) {
+  MultaccContact.fromContact(Contact baseContact) {
     // Base contact model - stored in contacts app:
     this.androidAccountName = baseContact.androidAccountName;
     this.androidAccountType = baseContact.androidAccountType;
@@ -42,6 +68,4 @@ class MultaccContact extends Contact {
       // @todo Pull multacc items from database when loading a contact
     ];
   }
-
-
 }

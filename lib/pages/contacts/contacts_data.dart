@@ -19,7 +19,7 @@ abstract class _ContactsData with Store {
   @action
   getAllContacts() async {
     loaded = false;
-    allContacts = (await ContactsService.getContacts()).map((e) => MultaccContact(e)).toList();
+    allContacts = (await ContactsService.getContacts()).map((e) => MultaccContact.fromContact(e)).toList();
     displayedContacts = allContacts;
     loaded = true;
   }
