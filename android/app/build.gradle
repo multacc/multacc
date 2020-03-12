@@ -39,7 +39,7 @@ android {
 
     defaultConfig {
         applicationId "com.multacc"
-        minSdkVersion 21
+        minSdkVersion 22
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

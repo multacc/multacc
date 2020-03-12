@@ -77,7 +77,8 @@ abstract class MultaccItem {
   /// Get human-readable item type (Snapchat, etc.) to display
   String getHumanReadableValue();
 
-// @todo Frontend team should add something like getIcon to MultaccItem
+  /// Get icon or image asset to display
+  dynamic getIcon();
 }
 
 enum MultaccItemType {

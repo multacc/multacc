@@ -1,4 +1,6 @@
 import 'package:contacts_service/contacts_service.dart';
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'item.dart';
 
 class EmailItem extends MultaccItem {
@@ -6,7 +8,7 @@ class EmailItem extends MultaccItem {
 
   EmailItem.fromJson(Map<String, dynamic> json) : email = json['email'];
 
-  EmailItem.fromItem(Item item) : email = item.toString();
+  EmailItem.fromItem(Item item) : email = item.value;
 
   Map<String, dynamic> toMap() => {'email': email};
 
@@ -17,8 +19,10 @@ class EmailItem extends MultaccItem {
   MultaccItemType getType() => MultaccItemType.Email;
 
   void launchApp() {
-    // @todo Implement email launching
+    launch('mailto:$email');
   }
 
   bool isLaunchable() => true;
+
+  getIcon() => Icon(Icons.email);
 }

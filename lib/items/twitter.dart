@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_brand_icons/flutter_brand_icons.dart';
+
 import 'item.dart';
 
 class TwitterItem extends MultaccItem {
@@ -21,4 +24,6 @@ class TwitterItem extends MultaccItem {
   }
 
   bool isLaunchable() => true;
+
+  getIcon() => Icon(BrandIcons.twitter);
 }
