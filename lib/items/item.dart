@@ -1,7 +1,15 @@
+import 'dart:convert';
+
+import 'package:hive/hive.dart';
+import 'package:multacc/database/type_ids.dart';
+import 'package:enum_to_string/enum_to_string.dart';
+
 import 'twitter.dart';
 import 'email.dart';
 import 'phone.dart';
-import 'package:enum_to_string/enum_to_string.dart';
+
+const ITEM_TYPE_KEY = '_t';
+const ITEM_KEY_KEY = '_id';
 
 /// MultaccItem interface
 abstract class MultaccItem {
@@ -11,8 +19,8 @@ abstract class MultaccItem {
   MultaccItem() : key = null;
 
   /// Use this constructor to create a MultaccItem using database values
-  factory MultaccItem.fromDB(String key, Map<String, dynamic> json) {
-    MultaccItemType type = EnumToString.fromString(MultaccItemType.values, json['_t']);
+  factory MultaccItem.fromDB(Map<String, dynamic> json) {
+    MultaccItemType type = EnumToString.fromString(MultaccItemType.values, json[ITEM_TYPE_KEY]);
     MultaccItem item;
     switch (type) {
       case MultaccItemType.Twitter:
@@ -40,9 +48,9 @@ abstract class MultaccItem {
 //        item = DogecoinItem.fromJson(json);
         break;
       default:
-        throw new FormatException('Type ${json['_t']} is not recognized');
+        throw new FormatException('Type ${json[ITEM_TYPE_KEY]} is not recognized');
     }
-    item.key = key;
+    item.key = json[ITEM_KEY_KEY];
     return item;
   }
 
@@ -58,9 +66,13 @@ abstract class MultaccItem {
   /// This is the map from toMap() but with an added pair for type ('t':'Twitter')
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = toMap();
-    map['_t'] = EnumToString.parse(getType());
-    map['_id'] = key;
+    map[ITEM_TYPE_KEY] = EnumToString.parse(getType());
+    map[ITEM_KEY_KEY] = key;
     return map;
+  }
+
+  String toString() {
+    return jsonEncode(this);
   }
 
   /// Launch the relevant app to message someone
@@ -91,4 +103,18 @@ enum MultaccItemType {
   Dogecoin, // @todo Implement dogecoin
   Phone,
   Email
+}
+
+/// Hive adapter for MultaccItem
+class MultaccItemAdapter extends TypeAdapter<MultaccItem> {
+  final typeId = MULTACC_ITEM_TYPE_ID;
+
+  MultaccItem read(BinaryReader reader) {
+    String json = reader.readString();
+    return MultaccItem.fromDB(jsonDecode(json));
+  }
+
+  void write(BinaryWriter writer, MultaccItem item) {
+    writer.writeString(item.toString());
+  }
 }

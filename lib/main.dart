@@ -13,9 +13,6 @@ import 'database/database_interface.dart';
 
 import 'pages/home_page.dart';
 import 'pages/contacts/contacts_data.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
-
-import 'package:hive/hive.dart';
 
 GetIt services = GetIt.I;
 
@@ -25,10 +22,6 @@ void main() async {
   // request contacts permission
   PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.contacts);
   if (permission != PermissionStatus.granted) await PermissionHandler().requestPermissions([PermissionGroup.contacts]);
-
-  final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
-  Hive.init(appDocumentDir.path);
-
 
   runApp(MyApp());
 
@@ -42,9 +35,9 @@ void main() async {
   await contactsData.getAllContacts();
 
   // initialize local database
-  final contactsBox = await Hive.openBox('contacts');
-  DatabaseInterface dbi = DatabaseInterface(box: contactsBox);
-  dbi.addDummyContacts(); // @todo Remove dummy contacts when database is known to work
+  DatabaseInterface db = DatabaseInterface()
+    ..init()
+    ..addDummyContacts(); // @todo Remove dummy contacts when database is known to work
 
   // fetch groupme messages in background if authorized
   final chatsData = ChatsData();
