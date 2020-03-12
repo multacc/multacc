@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
-import 'package:multacc/common/constants.dart';
-import 'package:multacc/common/draggable_sheet_widget.dart';
+import 'package:multacc/common/theme.dart';
 import 'package:multacc/main.dart';
 import 'package:multacc/pages/chats/chats_data.dart';
 
@@ -43,7 +42,7 @@ class _ChatsPageState extends State<ChatsPage> {
       title: Text(chat.name),
       subtitle: Text(chat.lastMessage, overflow: TextOverflow.ellipsis),
       trailing: _buildTimestamp(chat.timestamp),
-      onTap: () => showDraggableSheet(context, Center(child: Text('DM'))), // @todo Implement conversation screen
+      // onTap: () => showDraggableSheet(context, Center(child: Text('DM'))), // @todo Implement conversation screen
     );
   }
 
@@ -62,7 +61,7 @@ class _ChatsPageState extends State<ChatsPage> {
   }
 
   Widget _buildAvatar(String url) {
-    if (url == null) return CircleAvatar(child: Icon(Icons.person));
+    if (url == null) return CircleAvatar(child: Icon(Icons.person), backgroundColor: kBackgroundColorLight);
     return CircleAvatar(backgroundImage: NetworkImage(url));
   }
 }

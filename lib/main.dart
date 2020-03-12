@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:get_it/get_it.dart';
@@ -6,11 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:multacc/pages/chats/chats_data.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'common/constants.dart';
-
-import 'pages/home_page.dart';
-import 'pages/contacts/contacts_data.dart';
+import 'package:multacc/common/theme.dart';
+import 'package:multacc/pages/home_page.dart';
+import 'package:multacc/pages/contacts/contacts_data.dart';
 
 GetIt services = GetIt.I;
 
@@ -23,6 +20,10 @@ void main() async {
 
   runApp(MyApp());
 
+  // save shared prefs as a singleton for non-async access (might replace with a hive box)
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  services.registerSingleton(prefs);
+
   // fetch and save contacts list
   final contactsData = ContactsData();
   services.registerSingleton(contactsData);
@@ -31,7 +32,6 @@ void main() async {
   // fetch groupme messages in background if authorized
   final chatsData = ChatsData();
   services.registerSingleton(chatsData);
-  SharedPreferences prefs = await SharedPreferences.getInstance();
   if (prefs.containsKey('GROUPME_TOKEN')) {
     chatsData.getAllChats(prefs.getString('GROUPME_TOKEN')); // run in background
   }

@@ -34,7 +34,7 @@ class MultaccContact extends Contact {
     clientKey = identifier; // Key in client-side database
     serverKey = null; // Key in server-side database
     multaccItems = [
-      ...phones.map((item) => PhoneItem.fromItem(item)), // create PhoneItems from phone Items
+      ...phones.toSet().map((item) => PhoneItem.fromItem(item)), // create PhoneItems from phone Items
       ...emails.map((item) => EmailItem.fromItem(item)), // create EmailItems from email Items
       // @todo Convert addresses to Multacc items
       // @todo Convert IM to Multacc items

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:multacc/common/constants.dart';
+import 'package:multacc/common/avatars.dart';
+import 'package:multacc/common/theme.dart';
 import 'package:multacc/main.dart';
+import 'package:sliding_sheet/sliding_sheet.dart';
 import 'contact_details_page.dart';
 import 'contacts_data.dart';
 
@@ -47,10 +49,11 @@ class _ContactsPageState extends State<ContactsPage> {
   }
 
   ListTile _buildContactListItem(int index) {
+    final contact = contactsData.displayedContacts[index];
     return ListTile(
       contentPadding: EdgeInsets.all(6.0),
-      leading: CircleAvatar(child: Icon(Icons.person)),
-      title: Text(contactsData.displayedContacts[index].displayName),
+      leading: Avatars.buildContactAvatar(memoryImage: contact.avatar),
+      title: Padding(padding: EdgeInsets.only(left: 8.0), child: Text(contact.displayName, style: kBodyTextStyle)),
       onTap: () => _onContactPressed(index),
       onLongPress: () => _onLongPress(index),
       selected: _isSelected(index),
@@ -74,13 +77,21 @@ class _ContactsPageState extends State<ContactsPage> {
       } else if (selectedContacts.length > 0) {
         selectedContacts.add(index);
       } else {
-        showModalBottomSheet(
-          context: context,
-          builder: (_) => ContactDetailsPage(contactsData.displayedContacts[index]),
-          useRootNavigator: true,
-          isScrollControlled: true,
-          isDismissible: true,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        showSlidingBottomSheet(
+          context,
+          builder: (context) => SlidingSheetDialog(
+            elevation: 8.0,
+            cornerRadius: 16.0,
+            color: kBackgroundColor,
+            snapSpec: const SnapSpec(
+              snap: true,
+              snappings: [0.6, 1.0],
+              positioning: SnapPositioning.relativeToAvailableSpace,
+            ),
+            builder: (context, state) => ContactDetailsPage(contactsData.displayedContacts[index]),
+            headerBuilder: (_, __) => // drag handle
+                Padding(padding: EdgeInsets.all(16.0), child: Icon(Icons.maximize, color: Colors.grey)),
+          ),
         );
       }
     });

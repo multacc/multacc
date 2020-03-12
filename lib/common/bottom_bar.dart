@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_brand_icons/flutter_brand_icons.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get_it/get_it.dart';
+import 'package:multacc/common/theme.dart';
 import 'package:multacc/common/constants.dart';
+import 'package:multacc/common/search_delegate.dart';
 import 'package:multacc/pages/home_page.dart';
+import 'package:multacc/pages/settings/settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -42,6 +46,13 @@ class MultaccBottomBarState extends State<MultaccBottomBar> {
                 FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColorLight);
               },
             ),
+            Spacer(),
+            IconButton(
+              icon: Icon(Icons.search, color: Colors.grey),
+              onPressed: () {
+                showSearch(context: context, delegate: BottomBarSearchDelegate());
+              },
+            ),
             IconButton(
               icon: Icon(Icons.more_vert, color: Colors.grey),
               onPressed: () {},
@@ -54,6 +65,9 @@ class MultaccBottomBarState extends State<MultaccBottomBar> {
 
   Future showNavigationSheet(BuildContext context) {
     return showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
+      ),
       context: context,
       builder: (context) {
         return Padding(
@@ -89,7 +103,11 @@ class MultaccBottomBarState extends State<MultaccBottomBar> {
               ListTile(
                 leading: Icon(Icons.settings),
                 title: Text('Settings'),
-                onTap: () {},
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  await Navigator.of(context).push(MaterialPageRoute(builder: (_) => SettingsPage()));
+                  await FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColorLight);
+                },
               ),
               ListTile(
                 leading: Icon(Icons.security),
@@ -105,14 +123,17 @@ class MultaccBottomBarState extends State<MultaccBottomBar> {
 
   // @todo Refactor groupme auth
   Widget _buildGroupmeTile(BuildContext context) {
+    SharedPreferences prefs = GetIt.I.get<SharedPreferences>();
+    final isGroupmeConnected = prefs.containsKey('GROUPME_TOKEN');
+
     return ListTile(
       leading: SvgPicture.asset('assets/groupme.svg', color: Colors.white, width: 25),
       title: Text('Groupme'),
+      trailing: isGroupmeConnected ? Text('Connected ✔') : Text(''),
       onTap: () async {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (!prefs.containsKey('GROUPME_TOKEN')) {
+        if (!isGroupmeConnected) {
           // redirect url used to authenticate user and get access token
-          await launch('https://oauth.groupme.com/oauth/authorize?client_id=qUSMuMym9ticy1pCtC0LqRXXgIzEHzAWuYfJq3DlaV7HaCKh');
+          await launch(GROUPME_REDIRECT_URL);
         } else {
           globalScaffoldKey.currentState.showSnackBar(SnackBar(
             content: Text(

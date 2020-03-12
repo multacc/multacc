@@ -16,12 +16,15 @@ dependencies:
   google_fonts: any
   flutter_brand_icons: any
   flutter_svg: any
+  sliding_sheet: any
 
   # device APIs
   contacts_service: any
   permission_handler: any
   url_launcher: any
   shared_preferences: any
+  android_intent: any
+  flutter_package_manager: any
 
   # state management / data
   provider: any
