@@ -49,23 +49,18 @@ void main() async {
   await contactsData.getAllContacts();
 
   // initialize local database
-
   final contactsBox = await Hive.openBox('contacts');
-  // Hive.registerAdapter(ContactsAdapter());
 
   DatabaseInterface dbi = DatabaseInterface(box: contactsBox);
-  // dbi.initializeDatabase();
   dbi.addDummyContacts();
 
-  dbi.printContact('Sean_Gillen_7777');
+  dbi.printContact('0');
 
   dbi.addContact('David_Hall_8631');
   MultaccItem it = new MultaccItem.fromDB("asda", jsonDecode('{\"_t\": \"Email\", \"email\": \"dwhall1@crimson.ua.edu\"}'));
   dbi.addItem('David_Hall_8631', it);
 
   dbi.printContact('David_Hall_8631');
-  
-  
 
   // fetch groupme messages in background if authorized
   final chatsData = ChatsData();
