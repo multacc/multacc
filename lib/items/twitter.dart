@@ -1,29 +1,45 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_brand_icons/flutter_brand_icons.dart';
-
 import 'item.dart';
 
 class TwitterItem extends MultaccItem {
   String username;
   String userId;
 
+  TwitterItem();
+
   TwitterItem.fromJson(Map<String, dynamic> json)
       : username = json['at'],
         userId = json['id'];
 
-  Map<String, dynamic> toMap() => {'at': username, 'id': userId};
+  toMap() => {'at': username, 'id': userId};
 
-  String getHumanReadableType() => 'Twitter';
+  get humanReadableValue => '@$username';
 
-  String getHumanReadableValue() => '@$username';
+  get type => MultaccItemType.Twitter;
 
-  MultaccItemType getType() => MultaccItemType.Twitter;
-
-  void launchApp() {
+  launchApp() {
     // @todo Implement Twitter launching
   }
 
-  bool isLaunchable() => true;
+  get isLaunchable => true;
 
-  getIcon() => Icon(BrandIcons.twitter);
+  set value(String input) {
+    username = input.substring(input.startsWith('@') ? 1 : 0);
+    // @todo Detect Twitter user ID from username
+  }
+}
+
+class TwitterConnector extends Connector {
+  TwitterConnector();
+
+  connect() {
+    // @todo Connect to twitter
+    // return token
+  }
+
+  get(dynamic token) {
+    // Get value from twitter
+    TwitterItem item = TwitterItem();
+    // set item username and userId
+    return item;
+  }
 }

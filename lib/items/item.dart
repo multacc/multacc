@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:multacc/database/type_ids.dart';
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:flutter_brand_icons/flutter_brand_icons.dart';
 
 import 'twitter.dart';
 import 'email.dart';
@@ -66,32 +68,31 @@ abstract class MultaccItem {
   /// This is the map from toMap() but with an added pair for type ('t':'Twitter')
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = toMap();
-    map[ITEM_TYPE_KEY] = EnumToString.parse(getType());
+    map[ITEM_TYPE_KEY] = EnumToString.parse(type);
     map[ITEM_KEY_KEY] = key;
     return map;
   }
 
-  String toString() {
-    return jsonEncode(this);
-  }
+  String toString() => jsonEncode(this);
 
   /// Launch the relevant app to message someone
   void launchApp() {}
 
   /// Boolean indicating whether calling launchApp() will do something useful
-  bool isLaunchable() => false;
+  bool get isLaunchable => false;
 
   /// Get item type (from MultaccItemType enum; index will be stored in database)
-  MultaccItemType getType();
-
-  /// Get human-readable item type for display
-  String getHumanReadableType();
+  MultaccItemType get type;
 
   /// Get human-readable item type (Snapchat, etc.) to display
-  String getHumanReadableValue();
+  String get humanReadableValue;
 
-  /// Get icon or image asset to display
-  dynamic getIcon();
+  /// Get item icon
+  /// Override this implementation if the icon is dependent on the value of the item
+  dynamic get icon => type.icon;
+
+  /// Set the value of this item from manual input
+  set value(String item);
 }
 
 enum MultaccItemType {
@@ -103,6 +104,62 @@ enum MultaccItemType {
   Dogecoin, // @todo Implement dogecoin
   Phone,
   Email
+}
+
+extension MultaccItemTypeInfo on MultaccItemType {
+  /// Get icon or image asset to display
+  dynamic get icon {
+    switch (this) {
+      case MultaccItemType.Twitter:
+        return Icon(BrandIcons.twitter);
+      case MultaccItemType.Phone:
+        return Icon(Icons.phone);
+      case MultaccItemType.Email:
+        return Icon(Icons.email);
+      default:
+        return Icon(Icons.person);
+    }
+  }
+
+  /// Get human-readable name of type ("Twitter", etc.)
+  String get name {
+    switch (this) {
+      // Add cases here for any types where name should differ from enum alias
+
+      // Use enum alias by default
+      default:
+        return EnumToString.parse(this);
+    }
+  }
+
+  /// Connect to this platform
+  Connector get connector {
+    switch (this) {
+      case MultaccItemType.Twitter:
+        return TwitterConnector();
+      case MultaccItemType.Phone:
+        return PhoneConnector();
+      default:
+        return null;
+    }
+  }
+
+  /// Determine whether a method exists to connect to this platform
+  bool get isConnectable => connector != null;
+
+  /// Create an empty item with this type
+  MultaccItem createItem() {
+    switch (this) {
+      case MultaccItemType.Twitter:
+        return TwitterItem();
+      case MultaccItemType.Phone:
+        return PhoneItem();
+      case MultaccItemType.Email:
+        return EmailItem();
+      default:
+        return null;
+    }
+  }
 }
 
 /// Hive adapter for MultaccItem
@@ -117,4 +174,17 @@ class MultaccItemAdapter extends TypeAdapter<MultaccItem> {
   void write(BinaryWriter writer, MultaccItem item) {
     writer.writeString(item.toString());
   }
+}
+
+/// Connector class
+/// For item types that can be connected (log into platform to detect accounts),
+/// implement a connector, add a const default constructor, and add it to MultaccItemTypeInfo.connector above
+abstract class Connector {
+  /// Return a token or something representing the connection that can be:
+  /// * Put in Hive to maintain a connection between sessions
+  /// * Passed to get() to get the value from the connection
+  dynamic connect();
+
+  /// Use an established connection to get a MultaccItem
+  MultaccItem get(dynamic token);
 }
