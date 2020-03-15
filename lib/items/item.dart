@@ -147,6 +147,15 @@ extension MultaccItemTypeInfo on MultaccItemType {
   /// Determine whether a method exists to connect to this platform
   bool get isConnectable => connector != null;
 
+  /// Determine whether the value setter on an instance of this item is useful
+  /// False for things like groupme where there is no meaningful value for a user to type in
+  bool get isInputtable {
+    switch (this) { // idk if this should be a switch but we can figure it out later
+      default:
+        return true;
+    }
+  }
+
   /// Create an empty item with this type
   MultaccItem createItem() {
     switch (this) {
