@@ -1,6 +1,5 @@
 import 'package:android_intent/android_intent.dart';
 import 'package:contacts_service/contacts_service.dart';
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:multacc/common/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,20 +11,24 @@ class PhoneItem extends MultaccItem {
   String phone;
   String label;
 
-  PhoneItem.fromJson(Map<String, dynamic> json) : phone = json['no'], label = json['label'];
+  PhoneItem();
 
-  PhoneItem.fromItem(Item item) : phone = item.value, label = item.label;
+  PhoneItem.fromJson(Map<String, dynamic> json)
+      : phone = json['no'],
+        label = json['label'];
 
-  Map<String, dynamic> toMap() => {'no': phone, 'label': label};
+  PhoneItem.fromItem(Item item)
+      : phone = item.value,
+        label = item.label;
 
-  String getHumanReadableType() => 'Phone';
+  toMap() => {'no': phone, 'label': label};
 
-  String getHumanReadableValue() => phone; // @todo Format phone numbers
+  get humanReadableValue => phone; // @todo Format phone numbers
 
-  MultaccItemType getType() => MultaccItemType.Phone;
+  get type => MultaccItemType.Phone;
 
   /// Dials number in the preferred app
-  void launchApp() {
+  launchApp() {
     SharedPreferences prefs = GetIt.I.get<SharedPreferences>();
     switch (prefs.getString('PHONE_APP')) {
       case 'voice':
@@ -50,7 +53,23 @@ class PhoneItem extends MultaccItem {
     }
   }
 
-  bool isLaunchable() => true;
+  get isLaunchable => true;
 
-  getIcon() => Icon(Icons.phone);
+  set value(String number) {
+    phone = number;
+    // @todo Allow adding phone number labels manually
+  }
+}
+
+class PhoneConnector extends Connector {
+  PhoneConnector();
+
+  connect() {
+    return true; // "is connection-based" to store in MultaccItem
+  }
+
+  get(dynamic isConnected) {
+    // @todo Detect user's phone number
+    //
+  }
 }

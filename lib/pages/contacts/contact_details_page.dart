@@ -51,10 +51,10 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
         itemBuilder: (BuildContext context, int index) {
           final item = contact.multaccItems.elementAt(index);
           return ListTile(
-            title: Text(item.getHumanReadableValue() ?? ''),
-            trailing: Text(item.getType() == MultaccItemType.Phone ? (item as PhoneItem).label : ''),
-            leading: item.getIcon(),
-            onTap: item.isLaunchable() ? item.launchApp : null,
+            title: Text(item.humanReadableValue ?? ''),
+            trailing: Text(item.type == MultaccItemType.Phone ? (item as PhoneItem).label : ''),
+            leading: item.icon,
+            onTap: item.isLaunchable ? item.launchApp : null,
           );
         },
       ),
