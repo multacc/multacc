@@ -2,18 +2,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_brand_icons/flutter_brand_icons.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:multacc/common/bottom_bar.dart';
-
 import 'package:multacc/common/theme.dart';
-
 import 'package:multacc/pages/chats/chats_page.dart';
 import 'package:multacc/pages/contacts/contacts_page.dart';
 import 'package:multacc/pages/profile/profile_page.dart';
-
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
 GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>['email']);
@@ -90,7 +89,13 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               padding: EdgeInsets.all(16.0),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
               color: kBackgroundColorLight,
-              child: Text('Sign in with Google', style: kHeaderTextStyle),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(right: 8.0), child: Icon(BrandIcons.google)),
+                  Text('Sign in with Google', style: kHeaderTextStyle),
+                ],
+              ),
               onPressed: _signinWithGoogle,
             ),
           ],

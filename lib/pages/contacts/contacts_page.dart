@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:multacc/common/avatars.dart';
 import 'package:multacc/common/theme.dart';
-import 'package:multacc/main.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 import 'contact_details_page.dart';
 import 'contacts_data.dart';
@@ -12,44 +13,44 @@ class ContactsPage extends StatefulWidget {
   _ContactsPageState createState() => _ContactsPageState();
 }
 
-class _ContactsPageState extends State<ContactsPage> {
+class _ContactsPageState extends State<ContactsPage> with WidgetsBindingObserver {
   ContactsData contactsData;
   List<int> selectedContacts;
 
   @override
   void initState() {
     super.initState();
-    contactsData = services.get<ContactsData>();
+    contactsData = GetIt.I.get<ContactsData>();
     selectedContacts = List<int>();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 12.0),
-      child: Observer(
-        builder: (_) => !contactsData.loaded ? Center(child: CircularProgressIndicator()) : _buildContactsList(),
-      ),
-    );
-  }
-
-  Widget _buildContactsList() {
     return Observer(
-      builder: (_) => ListTileTheme(
-        selectedColor: kPrimaryColor,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListView.builder(
-            itemCount: contactsData.displayedContacts.length,
-            itemBuilder: (context, index) => _buildContactListItem(index),
+      builder: (_) {
+        contactsData.allContacts.sort((a, b) => a.displayName.compareTo(b.displayName));
+        return ListTileTheme(
+          selectedColor: kPrimaryColor,
+          child: LiquidPullToRefresh(
+            springAnimationDurationInMilliseconds: 300,
+            color: kBackgroundColorLight,
+            backgroundColor: kPrimaryColor,
+            onRefresh: contactsData.getAllContacts,
+            showChildOpacityTransition: false,
+            child: ListView.builder(
+              padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+              itemCount: contactsData.allContacts.length,
+              itemBuilder: (context, index) => _buildContactListItem(index),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
   ListTile _buildContactListItem(int index) {
-    final contact = contactsData.displayedContacts[index];
+    final contact = contactsData.allContacts[index];
     return ListTile(
       contentPadding: EdgeInsets.all(6.0),
       leading: Avatars.buildContactAvatar(memoryImage: contact.avatar),
@@ -88,12 +89,25 @@ class _ContactsPageState extends State<ContactsPage> {
               snappings: [0.6, 1.0],
               positioning: SnapPositioning.relativeToAvailableSpace,
             ),
-            builder: (context, state) => ContactDetailsPage(contactsData.displayedContacts[index]),
+            builder: (context, state) => ContactDetailsPage(contactsData.allContacts[index]),
             headerBuilder: (_, __) => // drag handle
                 Padding(padding: EdgeInsets.all(16.0), child: Icon(Icons.maximize, color: Colors.grey)),
           ),
         );
       }
     });
+  }
+
+  // Quietly refresh contacts when returning to foreground
+  // @todo Decide if we want to limit the frequency of auto-refreshing contacts
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) contactsData.getAllContacts();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 }
