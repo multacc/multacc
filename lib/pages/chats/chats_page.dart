@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:multacc/common/theme.dart';
-import 'package:multacc/main.dart';
 import 'package:multacc/pages/chats/chats_data.dart';
 
 class ChatsPage extends StatefulWidget {
@@ -16,7 +16,7 @@ class _ChatsPageState extends State<ChatsPage> {
   @override
   void initState() {
     super.initState();
-    chatsData = services.get<ChatsData>();
+    chatsData = GetIt.I.get<ChatsData>();
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:contacts_service/contacts_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:multacc/database/type_ids.dart';
 
@@ -65,7 +66,24 @@ class MultaccContact extends Contact {
       // @todo Convert addresses to Multacc items
       // @todo Convert IM to Multacc items
       // @todo Convert SIP to Multacc items
-      // @todo Pull multacc items from database when loading a contact
     ];
+  }
+
+  // Returns true if the base contact fields match
+  bool equalsBaseContact(Contact baseContact) {
+    return (listEquals(this.avatar, baseContact.avatar) &&
+        this.birthday?.millisecondsSinceEpoch == baseContact.birthday?.millisecondsSinceEpoch &&
+        this.company == baseContact.company &&
+        this.displayName == baseContact.displayName &&
+        listEquals(this.emails?.toList(), baseContact.emails?.toList()) &&
+        this.familyName == baseContact.familyName &&
+        this.givenName == baseContact.givenName &&
+        this.identifier == baseContact.identifier &&
+        this.jobTitle == baseContact.jobTitle &&
+        this.middleName == baseContact.middleName &&
+        listEquals(this.phones?.toList(), baseContact.phones?.toList()) &&
+        listEquals(this.postalAddresses?.toList(), baseContact.postalAddresses?.toList()) &&
+        this.prefix == baseContact.prefix &&
+        this.suffix == baseContact.suffix);
   }
 }
