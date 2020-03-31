@@ -34,17 +34,22 @@ class _SettingsPageState extends State<SettingsPage> {
         margin: EdgeInsets.all(8.0),
         width: double.infinity,
         child: Column(
-          children: <Widget>[_buildPhoneAppTile(context)],
+          children: <Widget>[
+            _buildPhoneAppTile(context),
+            // @todo Add setting for redirecting calls to preferred dialer through multacc
+          ],
         ),
       ),
     );
   }
 
+  // @todo Implement iOS version of choosing preferred phone app
   Widget _buildPhoneAppTile(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(accentColor: Colors.white),
       child: FutureBuilder(
         future: Future.wait([
+          FlutterPackageManager.getPackageInfo(ANDROID_DIALER_PACKAGE),
           FlutterPackageManager.getPackageInfo(GOOGLE_VOICE_PACKAGE),
           FlutterPackageManager.getPackageInfo(GOOGLE_DUO_PACKAGE)
         ]),
@@ -52,7 +57,7 @@ class _SettingsPageState extends State<SettingsPage> {
           title: Text('Phone app'),
           children: <Widget>[
             RadioListTile(
-              secondary: Icon(Icons.phone),
+              secondary: snapshot.data?.first?.getAppIcon() ?? Icon(Icons.phone),
               title: Text('Default'),
               value: 'default',
               controlAffinity: ListTileControlAffinity.trailing,
@@ -60,9 +65,9 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: _changePhoneApp,
             ),
             // Google Voice tile
-            if (snapshot.hasData && snapshot.data.first != null)
+            if (snapshot.data?.elementAt(1) != null)
               RadioListTile(
-                secondary: snapshot.data.first.getAppIcon(),
+                secondary: snapshot.data[1].getAppIcon(),
                 title: Text('Google Voice'),
                 value: 'voice',
                 controlAffinity: ListTileControlAffinity.trailing,
@@ -70,7 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 onChanged: _changePhoneApp,
               ),
             // Google Duo tile
-            if (snapshot.hasData && snapshot.data.last != null)
+            if (snapshot.data?.last != null)
               RadioListTile(
                 secondary: snapshot.data.last.getAppIcon(),
                 title: Text('Google Duo'),

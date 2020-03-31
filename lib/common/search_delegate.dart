@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_it/get_it.dart';
 import 'package:multacc/common/avatars.dart';
 import 'package:multacc/common/theme.dart';
-import 'package:multacc/main.dart';
 import 'package:multacc/pages/contacts/contact_details_page.dart';
 import 'package:multacc/pages/contacts/contact_model.dart';
 import 'package:multacc/pages/contacts/contacts_data.dart';
@@ -10,7 +10,7 @@ import 'package:multacc/pages/contacts/contacts_data.dart';
 /// Helper class for searching contacts
 /// @todo Add support for searching chats too
 class BottomBarSearchDelegate extends SearchDelegate<String> {
-  final ContactsData contactsData = services.get<ContactsData>();
+  final ContactsData contactsData = GetIt.I.get<ContactsData>();
 
   @override
   ThemeData appBarTheme(BuildContext context) {
