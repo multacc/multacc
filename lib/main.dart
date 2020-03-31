@@ -15,8 +15,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // request contacts permission
-  PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.contacts);
-  if (permission != PermissionStatus.granted) await PermissionHandler().requestPermissions([PermissionGroup.contacts]);
+  while (!await Permission.contacts.request().isGranted) {}
 
   // set status/nav bar colors before starting app
   await FlutterStatusbarcolor.setStatusBarColor(kBackgroundColor);
