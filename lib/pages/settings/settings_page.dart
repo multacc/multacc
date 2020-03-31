@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_package_manager/flutter_package_manager.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:get_it/get_it.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:multacc/common/constants.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,7 +27,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Settings', style: GoogleFonts.lato(textStyle: kTabBarTextStyle)), centerTitle: true),
+      appBar: AppBar(title: Text('Settings', style: kHeaderTextStyle), centerTitle: true),
       backgroundColor: kBackgroundColor,
       body: Container(
         margin: EdgeInsets.all(8.0),

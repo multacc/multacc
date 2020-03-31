@@ -14,6 +14,8 @@ import 'package:multacc/pages/chats/chats_page.dart';
 import 'package:multacc/pages/contacts/contacts_page.dart';
 import 'package:multacc/pages/profile/profile_page.dart';
 
+import 'chats/chats_data.dart';
+
 FirebaseAuth _auth = FirebaseAuth.instance;
 GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>['email']);
 
@@ -48,16 +50,15 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   void initDynamicLinks() async {
-    SharedPreferences prefs = GetIt.I.get<SharedPreferences>();
-
     // Deep link back into app to save groupme access token
     FirebaseDynamicLinks.instance.onLink(onSuccess: (dynamicLink) async {
       final Uri deepLink = dynamicLink?.link;
 
       if (deepLink != null) {
         if (deepLink.path == '/groupme') {
-          String token = deepLink.queryParameters['access_token'];
-          prefs.setString('GROUPME_TOKEN', token);
+          String groupmeToken = deepLink.queryParameters['access_token'];
+          GetIt.I.get<SharedPreferences>().setString('GROUPME_TOKEN', groupmeToken);
+          GetIt.I.get<ChatsData>().getAllChats(groupmeToken: groupmeToken);
           // @todo Refactor deeplink logic when adding more platforms
         }
       }
@@ -192,7 +193,7 @@ class _MultaccTab extends StatefulWidget {
   bool isExpanded;
 
   _MultaccTab(String title, bool isExpanded) {
-    titleText = Text(title, style: GoogleFonts.lato(textStyle: kTabBarTextStyle));
+    titleText = Text(title, style: kHeaderTextStyle);
     this.isExpanded = isExpanded;
   }
 

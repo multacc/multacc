@@ -18,6 +18,7 @@ dependencies:
   flutter_svg: any
   sliding_sheet: any
   liquid_pull_to_refresh: any
+  bubble: any
 
   # device APIs
   contacts_service: any

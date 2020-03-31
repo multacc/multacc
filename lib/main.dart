@@ -41,7 +41,7 @@ void main() async {
   final chatsData = ChatsData();
   GetIt.I.registerSingleton(chatsData);
   if (prefs.containsKey('GROUPME_TOKEN')) {
-    chatsData.getAllChats(prefs.getString('GROUPME_TOKEN'));
+    chatsData.getAllChats(groupmeToken: prefs.getString('GROUPME_TOKEN'));
   }
 }
 
