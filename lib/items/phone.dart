@@ -23,7 +23,7 @@ class PhoneItem extends MultaccItem {
 
   toMap() => {'no': phone, 'label': label};
 
-  get humanReadableValue => phone; // @todo Format phone numbers
+  get humanReadableValue => phone ?? ''; // @todo Format phone numbers
 
   get type => MultaccItemType.Phone;
 
