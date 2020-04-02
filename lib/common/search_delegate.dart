@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:multacc/common/avatars.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:multacc/pages/contacts/contact_details_page.dart';
@@ -14,7 +15,11 @@ class BottomBarSearchDelegate extends SearchDelegate<String> {
 
   @override
   ThemeData appBarTheme(BuildContext context) {
-    return Theme.of(context).copyWith(primaryColor: kBackgroundColorLight);
+    final theme = Theme.of(context);
+    return theme.copyWith(
+      primaryColor: kBackgroundColorLight,
+      textTheme: theme.textTheme.copyWith(headline6: theme.textTheme.headline6.copyWith(fontSize: 18)),
+    );
   }
 
   @override

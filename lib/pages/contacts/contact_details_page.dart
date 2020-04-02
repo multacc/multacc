@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:multacc/common/avatars.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:multacc/items/item.dart';
@@ -95,7 +94,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
   Padding _buildName() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Text(contact.displayName, style: GoogleFonts.lato(fontSize: 25)),
+      child: Text(contact.displayName, style: kHeaderTextStyle),
     );
   }
 
