@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_brand_icons/flutter_brand_icons.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:multacc/common/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:multacc/common/bottom_bar.dart';
@@ -16,8 +16,7 @@ import 'package:multacc/pages/profile/profile_page.dart';
 
 import 'chats/chats_data.dart';
 
-FirebaseAuth _auth = FirebaseAuth.instance;
-GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>['email']);
+Auth _auth = Auth.instance;
 
 final globalScaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -97,7 +96,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   Text('Sign in with Google', style: kHeaderTextStyle),
                 ],
               ),
-              onPressed: _signinWithGoogle,
+              onPressed: _auth.signinWithGoogle,
+            ),
+            FlatButton(
+              child: Text('Skip', style: kBodyTextStyle),
+              onPressed: _auth.signInAnonymously,
+              padding: EdgeInsets.all(8.0),
             ),
           ],
         ),
@@ -105,15 +109,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     );
   }
 
-  void _signinWithGoogle() async {
-    final googleUser = await _googleSignIn.signIn();
-    final googleAuth = await googleUser.authentication;
-    final credential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    await _auth.signInWithCredential(credential);
-  }
+  
 
   Scaffold _buildHomePageBody(BuildContext context, FirebaseUser user) {
     return Scaffold(
