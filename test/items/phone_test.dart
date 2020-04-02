@@ -23,7 +23,7 @@ void main() {
       expect(item.toJson()['no'], '205-123-4567');
     });
     test('updating phone using value setter should update json', () {
-      item.phone = '615-123-4567';
+      item.value = '615-123-4567';
       expect(item.toJson()['no'], '615-123-4567');
     });
     test('updating key should update json', () {
