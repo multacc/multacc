@@ -3,12 +3,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class Auth {
   Auth._();
+  static final Auth instance = Auth._();
 
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>['email']);
-
-  static final Auth instance = Auth._();
-  static final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   Stream<FirebaseUser> get onAuthStateChanged => _firebaseAuth.onAuthStateChanged;
 
