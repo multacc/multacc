@@ -29,7 +29,7 @@ class _ContactsPageState extends State<ContactsPage> with WidgetsBindingObserver
   Widget build(BuildContext context) {
     return Observer(
       builder: (_) {
-        contactsData.allContacts.sort((a, b) => a.displayName.compareTo(b.displayName));
+        contactsData.allContacts.sort((a, b) => a.name.compareTo(b.name));
         return ListTileTheme(
           selectedColor: kPrimaryColor,
           child: LiquidPullToRefresh(
@@ -54,7 +54,7 @@ class _ContactsPageState extends State<ContactsPage> with WidgetsBindingObserver
     return ListTile(
       contentPadding: EdgeInsets.all(6.0),
       leading: Avatars.buildContactAvatar(memoryImage: contact.avatar),
-      title: Padding(padding: EdgeInsets.only(left: 8.0), child: Text(contact.displayName, style: kBodyTextStyle)),
+      title: Padding(padding: EdgeInsets.only(left: 8.0), child: Text(contact.name, style: kBodyTextStyle)),
       onTap: () => _onContactPressed(index),
       onLongPress: () => _onLongPress(index),
       selected: _isSelected(index),

@@ -10,6 +10,7 @@ import 'twitter.dart';
 import 'email.dart';
 import 'phone.dart';
 import 'url.dart';
+import 'text.dart';
 
 const ITEM_TYPE_KEY = '_t';
 const ITEM_KEY_KEY = '_id';
@@ -52,6 +53,8 @@ abstract class MultaccItem {
         break;
       case MultaccItemType.URL:
         item = URLItem.fromJson(json);
+      case MultaccItemType.Text:
+        item = TextItem.fromJson(json);
         break;
       default:
         throw new FormatException('Type ${json[ITEM_TYPE_KEY]} is not recognized');
@@ -109,6 +112,7 @@ enum MultaccItemType {
   Phone,
   Email,
   URL
+  Text
 }
 
 extension MultaccItemTypeInfo on MultaccItemType {
@@ -174,6 +178,8 @@ extension MultaccItemTypeInfo on MultaccItemType {
         return EmailItem();
       case MultaccItemType.URL:
         return URLItem();
+      case MultaccItemType.Text:
+        return TextItem();
       default:
         return null;
     }
