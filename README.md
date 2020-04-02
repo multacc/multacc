@@ -21,7 +21,6 @@ A flutter app that integrates communication platforms and lets you consolidate a
 
 ## conventions
 - Tab width = 2 spaces
-- All constants either use SCREAMING_CAPS or start with k
 - Line length is 120
 - Single quotes for strings
 - Dart/Prettier automatically formats the code if there are proper trailing commas
