@@ -12,7 +12,7 @@ class TwitterItem extends MultaccItem {
 
   toMap() => {'at': username, 'id': userId};
 
-  get humanReadableValue => username == null ? '' : '@$username';
+  get humanReadableValue => (username == null || username.trim() == '') ? '' : '@$username';
 
   get type => MultaccItemType.Twitter;
 
