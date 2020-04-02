@@ -53,6 +53,7 @@ abstract class MultaccItem {
         break;
       case MultaccItemType.URL:
         item = URLItem.fromJson(json);
+        break;
       case MultaccItemType.Text:
         item = TextItem.fromJson(json);
         break;
@@ -111,7 +112,7 @@ enum MultaccItemType {
   Dogecoin, // @todo Implement dogecoin
   Phone,
   Email,
-  URL
+  URL,
   Text
 }
 
