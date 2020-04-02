@@ -45,8 +45,9 @@ class BottomBarSearchDelegate extends SearchDelegate<String> {
   @override
   Widget buildResults(BuildContext context) {
     final results = query != ''
-        ? contactsData.allContacts.where((e) => e.displayName.toLowerCase().contains(query.toLowerCase())).toList()
+        ? contactsData.allContacts.where((e) => e.name.toLowerCase().contains(query.toLowerCase())).toList()
         : []; // don't show the whole damn list if search query is empty
+    // @todo use a better search algorithm
 
     return ListView.builder(
       padding: EdgeInsets.all(8.0),
@@ -56,7 +57,7 @@ class BottomBarSearchDelegate extends SearchDelegate<String> {
         return ListTile(
           contentPadding: EdgeInsets.all(8.0),
           leading: Avatars.buildContactAvatar(memoryImage: contact.avatar),
-          title: Text(results[index].displayName),
+          title: Text(contact.name),
           onTap: () => Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => Scaffold(
               appBar: AppBar(), // for back button

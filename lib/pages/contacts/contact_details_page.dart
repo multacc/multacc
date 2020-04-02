@@ -94,7 +94,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
   Padding _buildName() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Text(contact.displayName, style: kHeaderTextStyle),
+      child: Text(contact.name, style: kHeaderTextStyle),
     );
   }
 
