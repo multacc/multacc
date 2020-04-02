@@ -9,6 +9,7 @@ import 'package:flutter_brand_icons/flutter_brand_icons.dart';
 import 'twitter.dart';
 import 'email.dart';
 import 'phone.dart';
+import 'url.dart';
 
 const ITEM_TYPE_KEY = '_t';
 const ITEM_KEY_KEY = '_id';
@@ -48,6 +49,9 @@ abstract class MultaccItem {
         break;
       case MultaccItemType.Dogecoin:
 //        item = DogecoinItem.fromJson(json);
+        break;
+      case MultaccItemType.URL:
+        item = URLItem.fromJson(json);
         break;
       default:
         throw new FormatException('Type ${json[ITEM_TYPE_KEY]} is not recognized');
@@ -103,7 +107,8 @@ enum MultaccItemType {
   Discord, // @todo Implement discord
   Dogecoin, // @todo Implement dogecoin
   Phone,
-  Email
+  Email,
+  URL
 }
 
 extension MultaccItemTypeInfo on MultaccItemType {
@@ -116,6 +121,8 @@ extension MultaccItemTypeInfo on MultaccItemType {
         return Icon(Icons.phone);
       case MultaccItemType.Email:
         return Icon(Icons.email);
+      case MultaccItemType.URL:
+        return Icon(Icons.public);
       default:
         return Icon(Icons.person);
     }
@@ -165,6 +172,8 @@ extension MultaccItemTypeInfo on MultaccItemType {
         return PhoneItem();
       case MultaccItemType.Email:
         return EmailItem();
+      case MultaccItemType.URL:
+        return URLItem();
       default:
         return null;
     }
