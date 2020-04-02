@@ -56,6 +56,7 @@ class MultaccContact extends Contact {
     this.suffix = baseContact.suffix;
     // @todo Get IM, notes, etc. from base contact
 
+
     // Multacc additional contact data
     // @todo Use a field other than identifier for clientKey (#26)
     clientKey = identifier; // Key in client-side database
@@ -67,6 +68,22 @@ class MultaccContact extends Contact {
       // @todo Convert IM to Multacc items
       // @todo Convert SIP to Multacc items
     ];
+  }
+
+  // Get display name for contact
+  String get name {
+    if (displayName == null || displayName.trim() == '') {
+      displayName = [prefix, givenName, middleName, familyName, suffix].where((x) => x != null).join(' ');
+    }
+    if (displayName != null && displayName.trim() != '') {
+      return displayName;
+    }
+    for (MultaccItem item in multaccItems) {
+      if (item.humanReadableValue != '') {
+        return item.humanReadableValue;
+      }
+    }
+    return 'Contact';
   }
 
   // Returns true if the base contact fields match
