@@ -73,7 +73,7 @@ class MultaccContact extends Contact {
   // Get display name for contact
   String get name {
     if (displayName == null || displayName.trim() == '') {
-      displayName = [prefix, givenName, middleName, familyName, suffix].join(' ');
+      displayName = [prefix, givenName, middleName, familyName, suffix].where((x) => x != null).join(' ');
     }
     if (displayName != null && displayName.trim() != '') {
       return displayName;
