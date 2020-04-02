@@ -53,7 +53,7 @@ dependencies:
 dev_dependencies:
   hive_generator: any
   build_runner: any
-  mockito: any
+  test: any
 
   flutter_test:
     sdk: flutter

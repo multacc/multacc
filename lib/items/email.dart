@@ -13,7 +13,7 @@ class EmailItem extends MultaccItem {
 
   toMap() => {'email': email};
 
-  get humanReadableValue => email;
+  get humanReadableValue => email ?? '';
 
   get type => MultaccItemType.Email;
 
