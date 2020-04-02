@@ -92,7 +92,7 @@ abstract class MultaccItem {
   MultaccItemType get type;
 
   /// Get human-readable item type (Snapchat, etc.) to display
-  String get humanReadableValue;
+  String get humanReadableValue => '';
 
   /// Get item icon
   /// Override this implementation if the icon is dependent on the value of the item
