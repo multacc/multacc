@@ -98,6 +98,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               ),
               onPressed: _signinWithGoogle,
             ),
+            FlatButton(
+              child: Text('Skip', style: kBodyTextStyle),
+              onPressed: _auth.signInAnonymously,
+              padding: EdgeInsets.all(8.0),
+            ),
           ],
         ),
       ),

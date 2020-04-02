@@ -79,9 +79,12 @@ class MultaccBottomBarState extends State<MultaccBottomBar> {
               Theme(
                 data: Theme.of(context).copyWith(accentColor: Colors.white),
                 child: ExpansionTile(
-                  leading: CircleAvatar(backgroundImage: NetworkImage(widget._user.photoUrl)),
-                  title: Text(widget._user.displayName),
-                  subtitle: Text(widget._user.email),
+                  leading: widget._user?.photoUrl != null
+                      ? CircleAvatar(backgroundImage: NetworkImage(widget._user.photoUrl))
+                      : CircleAvatar(child: Icon(Icons.person), foregroundColor: kBackgroundColorLight),
+                  title: Text(widget._user?.displayName ?? 'Anonymous'),
+                  subtitle: Text(widget._user?.email ?? 'You are not signed in',
+                      style: kTinyTextStyle.copyWith(fontStyle: FontStyle.italic)),
                   children: [
                     _buildGroupmeTile(context),
                     ListTile(
@@ -90,7 +93,7 @@ class MultaccBottomBarState extends State<MultaccBottomBar> {
                     ),
                     ListTile(
                       leading: Icon(Icons.power_settings_new),
-                      title: Text('Sign out'),
+                      title: Text(!widget._user.isAnonymous ? 'Sign out' : 'Sign in'),
                       onTap: () async {
                         await _auth.signOut();
                         Navigator.pop(context);
