@@ -9,6 +9,7 @@ import 'package:flutter_brand_icons/flutter_brand_icons.dart';
 import 'twitter.dart';
 import 'email.dart';
 import 'phone.dart';
+import 'url.dart';
 import 'text.dart';
 
 const ITEM_TYPE_KEY = '_t';
@@ -50,6 +51,8 @@ abstract class MultaccItem {
       case MultaccItemType.Dogecoin:
 //        item = DogecoinItem.fromJson(json);
         break;
+      case MultaccItemType.URL:
+        item = URLItem.fromJson(json);
       case MultaccItemType.Text:
         item = TextItem.fromJson(json);
         break;
@@ -108,6 +111,7 @@ enum MultaccItemType {
   Dogecoin, // @todo Implement dogecoin
   Phone,
   Email,
+  URL
   Text
 }
 
@@ -121,6 +125,8 @@ extension MultaccItemTypeInfo on MultaccItemType {
         return Icon(Icons.phone);
       case MultaccItemType.Email:
         return Icon(Icons.email);
+      case MultaccItemType.URL:
+        return Icon(Icons.public);
       default:
         return Icon(Icons.person);
     }
@@ -170,6 +176,8 @@ extension MultaccItemTypeInfo on MultaccItemType {
         return PhoneItem();
       case MultaccItemType.Email:
         return EmailItem();
+      case MultaccItemType.URL:
+        return URLItem();
       case MultaccItemType.Text:
         return TextItem();
       default:
