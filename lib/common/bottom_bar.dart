@@ -4,15 +4,17 @@ import 'package:flutter_brand_icons/flutter_brand_icons.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'package:multacc/common/auth.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:multacc/common/constants.dart';
 import 'package:multacc/common/search_delegate.dart';
 import 'package:multacc/pages/home_page.dart';
 import 'package:multacc/pages/settings/settings_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-FirebaseAuth _auth = FirebaseAuth.instance;
+Auth _auth = Auth.instance;
 
 /// MultaccBottomBar class containing the logic for FAB, account auth, etc
 class MultaccBottomBar extends StatefulWidget {
@@ -95,7 +97,7 @@ class MultaccBottomBarState extends State<MultaccBottomBar> {
                       leading: Icon(Icons.power_settings_new),
                       title: Text(!widget._user.isAnonymous ? 'Sign out' : 'Sign in'),
                       onTap: () async {
-                        await _auth.signOut();
+                        widget._user.isAnonymous ? await _auth.linkWithGoogleSignIn() : await _auth.signOut();
                         Navigator.pop(context);
                       },
                     ),
