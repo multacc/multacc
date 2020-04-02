@@ -26,10 +26,8 @@ void main() {
       expect(item.toJson()['id'], 'Micah White');
     });
     test('updating twitter using value setter should update json', () {
-      item.username = 'humblebeast';
-      item.userId = 'Micah White';
+      item.value = 'humblebeast';
       expect(item.toJson()['at'], 'humblebeast');
-      expect(item.toJson()['id'], 'Micah White');
     });
     test('updating key should update json', () {
       item.key = '69';

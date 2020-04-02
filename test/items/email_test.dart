@@ -23,7 +23,7 @@ void main() {
       expect(item.toJson()['email'], 'abc@ijk.xyz');
     });
     test('updating email using value setter should update json', () {
-      item.email = 'def@ijk.xyz';
+      item.value = 'def@ijk.xyz';
       expect(item.toJson()['email'], 'def@ijk.xyz');
     });
     test('updating key should update json', () {
