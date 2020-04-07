@@ -19,6 +19,7 @@ dependencies:
   sliding_sheet: any
   liquid_pull_to_refresh: any
   bubble: any
+  draggable_floating_button: any
 
   # device APIs
   contacts_service: any
@@ -40,12 +41,10 @@ dependencies:
   hive_flutter: any
   image_picker: any
 
-  # firebase APIs
-  # Firebase Core and Auth must remain at version 0.4.4 and 0.15.4 for ios until UserAgent.h fix
-  # See https://github.com/FirebaseExtended/flutterfire/pull/2099
-  firebase_core: 0.4.4
+  # network APIs
+  firebase_core: any
+  firebase_auth: any
   google_sign_in: any
-  firebase_auth: 0.15.4
   firebase_dynamic_links: any
 
   http: any
@@ -75,12 +74,3 @@ flutter:
 
   assets:
     - assets/
-
-  fonts:
-    - family: Product Sans
-      fonts:
-        - asset: assets/fonts/Product-Sans.ttf
-        - asset: assets/fonts/Product Sans Italic.ttf
-          style: italic
-        - asset: assets/fonts/Product Sans Bold.ttf
-          weight: 700

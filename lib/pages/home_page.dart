@@ -6,7 +6,7 @@ import 'package:flutter_brand_icons/flutter_brand_icons.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:multacc/pages/contacts/contact_model.dart';
+import 'package:multacc/database/contact_model.dart';
 import 'package:multacc/pages/contacts/contacts_data.dart';
 import 'package:multacc/common/auth.dart';
 import 'package:multacc/common/bottom_bar.dart';

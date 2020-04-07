@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:mobx/mobx.dart';
 import 'package:multacc/database/database_interface.dart';
 import 'package:multacc/items/item.dart';
-import 'package:multacc/pages/contacts/contact_model.dart';
+import 'package:multacc/database/contact_model.dart';
 
 part 'contacts_data.g.dart';
 

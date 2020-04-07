@@ -1,9 +1,11 @@
+import 'package:draggable_floating_button/draggable_floating_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:multacc/common/avatars.dart';
 import 'package:multacc/common/theme.dart';
+import 'package:multacc/pages/contacts/contact_form_page.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 import 'contact_details_page.dart';
 import 'contacts_data.dart';
@@ -92,6 +94,24 @@ class _ContactsPageState extends State<ContactsPage> with WidgetsBindingObserver
             builder: (context, state) => ContactDetailsPage(contactsData.allContacts[index]),
             headerBuilder: (_, __) => // drag handle
                 Padding(padding: EdgeInsets.all(16.0), child: Icon(Icons.maximize, color: Colors.grey)),
+            footerBuilder: (context, state) => Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: DraggableFloatingActionButton(
+                    offset: Offset(200, 200),
+                    backgroundColor: kPrimaryColor,
+                    child: Icon(Icons.edit),
+                    appContext: context,
+                    onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                      fullscreenDialog: true,
+                      builder: (context) => ContactFormPage(contactsData.allContacts[index]),
+                    )),
+                  ),
+                )
+              ],
+            ),
           ),
         );
       }

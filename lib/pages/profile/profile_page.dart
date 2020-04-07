@@ -5,8 +5,8 @@ import 'package:multacc/common/avatars.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:multacc/items/item.dart';
 import 'package:multacc/items/phone.dart';
-import 'package:multacc/pages/contacts/contact_form.dart';
-import 'package:multacc/pages/contacts/contact_model.dart';
+import 'package:multacc/pages/contacts/contact_form_page.dart';
+import 'package:multacc/database/contact_model.dart';
 
 class ProfilePage extends StatefulWidget {
   final MultaccContact contact;
@@ -54,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute<Null>(
                 builder: (BuildContext context) {
-                  return ContactForm(contact);
+                  return ContactFormPage(contact);
                 },
                 fullscreenDialog: true
               ));
