@@ -1,41 +1,30 @@
-import 'dart:async';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
-
+import 'package:multacc/items/item.dart';
+import 'package:multacc/database/contact_model.dart';
 
 class DatabaseInterface {
-  // final String dbName;
+  Box<MultaccContact> get contactsBox => Hive.box<MultaccContact>('contacts');
 
-  DatabaseInterface();
+  Future<void> init() async {
+    await Hive.initFlutter();
 
-  void initializeDatabase() async {
+    Hive.registerAdapter(MultaccContactAdapter());
+    Hive.registerAdapter(MultaccItemAdapter());
 
-    final databaseContacts = openDatabase(
-      join(await getDatabasesPath(), 'contacts_database.db'),
-      // When the database is first created, create a table to store dogs.
-      onCreate: (db, version) {
-        return db.execute(
-          "CREATE TABLE contacts(user_id TEXT PRIMARY KEY, name TEXT, multacc_id TEXT)",
-        );
-      },
-      
-      // version: 1,
-    );
-
-    final databaseItems = openDatabase(
-      join(await getDatabasesPath(), 'items_database.db'),
-      
-      onCreate: (db, version) {
-        return db.execute(
-          "CREATE TABLE items(item_id TEXT PRIMARY KEY, type TEXT, data TEXT, user_id TEXT)",
-        );
-      },
-      
-      // version: 1,
-    );
-    
+    await Hive.openBox<MultaccContact>('contacts');
   }
-  
-}
 
+  void addContact(MultaccContact contact) {
+    contactsBox.put(contact.clientKey, contact);
+  }
+
+  MultaccContact getContact(String key) {
+    return contactsBox.get(key);
+  }
+
+  Iterable<MultaccContact> getAllContacts() {
+    return contactsBox.values;
+  }
+}

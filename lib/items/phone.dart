@@ -1,25 +1,75 @@
+import 'package:android_intent/android_intent.dart';
 import 'package:contacts_service/contacts_service.dart';
+import 'package:get_it/get_it.dart';
+import 'package:multacc/common/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'item.dart';
 
 class PhoneItem extends MultaccItem {
   String phone;
+  String label;
 
-  PhoneItem.fromJson(Map<String, dynamic> json) : phone = json['no'];
+  PhoneItem();
 
-  PhoneItem.fromItem(Item item) : phone = item.toString();
+  PhoneItem.fromJson(Map<String, dynamic> json)
+      : phone = json['no'],
+        label = json['label'];
 
-  Map<String, dynamic> toJson() => {'no': phone};
+  PhoneItem.fromItem(Item item)
+      : phone = item.value,
+        label = item.label;
 
-  String getHumanReadableType() => 'Phone';
+  toMap() => {'no': phone, 'label': label};
 
-  String getHumanReadableValue() => phone; // @ todo Format phone numbers
+  get humanReadableValue => phone ?? ''; // @todo Format phone numbers
 
-  MultaccItemType getType() => MultaccItemType.Phone;
+  get type => MultaccItemType.Phone;
 
-  void launchApp() {
-    // @todo Implement phone launching
+  /// Dials number in the preferred app
+  launchApp() {
+    SharedPreferences prefs = GetIt.I.get<SharedPreferences>();
+    switch (prefs.getString('PHONE_APP')) {
+      case 'voice':
+        AndroidIntent(
+          action: 'android.intent.action.DIAL',
+          data: 'tel:$phone',
+          package: GOOGLE_VOICE_PACKAGE,
+          componentName: GOOGLE_VOICE_INTENT_ACTIVITY,
+        ).launch();
+        break;
+      case 'duo':
+        AndroidIntent(
+          action: '$GOOGLE_DUO_PACKAGE.action.CALL',
+          data: 'tel:$phone',
+          package: GOOGLE_DUO_PACKAGE,
+        ).launch();
+        break;
+      case 'default':
+      default:
+        launch('tel:$phone');
+        break;
+    }
   }
 
-  bool isLaunchable() => true;
+  get isLaunchable => true;
+
+  set value(String number) {
+    phone = number;
+    // @todo Allow adding phone number labels manually
+  }
+}
+
+class PhoneConnector extends Connector {
+  PhoneConnector();
+
+  connect() {
+    return true; // "is connection-based" to store in MultaccItem
+  }
+
+  get(dynamic isConnected) {
+    // @todo Detect user's phone number
+    //
+  }
 }

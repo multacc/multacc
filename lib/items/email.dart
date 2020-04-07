@@ -1,25 +1,34 @@
 import 'package:contacts_service/contacts_service.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'item.dart';
 
 class EmailItem extends MultaccItem {
   String email;
+  String label;
 
-  EmailItem.fromJson(Map<String, dynamic> json) : email = json['email'];
+  EmailItem();
 
-  EmailItem.fromItem(Item item) : email = item.toString();
+  EmailItem.fromJson(Map<String, dynamic> json)
+    : email = json['email'],
+      label = json['label'];
 
-  Map<String, dynamic> toJson() => {'email': email};
+  EmailItem.fromItem(Item item)
+    : email = item.value,
+      label = item.label;
 
-  String getHumanReadableType() => 'Email';
+  toMap() => {'email': email, 'label': label};
 
-  String getHumanReadableValue() => email;
+  get humanReadableValue => email ?? '';
 
-  MultaccItemType getType() => MultaccItemType.Email;
+  get type => MultaccItemType.Email;
 
-  void launchApp() {
-    // @todo Implement email launching
+  launchApp() {
+    launch('mailto:$email');
   }
 
-  bool isLaunchable() => true;
+  get isLaunchable => true;
+
+  set value(String address) {
+    email = address;
+  }
 }

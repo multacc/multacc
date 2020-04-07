@@ -1,14 +1,32 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_brand_icons/flutter_brand_icons.dart';
+import 'package:get_it/get_it.dart';
+<<<<<<< HEAD
+import 'package:multacc/pages/contacts/contact_form_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../common/constants.dart';
+import 'package:multacc/database/contact_model.dart';
+=======
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'chats/chats_page.dart';
-import 'contacts/contacts_page.dart';
-import 'profile/profile_page.dart';
-import 'settings/settings_page.dart';
+import 'package:multacc/pages/contacts/contact_model.dart';
+>>>>>>> 1937f90e6b5187690050e5dc45b7f3f9d74acfa4
+import 'package:multacc/pages/contacts/contacts_data.dart';
+import 'package:multacc/common/auth.dart';
+import 'package:multacc/common/bottom_bar.dart';
+import 'package:multacc/common/theme.dart';
+import 'package:multacc/pages/chats/chats_page.dart';
+import 'package:multacc/pages/contacts/contacts_page.dart';
+import 'package:multacc/pages/profile/profile_page.dart';
+
+import 'chats/chats_data.dart';
+
+Auth _auth = Auth.instance;
+
+final globalScaffoldKey = GlobalKey<ScaffoldState>();
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,7 +34,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  ContactsData contactsData;
   TabController _tabController;
+  MultaccContact userContact;
 
   @override
   bool get wantKeepAlive => true;
@@ -28,6 +48,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
+    contactsData = GetIt.I.get<ContactsData>();
+
+    userContact = contactsData.allContacts[0];
+
+    initDynamicLinks();
 
     _tabController.addListener(() {
       if (_tabController.previousIndex != _tabController.index) {
@@ -36,16 +61,87 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     });
   }
 
+  void initDynamicLinks() async {
+    // Deep link back into app to save groupme access token
+    FirebaseDynamicLinks.instance.onLink(onSuccess: (dynamicLink) async {
+      final Uri deepLink = dynamicLink?.link;
+
+      if (deepLink != null) {
+        if (deepLink.path == '/groupme') {
+          String groupmeToken = deepLink.queryParameters['access_token'];
+          GetIt.I.get<SharedPreferences>().setString('GROUPME_TOKEN', groupmeToken);
+          GetIt.I.get<ChatsData>().getAllChats(groupmeToken: groupmeToken);
+          // @todo Refactor deeplink logic when adding more platforms
+        }
+      }
+    }, onError: (OnLinkErrorException e) async {
+      print(e.message);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: _auth.onAuthStateChanged,
+      builder: (context, snapshot) => snapshot.hasData ? _buildHomePageBody(context, snapshot.data) : _buildLoginPage(),
+    );
+    // return _currentUser == null ? _buildLoginPage() : _buildHomePageBody(context);
+  }
+
+  Widget _buildLoginPage() {
     return Scaffold(
+      backgroundColor: kBackgroundColor,
+      body: Container(
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image.asset('assets/logo.png', height: 200),
+            SizedBox(height: 20),
+            RaisedButton(
+              padding: EdgeInsets.all(16.0),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+              color: kBackgroundColorLight,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(right: 8.0), child: Icon(BrandIcons.google)),
+                  Text('Sign in with Google', style: kHeaderTextStyle),
+                ],
+              ),
+              onPressed: _auth.signinWithGoogle,
+            ),
+            FlatButton(
+              child: Text('Skip', style: kBodyTextStyle),
+              onPressed: _auth.signInAnonymously,
+              padding: EdgeInsets.all(8.0),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Scaffold _buildHomePageBody(BuildContext context, FirebaseUser user) {
+    return Scaffold(
+      key: globalScaffoldKey,
       floatingActionButton: FloatingActionButton(
         backgroundColor: kPrimaryColor,
         child: Icon(_tabController.index == 2 ? Icons.share : Icons.add),
-        onPressed: null,
+        onPressed: () {
+          // @todo Allow adding new contact
+          switch (_tabController.index) {
+            case 0:
+              // Navigator.of(context).push(MaterialPageRoute(
+              //   fullscreenDialog: true,
+              //   builder: (context) => ContactFormPage(),
+              // ));
+              break;
+          }
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: _MultaccBottomBar(),
+      bottomNavigationBar: MultaccBottomBar(user),
       body: SafeArea(
         child: Column(children: <Widget>[
           Row(
@@ -54,32 +150,36 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 padding: kTabLabelPadding,
                 child: Image.asset('assets/icon.png', height: kToolbarHeight),
               ),
-              Expanded(
-                child: Theme(
-                  data: Theme.of(context).copyWith(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                  ),
-                  child: TabBar(
-                    dragStartBehavior: DragStartBehavior.start,
-                    // isScrollable: true,
-                    labelPadding: EdgeInsets.all(0),
-                    tabs: _buildTabs(),
-                    controller: _tabController,
-                    indicatorSize: TabBarIndicatorSize.label,
-                    indicator: UnderlineTabIndicator(
-                      insets: EdgeInsets.symmetric(horizontal: 16.0 * MediaQuery.of(context).devicePixelRatio),
-                      borderSide: BorderSide(color: kPrimaryColor, width: 2.0),
-                    ),
-                  ),
-                ),
-              ),
+              _buildTabBar(context),
             ],
           ),
           Expanded(
             child: TabBarView(children: _buildTabViews(), controller: _tabController),
           )
         ]),
+      ),
+    );
+  }
+
+  Expanded _buildTabBar(BuildContext context) {
+    return Expanded(
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+        ),
+        child: TabBar(
+          dragStartBehavior: DragStartBehavior.start,
+          // isScrollable: true,
+          labelPadding: EdgeInsets.all(0),
+          tabs: _buildTabs(),
+          controller: _tabController,
+          indicatorSize: TabBarIndicatorSize.label,
+          indicator: UnderlineTabIndicator(
+            insets: EdgeInsets.symmetric(horizontal: 16.0 * MediaQuery.of(context).devicePixelRatio),
+            borderSide: BorderSide(color: kPrimaryColor, width: 2.0),
+          ),
+        ),
       ),
     );
   }
@@ -96,7 +196,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return <Widget>[
       ContactsPage(),
       ChatsPage(),
-      ProfilePage(),
+      ProfilePage(userContact),
     ];
   }
 
@@ -110,7 +210,7 @@ class _MultaccTab extends StatefulWidget {
   bool isExpanded;
 
   _MultaccTab(String title, bool isExpanded) {
-    titleText = Text(title, style: GoogleFonts.lato(textStyle: kTabBarTextStyle));
+    titleText = Text(title, style: kHeaderTextStyle);
     this.isExpanded = isExpanded;
   }
 
@@ -147,72 +247,5 @@ class _MultaccTabState extends State<_MultaccTab> with SingleTickerProviderState
   dispose() {
     _controller.dispose();
     super.dispose();
-  }
-}
-
-class _MultaccBottomBar extends StatefulWidget {
-  @override
-  __MultaccBottomBarState createState() => __MultaccBottomBarState();
-}
-
-class __MultaccBottomBarState extends State<_MultaccBottomBar> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: kBottomNavigationBarHeight,
-      child: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        notchMargin: 8.0,
-        elevation: 8.0,
-        color: kBackgroundColorLight,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.menu, color: Colors.grey),
-              onPressed: () async {
-                FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColor);
-                await showNavigationSheet(context);
-                FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColorLight);
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.more_vert, color: Colors.grey),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future showNavigationSheet(BuildContext context) {
-    return showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.security),
-              title: Text('Privacy policy'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.power_settings_new),
-              title: Text('Sign out'),
-              onTap: () {},
-            ),
-          ],
-        );
-      },
-    );
   }
 }

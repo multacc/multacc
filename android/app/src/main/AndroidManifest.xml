@@ -1,15 +1,9 @@
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.multacc">
-    <!-- io.flutter.app.FlutterApplication is an android.app.Application that
-         calls FlutterMain.startInitialization(this); in its onCreate method.
-         In most cases you can leave this as-is, but you if you want to provide
-         additional functionality it is fine to subclass or reimplement
-         FlutterApplication and put your custom class here. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.multacc">
     <application
-        android:name="io.flutter.app.FlutterApplication"
         android:label="multacc"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/launcher_icon"
+        android:requestLegacyExternalStorage="true" >
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -47,5 +41,6 @@
     </application>
 
   <uses-permission android:name="android.permission.READ_CONTACTS" />  
-  <uses-permission android:name="android.permission.WRITE_CONTACTS" /> 
+  <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+
 </manifest>

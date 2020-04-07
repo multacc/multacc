@@ -1,4 +1,19 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:multacc/database/type_ids.dart';
+import 'package:enum_to_string/enum_to_string.dart';
+import 'package:flutter_brand_icons/flutter_brand_icons.dart';
+
 import 'twitter.dart';
+import 'email.dart';
+import 'phone.dart';
+import 'url.dart';
+import 'text.dart';
+
+const ITEM_TYPE_KEY = '_t';
+const ITEM_KEY_KEY = '_id';
 
 /// MultaccItem interface
 abstract class MultaccItem {
@@ -8,12 +23,18 @@ abstract class MultaccItem {
   MultaccItem() : key = null;
 
   /// Use this constructor to create a MultaccItem using database values
-  factory MultaccItem.fromDB(String key, int typeInt, Map<String, dynamic> json) {
-    MultaccItemType type = MultaccItemType.values[typeInt];
+  factory MultaccItem.fromDB(Map<String, dynamic> json) {
+    MultaccItemType type = EnumToString.fromString(MultaccItemType.values, json[ITEM_TYPE_KEY]);
     MultaccItem item;
     switch (type) {
       case MultaccItemType.Twitter:
         item = TwitterItem.fromJson(json);
+        break;
+      case MultaccItemType.Phone:
+        item = PhoneItem.fromJson(json);
+        break;
+      case MultaccItemType.Email:
+        item = EmailItem.fromJson(json);
         break;
       case MultaccItemType.Snapchat:
 //        item = SnapchatItem.fromJson(json);
@@ -30,10 +51,16 @@ abstract class MultaccItem {
       case MultaccItemType.Dogecoin:
 //        item = DogecoinItem.fromJson(json);
         break;
+      case MultaccItemType.URL:
+        item = URLItem.fromJson(json);
+        break;
+      case MultaccItemType.Text:
+        item = TextItem.fromJson(json);
+        break;
       default:
-        throw new FormatException('Type index $typeInt is not recognized');
+        throw new FormatException('Type ${json[ITEM_TYPE_KEY]} is not recognized');
     }
-    item.key = key;
+    item.key = json[ITEM_KEY_KEY];
     return item;
   }
 
@@ -41,30 +68,41 @@ abstract class MultaccItem {
   /// instance variables (username, etc.)
   MultaccItem.fromJson(Map<String, dynamic> json);
 
-  /// This should return a map that can be passed to the constructor to
-  /// rehydrate this item in the future.
-  Map<String, dynamic> toJson();
+  /// This should return a map with values (other than type) that can be passed to
+  /// fromJson to rehydrate an item
+  Map<String, dynamic> toMap();
+
+  /// This returns the map that can be passed to fromJson to rehydrate.
+  /// This is the map from toMap() but with an added pair for type ('t':'Twitter')
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> map = toMap();
+    map[ITEM_TYPE_KEY] = EnumToString.parse(type);
+    map[ITEM_KEY_KEY] = key;
+    return map;
+  }
+
+  String toString() => jsonEncode(this);
 
   /// Launch the relevant app to message someone
   void launchApp() {}
 
   /// Boolean indicating whether calling launchApp() will do something useful
-  bool isLaunchable() => false;
+  bool get isLaunchable => false;
 
   /// Get item type (from MultaccItemType enum; index will be stored in database)
-  MultaccItemType getType();
-
-  /// Get human-readable item type for display
-  String getHumanReadableType();
+  MultaccItemType get type;
 
   /// Get human-readable item type (Snapchat, etc.) to display
-  String getHumanReadableValue();
+  String get humanReadableValue => '';
 
-// @todo Frontend team should add something like getIcon to MultaccItem
+  /// Get item icon
+  /// Override this implementation if the icon is dependent on the value of the item
+  dynamic get icon => type.icon;
+
+  /// Set the value of this item from manual input
+  set value(String item);
 }
 
-// To maintain the relationship between type and enum index, never remove things from this enum and always add new
-// things at the end pls kthx
 enum MultaccItemType {
   Twitter,
   Snapchat, // @todo Implement snapchat
@@ -73,5 +111,105 @@ enum MultaccItemType {
   Discord, // @todo Implement discord
   Dogecoin, // @todo Implement dogecoin
   Phone,
-  Email
+  Email,
+  URL,
+  Text
+}
+
+extension MultaccItemTypeInfo on MultaccItemType {
+  /// Get icon or image asset to display
+  dynamic get icon {
+    switch (this) {
+      case MultaccItemType.Twitter:
+        return Icon(BrandIcons.twitter);
+      case MultaccItemType.Phone:
+        return Icon(Icons.phone);
+      case MultaccItemType.Email:
+        return Icon(Icons.email);
+      case MultaccItemType.URL:
+        return Icon(Icons.public);
+      default:
+        return Icon(Icons.person);
+    }
+  }
+
+  /// Get human-readable name of type ("Twitter", etc.)
+  String get name {
+    switch (this) {
+      // Add cases here for any types where name should differ from enum alias
+
+      // Use enum alias by default
+      default:
+        return EnumToString.parse(this);
+    }
+  }
+
+  /// Connect to this platform
+  Connector get connector {
+    switch (this) {
+      case MultaccItemType.Twitter:
+        return TwitterConnector();
+      case MultaccItemType.Phone:
+        return PhoneConnector();
+      default:
+        return null;
+    }
+  }
+
+  /// Determine whether a method exists to connect to this platform
+  bool get isConnectable => connector != null;
+
+  /// Determine whether the value setter on an instance of this item is useful
+  /// False for things like groupme where there is no meaningful value for a user to type in
+  bool get isInputtable {
+    switch (this) { // idk if this should be a switch but we can figure it out later
+      default:
+        return true;
+    }
+  }
+
+  /// Create an empty item with this type
+  MultaccItem createItem() {
+    switch (this) {
+      case MultaccItemType.Twitter:
+        return TwitterItem();
+      case MultaccItemType.Phone:
+        return PhoneItem();
+      case MultaccItemType.Email:
+        return EmailItem();
+      case MultaccItemType.URL:
+        return URLItem();
+      case MultaccItemType.Text:
+        return TextItem();
+      default:
+        return null;
+    }
+  }
+}
+
+/// Hive adapter for MultaccItem
+class MultaccItemAdapter extends TypeAdapter<MultaccItem> {
+  final typeId = MULTACC_ITEM_TYPE_ID;
+
+  MultaccItem read(BinaryReader reader) {
+    String json = reader.readString();
+    return MultaccItem.fromDB(jsonDecode(json));
+  }
+
+  void write(BinaryWriter writer, MultaccItem item) {
+    writer.writeString(item.toString());
+  }
+}
+
+/// Connector class
+/// For item types that can be connected (log into platform to detect accounts),
+/// implement a connector, add a const default constructor, and add it to MultaccItemTypeInfo.connector above
+abstract class Connector {
+  /// Return a token or something representing the connection that can be:
+  /// * Put in Hive to maintain a connection between sessions
+  /// * Passed to get() to get the value from the connection
+  dynamic connect();
+
+  /// Use an established connection to get a MultaccItem
+  MultaccItem get(dynamic token);
 }

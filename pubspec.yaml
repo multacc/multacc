@@ -1,24 +1,34 @@
 name: multacc
 description: multiple accounts
 
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
-  sdk: ">=2.3.0 <3.0.0"
+  sdk: ">=2.6.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-
+  
   # UI
   cupertino_icons: any
-  curved_navigation_bar: any
   flutter_statusbarcolor : any
   google_fonts: any
+  flutter_brand_icons: any
+  flutter_svg: any
+  sliding_sheet: any
+  liquid_pull_to_refresh: any
+  bubble: any
+  draggable_floating_button: any
 
   # device APIs
   contacts_service: any
-  permission_handler: any
+  permission_handler: ^5.0.0+hotfix.3
+  url_launcher: any
+  shared_preferences: any
+  android_intent: any
+  flutter_package_manager: any
+  path_provider: any
 
   # state management / data
   provider: any
@@ -27,9 +37,24 @@ dependencies:
   flutter_mobx: any
   mobx_codegen: any
   get_it: any
+  hive: any
+  hive_flutter: any
+  image_picker: any
+
+  # network APIs
+  firebase_core: any
+  firebase_auth: any
+  google_sign_in: any
+  firebase_dynamic_links: any
+
+  http: any
+  intl: any
+  enum_to_string: any
 
 dev_dependencies:
+  hive_generator: any
   build_runner: any
+  test: any
 
   flutter_test:
     sdk: flutter
@@ -48,14 +73,4 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/logo.png
-    - assets/icon.png
-
-  fonts:
-    - family: Product Sans
-      fonts:
-        - asset: assets/fonts/Product-Sans.ttf
-        - asset: assets/fonts/Product Sans Italic.ttf
-          style: italic
-        - asset: assets/fonts/Product Sans Bold.ttf
-          weight: 700
+    - assets/
