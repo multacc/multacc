@@ -26,6 +26,7 @@ pubspec.lock
 
 # Firebase
 /android/app/google-services.json
+/ios/Runner/google-services.json
 /ios/Runner/GoogleService-Info.plist
 
 # Visual Studio Code related

@@ -43,7 +43,7 @@ class MultaccContact extends Contact {
     this.avatar = baseContact.avatar;
     this.birthday = baseContact.birthday;
     this.company = baseContact.company;
-    this.displayName = baseContact.displayName;
+    this.displayName = baseContact.displayName ?? '';
     this.emails = baseContact.emails;
     this.familyName = baseContact.familyName;
     this.givenName = baseContact.givenName;

@@ -4,7 +4,7 @@ import 'package:multacc/common/avatars.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:multacc/items/item.dart';
 import 'package:multacc/items/phone.dart';
-import 'package:multacc/pages/contacts/contact_model.dart';
+import 'package:multacc/database/contact_model.dart';
 
 class ContactDetailsPage extends StatefulWidget {
   final MultaccContact contact;
@@ -26,13 +26,13 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
 
     return Material(
       child: Container(
-        height: MediaQuery.of(context).size.height / 1.1, // @todo Fix ContactDetails height for scrolling
+        height: MediaQuery.of(context).size.height / 1.2, // @todo Fix ContactDetails height for scrolling
         child: Column(
           children: <Widget>[
             Avatars.buildContactAvatar(memoryImage: contact.avatar, radius: 40.0),
             _buildName(),
-            _buildShortcutsRow(),
-            _buildContactItemsList()
+            // _buildShortcutsRow(),
+            _buildContactItemsList(),
           ],
         ),
       ),
@@ -60,7 +60,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
     );
   }
 
-  Padding _buildShortcutsRow() {
+  // @todo Fix the terrible contact shortcuts row
+  Widget _buildShortcutsRow() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Row(

@@ -4,9 +4,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_brand_icons/flutter_brand_icons.dart';
 import 'package:get_it/get_it.dart';
-import 'package:multacc/common/auth.dart';
+import 'package:multacc/pages/contacts/contact_form_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:multacc/database/contact_model.dart';
+import 'package:multacc/pages/contacts/contacts_data.dart';
+import 'package:multacc/common/auth.dart';
 import 'package:multacc/common/bottom_bar.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:multacc/pages/chats/chats_page.dart';
@@ -25,7 +28,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  ContactsData contactsData;
   TabController _tabController;
+  MultaccContact userContact;
 
   @override
   bool get wantKeepAlive => true;
@@ -37,6 +42,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
+    contactsData = GetIt.I.get<ContactsData>();
+
+    userContact = contactsData.allContacts[0];
 
     initDynamicLinks();
 
@@ -108,15 +116,23 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     );
   }
 
-  
-
   Scaffold _buildHomePageBody(BuildContext context, FirebaseUser user) {
     return Scaffold(
       key: globalScaffoldKey,
       floatingActionButton: FloatingActionButton(
         backgroundColor: kPrimaryColor,
         child: Icon(_tabController.index == 2 ? Icons.share : Icons.add),
-        onPressed: null,
+        onPressed: () {
+          // @todo Allow adding new contact
+          switch (_tabController.index) {
+            case 0:
+              // Navigator.of(context).push(MaterialPageRoute(
+              //   fullscreenDialog: true,
+              //   builder: (context) => ContactFormPage(),
+              // ));
+              break;
+          }
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: MultaccBottomBar(user),
@@ -174,7 +190,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return <Widget>[
       ContactsPage(),
       ChatsPage(),
-      ProfilePage(),
+      ProfilePage(userContact),
     ];
   }
 

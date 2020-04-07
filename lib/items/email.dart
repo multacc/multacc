@@ -4,14 +4,19 @@ import 'item.dart';
 
 class EmailItem extends MultaccItem {
   String email;
+  String label;
 
   EmailItem();
 
-  EmailItem.fromJson(Map<String, dynamic> json) : email = json['email'];
+  EmailItem.fromJson(Map<String, dynamic> json)
+    : email = json['email'],
+      label = json['label'];
 
-  EmailItem.fromItem(Item item) : email = item.value;
+  EmailItem.fromItem(Item item)
+    : email = item.value,
+      label = item.label;
 
-  toMap() => {'email': email};
+  toMap() => {'email': email, 'label': label};
 
   get humanReadableValue => email ?? '';
 
