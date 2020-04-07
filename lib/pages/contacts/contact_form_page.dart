@@ -318,6 +318,8 @@ class _ContactForm extends State<ContactFormPage> {
       contact.phones = phoneItems;
       contact.emails = emailItems;
 
+      // @todo Allow adding new contact
+
       // Update the base contact on device
       ContactsService.updateContact(contact);
 
