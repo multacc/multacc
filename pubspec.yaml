@@ -38,6 +38,7 @@ dependencies:
   get_it: any
   hive: any
   hive_flutter: any
+  image_picker: any
 
   # firebase APIs
   # Firebase Core and Auth must remain at version 0.4.4 and 0.15.4 for ios until UserAgent.h fix

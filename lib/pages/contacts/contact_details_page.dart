@@ -4,6 +4,7 @@ import 'package:multacc/common/avatars.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:multacc/items/item.dart';
 import 'package:multacc/items/phone.dart';
+import 'package:multacc/pages/contacts/contact_form.dart';
 import 'package:multacc/pages/contacts/contact_model.dart';
 
 class ContactDetailsPage extends StatefulWidget {
@@ -29,13 +30,40 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
         height: MediaQuery.of(context).size.height / 1.1, // @todo Fix ContactDetails height for scrolling
         child: Column(
           children: <Widget>[
-            Avatars.buildContactAvatar(memoryImage: contact.avatar, radius: 40.0),
+            _buildHeader(),
             _buildName(),
             _buildShortcutsRow(),
-            _buildContactItemsList()
+            _buildContactItemsList(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(width: MediaQuery.of(context).size.width / 3),
+        Container(
+          width: MediaQuery.of(context).size.width / 3,
+          child: Avatars.buildContactAvatar(memoryImage: contact.avatar, radius: 40.0),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width / 3,
+          child: IconButton(
+            icon: Icon(Icons.edit, color: Colors.grey),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute<Null>(
+                builder: (BuildContext context) {
+                  return ContactForm(contact);
+                },
+                fullscreenDialog: true
+              ));
+            },
+          ),
+        ),
+      ],
     );
   }
 

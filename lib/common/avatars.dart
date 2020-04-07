@@ -7,7 +7,7 @@ import 'package:multacc/common/theme.dart';
 class Avatars {
   static Widget buildContactAvatar({@required Uint8List memoryImage, double radius = 20.0}) {
     return memoryImage != null && memoryImage.length > 0
-        ? CircleAvatar(backgroundImage: MemoryImage(memoryImage), radius: radius)
+        ? CircleAvatar(backgroundImage: MemoryImage(memoryImage), radius: radius, backgroundColor: Colors.transparent)
         : CircleAvatar(child: Icon(Icons.person, size: radius), backgroundColor: kBackgroundColorLight, radius: radius);
   }
 }

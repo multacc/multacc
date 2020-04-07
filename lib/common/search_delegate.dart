@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:multacc/common/avatars.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:multacc/pages/contacts/contact_details_page.dart';
