@@ -16,6 +16,8 @@ class EmailItem extends MultaccItem {
     : email = item.value,
       label = item.label;
 
+  Item toItem() => Item(label: label, value: email);
+
   toMap() => {'email': email, 'label': label};
 
   get humanReadableValue => email ?? '';

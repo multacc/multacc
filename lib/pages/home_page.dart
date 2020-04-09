@@ -200,13 +200,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 }
 
 class _MultaccTab extends StatefulWidget {
-  Text titleText;
-  bool isExpanded;
+  final Text titleText;
+  final bool isExpanded;
 
-  _MultaccTab(String title, bool isExpanded) {
-    titleText = Text(title, style: kHeaderTextStyle);
-    this.isExpanded = isExpanded;
-  }
+  _MultaccTab(String title, bool isExpanded)
+      : titleText = Text(title, style: kHeaderTextStyle),
+        this.isExpanded = isExpanded;
 
   _MultaccTabState createState() => _MultaccTabState();
 }
