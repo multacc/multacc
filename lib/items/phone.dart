@@ -21,6 +21,8 @@ class PhoneItem extends MultaccItem {
       : phone = item.value,
         label = item.label;
 
+  Item toItem() => Item(label: label, value: phone);
+
   toMap() => {'no': phone, 'label': label};
 
   get humanReadableValue => phone ?? ''; // @todo Format phone numbers

@@ -1,5 +1,3 @@
-import 'package:contacts_service/contacts_service.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'item.dart';
 
 class TextItem extends MultaccItem {
