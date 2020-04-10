@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_brand_icons/flutter_brand_icons.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get_it/get_it.dart';
 import 'package:multacc/pages/contacts/contact_form_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(right: 8.0), child: Icon(BrandIcons.google)),
+                  Padding(padding: const EdgeInsets.only(right: 8.0), child: Icon(FontAwesome.google)),
                   Text('Sign in with Google', style: kHeaderTextStyle),
                 ],
               ),
