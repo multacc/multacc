@@ -42,7 +42,7 @@ class InstagramItem extends MultaccItem {
   get isLaunchable => true;
 
   set value(String input) {
-    username = input.trim().substring(input.startsWith('@') ? 1 : 0);
+    username = input.trim().substring(input.trim().startsWith('@') ? 1 : 0);
     _fetchId();
   }
 

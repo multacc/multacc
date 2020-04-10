@@ -17,7 +17,7 @@ class TwitterItem extends MultaccItem {
 
   toMap() => {'username': username, 'id': userId};
 
-  get humanReadableValue => '@${username ?? ''}';
+  get humanReadableValue => (username ?? '') == '' ? '' : '@$username';
 
   get type => MultaccItemType.Twitter;
 
@@ -32,7 +32,7 @@ class TwitterItem extends MultaccItem {
   get isLaunchable => true;
 
   set value(String input) {
-    username = input.trim().substring(input.startsWith('@') ? 1 : 0);
+    username = input.trim().substring(input.trim().startsWith('@') ? 1 : 0);
     _fetchId();
   }
 
