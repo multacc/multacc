@@ -5,6 +5,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:hive/hive.dart';
 import 'package:multacc/database/type_ids.dart';
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:multacc/items/snapchat.dart';
 
 import 'twitter.dart';
 import 'email.dart';
@@ -37,7 +38,7 @@ abstract class MultaccItem {
         item = EmailItem.fromJson(json);
         break;
       case MultaccItemType.Snapchat:
-//        item = SnapchatItem.fromJson(json);
+        item = SnapchatItem.fromJson(json);
         break;
       case MultaccItemType.Instagram:
 //        item = InstagramItem.fromJson(json);
@@ -122,6 +123,8 @@ extension MultaccItemTypeInfo on MultaccItemType {
     switch (this) {
       case MultaccItemType.Twitter:
         return Icon(MaterialCommunityIcons.twitter);
+      case MultaccItemType.Snapchat:
+        return Icon(MaterialCommunityIcons.snapchat);
       case MultaccItemType.Phone:
         return Icon(Icons.phone);
       case MultaccItemType.Email:
@@ -173,6 +176,8 @@ extension MultaccItemTypeInfo on MultaccItemType {
     switch (this) {
       case MultaccItemType.Twitter:
         return TwitterItem();
+      case MultaccItemType.Snapchat:
+        return SnapchatItem();
       case MultaccItemType.Phone:
         return PhoneItem();
       case MultaccItemType.Email:
@@ -180,9 +185,8 @@ extension MultaccItemTypeInfo on MultaccItemType {
       case MultaccItemType.URL:
         return URLItem();
       case MultaccItemType.Text:
-        return TextItem();
       default:
-        return null;
+        return TextItem();
     }
   }
 }
