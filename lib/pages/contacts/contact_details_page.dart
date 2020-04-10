@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+
 import 'package:multacc/common/avatars.dart';
 import 'package:multacc/common/theme.dart';
+import 'package:multacc/items/email.dart';
+import 'package:multacc/items/facebook.dart';
+import 'package:multacc/items/instagram.dart';
 import 'package:multacc/items/item.dart';
 import 'package:multacc/items/phone.dart';
 import 'package:multacc/database/contact_model.dart';
@@ -51,7 +56,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
           final item = contact.multaccItems.elementAt(index);
           return ListTile(
             title: Text(item.humanReadableValue ?? ''),
-            trailing: Text(item.type == MultaccItemType.Phone ? (item as PhoneItem).label : ''),
+            trailing: _buildTrailing(item),
             leading: item.icon,
             onTap: item.isLaunchable ? item.launchApp : null,
           );
@@ -92,11 +97,32 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
     );
   }
 
-  Padding _buildName() {
+  Widget _buildName() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Text(contact.name, style: kHeaderTextStyle),
     );
+  }
+
+  Widget _buildTrailing(MultaccItem item) {
+    switch (item.type) {
+      case MultaccItemType.Phone:
+        return Text((item as PhoneItem).label);
+      case MultaccItemType.Email:
+        return Text((item as EmailItem).label);
+      case MultaccItemType.Facebook:
+        return IconButton(
+          icon: Icon(MaterialCommunityIcons.facebook_messenger),
+          onPressed: () => (item as FacebookItem).launchMessenger(),
+        );
+      case MultaccItemType.Instagram:
+        return IconButton(
+          icon: Icon(SimpleLineIcons.paper_plane),
+          onPressed: () => (item as InstagramItem).launchDirectMessage(),
+        );
+      default:
+        return Text('');
+    }
   }
 
   @override

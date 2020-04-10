@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 import 'item.dart';
 
@@ -18,12 +21,34 @@ class InstagramItem extends MultaccItem {
 
   get type => MultaccItemType.Instagram;
 
-  launchApp() => launch('https://www.instagram.com/$username');
+  launchApp() async {
+    try {
+      await launch('instagram://user?username=$username');
+    } catch (ex) {
+      launch('https://instagram.com/$username');
+    }
+  }
+
+  launchDirectMessage() async {
+    try {
+      // @todo Figure out how to get Instagram DM thread id and launch DM
+      // await launch('instagram://direct?username=$username');
+      launch('https://instagram.com/direct/inbox');
+    } catch (ex) {
+      launchApp();
+    }
+  }
 
   get isLaunchable => true;
 
   set value(String input) {
     username = input.substring(input.startsWith('@') ? 1 : 0);
-    // @todo Detect Instagram ID from username
+    _fetchInstagramId(username);
+  }
+
+  void _fetchInstagramId(username) async {
+    String searchUrl = 'https://www.instagram.com/web/search/topsearch/?context=user&count=0&query=';
+    final response = jsonDecode((await http.Client().get('$searchUrl$username')).body);
+    userId = response['users'][0]['user']['pk'];
   }
 }

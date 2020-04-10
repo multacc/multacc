@@ -186,6 +186,8 @@ extension MultaccItemTypeInfo on MultaccItemType {
         return SnapchatItem();
       case MultaccItemType.Instagram:
         return InstagramItem();
+      case MultaccItemType.Facebook:
+        return FacebookItem();
       case MultaccItemType.Phone:
         return PhoneItem();
       case MultaccItemType.Email:
