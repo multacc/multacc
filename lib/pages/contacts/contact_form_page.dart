@@ -269,7 +269,11 @@ class _ContactForm extends State<ContactFormPage> {
       children: <Widget>[
         SizedBox(height: 30, child: null),
         InkWell(
-          onTap: () => items.add(type.createItem()),
+          onTap: () {
+            setState(() {
+              items.add(type.createItem());
+            });
+          },
           child: Row(children: rowWidgets),
         ),
       ],
