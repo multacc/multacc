@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(right: 8.0), child: Icon(AntDesign.google)),
+                  Padding(padding: const EdgeInsets.only(right: 8.0), child: Icon(FontAwesome.google)),
                   Text('Sign in with Google', style: kHeaderTextStyle),
                 ],
               ),
