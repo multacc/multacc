@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:hive/hive.dart';
 import 'package:multacc/database/type_ids.dart';
 import 'package:enum_to_string/enum_to_string.dart';
-import 'package:flutter_brand_icons/flutter_brand_icons.dart';
 
 import 'twitter.dart';
 import 'email.dart';
@@ -121,7 +121,7 @@ extension MultaccItemTypeInfo on MultaccItemType {
   dynamic get icon {
     switch (this) {
       case MultaccItemType.Twitter:
-        return Icon(BrandIcons.twitter);
+        return Icon(MaterialCommunityIcons.twitter);
       case MultaccItemType.Phone:
         return Icon(Icons.phone);
       case MultaccItemType.Email:

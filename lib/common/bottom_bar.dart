@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_brand_icons/flutter_brand_icons.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
@@ -90,11 +90,11 @@ class MultaccBottomBarState extends State<MultaccBottomBar> {
                   children: [
                     _buildGroupmeTile(context),
                     ListTile(
-                      leading: Icon(BrandIcons.discord),
+                      leading: Icon(MaterialCommunityIcons.discord),
                       title: Text('Discord'), // @todo Add discord chats integration under accounts
                     ),
                     ListTile(
-                      leading: Icon(Icons.power_settings_new),
+                      leading: Icon(!widget._user.isAnonymous ? MaterialCommunityIcons.logout : MaterialCommunityIcons.login),
                       title: Text(!widget._user.isAnonymous ? 'Sign out' : 'Sign in'),
                       onTap: () async {
                         widget._user.isAnonymous ? await _auth.linkWithGoogleSignIn() : await _auth.signOut();

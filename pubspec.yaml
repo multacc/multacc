@@ -14,7 +14,7 @@ dependencies:
   cupertino_icons: any
   flutter_statusbarcolor : any
   google_fonts: any
-  flutter_brand_icons: any
+  flutter_icons: any
   flutter_svg: any
   sliding_sheet: any
   liquid_pull_to_refresh: any
