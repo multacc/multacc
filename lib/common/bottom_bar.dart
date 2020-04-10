@@ -94,8 +94,8 @@ class MultaccBottomBarState extends State<MultaccBottomBar> {
                       title: Text('Discord'), // @todo Add discord chats integration under accounts
                     ),
                     ListTile(
-                      leading: Icon(!widget._user.isAnonymous ? MaterialCommunityIcons.logout : MaterialCommunityIcons.login),
-                      title: Text(!widget._user.isAnonymous ? 'Sign out' : 'Sign in'),
+                      leading: Icon(widget._user.isAnonymous ? MaterialCommunityIcons.login : MaterialCommunityIcons.logout),
+                      title: Text(widget._user.isAnonymous ? 'Sign in' : 'Sign out'),
                       onTap: () async {
                         widget._user.isAnonymous ? await _auth.linkWithGoogleSignIn() : await _auth.signOut();
                         Navigator.pop(context);
