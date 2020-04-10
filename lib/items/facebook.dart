@@ -46,15 +46,17 @@ class FacebookItem extends MultaccItem {
 
   get isLaunchable => true;
 
+  // @todo Add 'value' getter for editing
   set value(String input) {
     Uri url = Uri.parse(input);
+    String urlText = url.toString().toLowerCase();
 
-    if (url.host.contains('fb.me') || url.host.contains('m.me')) {
+    if (urlText.contains('fb.me') || urlText.contains('m.me')) {
       username = url.pathSegments.last;
-    } else if (url.path.contains('profile.php')) {
+    } else if (urlText.contains('profile.php')) {
       userId = url.queryParameters['id'];
       _username = '';
-    } else if (url.host.contains('facebook.com') || url.host.contains('fb.com')) {
+    } else if (urlText.contains('facebook.com') || urlText.contains('fb.com')) {
       username = url.pathSegments.last;
     } else {
       username = input.trim();
