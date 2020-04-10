@@ -29,10 +29,14 @@ class FacebookItem extends MultaccItem {
   get type => MultaccItemType.Facebook;
 
   launchApp() async {
-    try {
-      await launch('fb://profile/$userId');
-    } catch (ex) {
-      launch('https://facebook.com/$_validUsernameOrId');
+    if ((userId ?? '') != '') {
+      try {
+        await launch('fb://profile/$userId');
+      } catch (e) {
+        launch('https://facebook.com/$userId');
+      }
+    } else {
+      launch('https://facebook.com/$username');
     }
   }
 
@@ -81,6 +85,10 @@ class FacebookItem extends MultaccItem {
       username = input.trim();
     }
   }
+ 
+ void _fetchUsername() {
+   // @todo Fetch Facebook username from id
+ }
  
   void _fetchId() async {
     final response = parse((await http.Client().get('https://facebook.com/$username')).body);
