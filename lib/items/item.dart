@@ -3,14 +3,17 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:hive/hive.dart';
-import 'package:multacc/database/type_ids.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 
-import 'twitter.dart';
-import 'email.dart';
-import 'phone.dart';
-import 'url.dart';
-import 'text.dart';
+import 'package:multacc/database/type_ids.dart';
+import 'package:multacc/items/facebook.dart';
+import 'package:multacc/items/twitter.dart';
+import 'package:multacc/items/email.dart';
+import 'package:multacc/items/phone.dart';
+import 'package:multacc/items/url.dart';
+import 'package:multacc/items/text.dart';
+import 'package:multacc/items/instagram.dart';
+import 'package:multacc/items/snapchat.dart';
 
 const ITEM_TYPE_KEY = '_t';
 const ITEM_KEY_KEY = '_id';
@@ -37,13 +40,13 @@ abstract class MultaccItem {
         item = EmailItem.fromJson(json);
         break;
       case MultaccItemType.Snapchat:
-//        item = SnapchatItem.fromJson(json);
+        item = SnapchatItem.fromJson(json);
         break;
       case MultaccItemType.Instagram:
-//        item = InstagramItem.fromJson(json);
+        item = InstagramItem.fromJson(json);
         break;
       case MultaccItemType.Facebook:
-//        item = FacebookItem.fromJson(json);
+        item = FacebookItem.fromJson(json);
         break;
       case MultaccItemType.Discord:
 //        item = DiscordItem.fromJson(json);
@@ -105,9 +108,9 @@ abstract class MultaccItem {
 
 enum MultaccItemType {
   Twitter,
-  Snapchat, // @todo Implement snapchat
-  Instagram, // @todo Implement instagram
-  Facebook, // @todo Implement facebook
+  Snapchat,
+  Instagram,
+  Facebook,
   Discord, // @todo Implement discord
   Dogecoin, // @todo Implement dogecoin
   Phone,
@@ -122,6 +125,12 @@ extension MultaccItemTypeInfo on MultaccItemType {
     switch (this) {
       case MultaccItemType.Twitter:
         return Icon(MaterialCommunityIcons.twitter);
+      case MultaccItemType.Snapchat:
+        return Icon(MaterialCommunityIcons.snapchat);
+      case MultaccItemType.Instagram:
+        return Icon(MaterialCommunityIcons.instagram);
+      case MultaccItemType.Facebook:
+        return Icon(MaterialCommunityIcons.facebook);
       case MultaccItemType.Phone:
         return Icon(Icons.phone);
       case MultaccItemType.Email:
@@ -173,6 +182,12 @@ extension MultaccItemTypeInfo on MultaccItemType {
     switch (this) {
       case MultaccItemType.Twitter:
         return TwitterItem();
+      case MultaccItemType.Snapchat:
+        return SnapchatItem();
+      case MultaccItemType.Instagram:
+        return InstagramItem();
+      case MultaccItemType.Facebook:
+        return FacebookItem();
       case MultaccItemType.Phone:
         return PhoneItem();
       case MultaccItemType.Email:
@@ -180,9 +195,8 @@ extension MultaccItemTypeInfo on MultaccItemType {
       case MultaccItemType.URL:
         return URLItem();
       case MultaccItemType.Text:
-        return TextItem();
       default:
-        return null;
+        return TextItem();
     }
   }
 }
