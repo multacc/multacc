@@ -12,10 +12,10 @@ class InstagramItem extends MultaccItem {
   InstagramItem();
 
   InstagramItem.fromJson(Map<String, dynamic> json)
-      : username = json['at'],
+      : username = json['username'],
         userId = json['id'];
 
-  toMap() => {'at': username, 'id': userId};
+  toMap() => {'username': username, 'id': userId};
 
   get humanReadableValue => '@${username ?? ''}';
 
@@ -42,7 +42,7 @@ class InstagramItem extends MultaccItem {
   get isLaunchable => true;
 
   set value(String input) {
-    username = input.substring(input.startsWith('@') ? 1 : 0).trim();
+    username = input.trim().substring(input.startsWith('@') ? 1 : 0);
     _fetchId();
   }
 

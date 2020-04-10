@@ -7,9 +7,9 @@ class SnapchatItem extends MultaccItem {
 
   SnapchatItem();
 
-  SnapchatItem.fromJson(Map<String, dynamic> json) : username = json['at'];
+  SnapchatItem.fromJson(Map<String, dynamic> json) : username = json['username'];
 
-  toMap() => {'at': username};
+  toMap() => {'username': username};
 
   get humanReadableValue => '@${username ?? ''}';
 
@@ -20,6 +20,6 @@ class SnapchatItem extends MultaccItem {
   get isLaunchable => true;
 
   set value(String input) {
-    username = input.substring(input.startsWith('@') ? 1 : 0).trim();
+    username = input.trim().substring(input.startsWith('@') ? 1 : 0);
   }
 }

@@ -14,9 +14,11 @@ class FacebookItem extends MultaccItem {
       : username = json['username'],
         userId = json['id'];
 
-  toMap() => {'username': username, 'userId': userId};
+  toMap() => {'username': username, 'id': userId};
 
-  get humanReadableValue => username ?? (userId != null ? 'fb.com/$userId' : '');
+  get humanReadableValue => (username ?? '') != '' ? username : (userId != null ? 'fb.com/$userId' : '');
+
+  get _validUsernameOrId => (username ?? '') == '' ? userId : username;
 
   get type => MultaccItemType.Facebook;
 
@@ -24,31 +26,31 @@ class FacebookItem extends MultaccItem {
     try {
       await launch('fb://profile/$userId');
     } catch (ex) {
-      launch('https://facebook.com/${username ?? userId}');
+      launch('https://facebook.com/$_validUsernameOrId');
     }
   }
 
   launchMessenger() async {
     try {
-      await launch('fb-messenger://user/${username ?? userId}');
+      await launch('fb-messenger://user/$_validUsernameOrId');
     } catch (ex) {
-      launch('https://facebook.com/messages/t/${username ?? userId}');
+      launch('https://facebook.com/messages/t/$_validUsernameOrId');
     }
   }
 
   get isLaunchable => true;
 
   set value(String input) {
-    String domain = input.toLowerCase().split('/')[0];
+    Uri url = Uri.parse(input);
 
-    if (domain.contains('fb.me') || domain.contains('m.me')) {
-      username = input.split('/').last;
-    } else if (input.contains('profile.php?id=')) {
-      userId = input.split('id=')[1];
-    } else if (domain.contains('facebook.com') || domain.contains('fb.com')) {
-      username = input.split('/').last;
+    if (url.host.contains('fb.me') || url.host.contains('m.me')) {
+      username = url.pathSegments.last;
+    } else if (url.path.contains('profile.php')) {
+      userId = url.queryParameters['id'];
+    } else if (url.host.contains('facebook.com') || url.host.contains('fb.com')) {
+      username = url.pathSegments.last;
     } else {
-      username = input;
+      username = input.trim();
     }
 
     if (userId == null) _fetchId();
