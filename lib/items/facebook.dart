@@ -5,20 +5,26 @@ import 'package:html/parser.dart' show parse;
 import 'item.dart';
 
 class FacebookItem extends MultaccItem {
-  String username;
   String userId;
+
+  String _username;
+  get username => _username ?? '';
+  set username(String input) {
+    _username = input;
+    _fetchId();
+  }
 
   FacebookItem();
 
   FacebookItem.fromJson(Map<String, dynamic> json)
-      : username = json['username'],
+      : _username = json['username'],
         userId = json['id'];
 
   toMap() => {'username': username, 'id': userId};
 
-  get humanReadableValue => (username ?? '') != '' ? username : (userId != null ? 'fb.com/$userId' : '');
+  get humanReadableValue => username != '' ? username : (userId != null ? 'fb.com/$userId' : '');
 
-  get _validUsernameOrId => (username ?? '') == '' ? userId : username;
+  get _validUsernameOrId => username != '' ? username : userId;
 
   get type => MultaccItemType.Facebook;
 
@@ -47,15 +53,14 @@ class FacebookItem extends MultaccItem {
       username = url.pathSegments.last;
     } else if (url.path.contains('profile.php')) {
       userId = url.queryParameters['id'];
+      _username = '';
     } else if (url.host.contains('facebook.com') || url.host.contains('fb.com')) {
       username = url.pathSegments.last;
     } else {
       username = input.trim();
     }
-
-    if (userId == null) _fetchId();
   }
-
+ 
   void _fetchId() async {
     final response = parse((await http.Client().get('https://facebook.com/$username')).body);
     final meta = response.head.getElementsByTagName('meta').firstWhere((meta) => meta.attributes['property'] == 'al:android:url');
