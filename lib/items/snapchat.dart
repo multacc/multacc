@@ -11,7 +11,7 @@ class SnapchatItem extends MultaccItem {
 
   toMap() => {'at': username};
 
-  get humanReadableValue => (username == null || username.trim() == '') ? '' : '@$username';
+  get humanReadableValue => '@${username ?? ''}';
 
   get type => MultaccItemType.Snapchat;
 
@@ -20,6 +20,6 @@ class SnapchatItem extends MultaccItem {
   get isLaunchable => true;
 
   set value(String input) {
-    username = input.substring(input.startsWith('@') ? 1 : 0);
+    username = input.substring(input.startsWith('@') ? 1 : 0).trim();
   }
 }

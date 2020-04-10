@@ -104,6 +104,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
     );
   }
 
+  // @todo Refactor trailing button logic
   Widget _buildTrailing(MultaccItem item) {
     switch (item.type) {
       case MultaccItemType.Phone:

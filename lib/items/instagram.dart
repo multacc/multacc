@@ -17,7 +17,7 @@ class InstagramItem extends MultaccItem {
 
   toMap() => {'at': username, 'id': userId};
 
-  get humanReadableValue => (username == null || username.trim() == '') ? '' : '@$username';
+  get humanReadableValue => '@${username ?? ''}';
 
   get type => MultaccItemType.Instagram;
 
@@ -42,11 +42,11 @@ class InstagramItem extends MultaccItem {
   get isLaunchable => true;
 
   set value(String input) {
-    username = input.substring(input.startsWith('@') ? 1 : 0);
-    _fetchInstagramId(username);
+    username = input.substring(input.startsWith('@') ? 1 : 0).trim();
+    _fetchId();
   }
 
-  void _fetchInstagramId(username) async {
+  void _fetchId() async {
     String searchUrl = 'https://www.instagram.com/web/search/topsearch/?context=user&count=0&query=';
     final response = jsonDecode((await http.Client().get('$searchUrl$username')).body);
     userId = response['users'][0]['user']['pk'];
