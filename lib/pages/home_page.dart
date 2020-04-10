@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     super.initState();
     contactsData = GetIt.I.get<ContactsData>();
 
-    userContact = contactsData.allContacts[0];
+    // userContact = contactsData.allContacts[0] ?? null;
 
     initDynamicLinks();
 
