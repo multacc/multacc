@@ -81,15 +81,13 @@ class FacebookItem extends MultaccItem {
         _fetchId();
       }
     }
-    } else {
-      username = input.trim();
-    }
   }
  
  void _fetchUsername() {
    // @todo Fetch Facebook username from id
  }
  
+  // @todo More robust Facebook id fetching
   void _fetchId() async {
     final response = parse((await http.Client().get('https://facebook.com/$username')).body);
     final meta = response.head.getElementsByTagName('meta').firstWhere((meta) => meta.attributes['property'] == 'al:android:url');
