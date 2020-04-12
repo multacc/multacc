@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:multacc/database/type_ids.dart';
 
 import 'package:multacc/items/item.dart';
 import 'package:multacc/items/phone.dart';
@@ -10,7 +11,7 @@ import 'package:multacc/items/email.dart';
 
 part 'contact_model.g.dart';
 
-@HiveType()
+@HiveType(typeId: MULTACC_CONTACT_TYPE_ID)
 class MultaccContact extends Contact {
   // Stored in the database even though it is the key because this allows the Hive adapter to create a MultaccContact
   // with the appropriate clientKey (database key is not exposed to adapter), thus preventing us from having to manually
