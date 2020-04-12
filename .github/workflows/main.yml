@@ -32,7 +32,7 @@ jobs:
           channel: 'beta'
       - run: flutter pub get
       - run: flutter pub run build_runner build
-      #- run: flutter test
+      - run: flutter test
       - run: flutter build apk
       
       - uses: actions/upload-artifact@v1

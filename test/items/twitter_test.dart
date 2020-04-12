@@ -13,7 +13,7 @@ void main() {
       expect(item.key, null);
     });
     test('twitter should be null in json', () {
-      expect(item.toJson()['at'], null);
+      expect(item.toJson()['username'], null);
       expect(item.toJson()['id'], null);
     });
     test('key should initially be null in json', () {
@@ -22,12 +22,12 @@ void main() {
     test('updating twitter using field should update json', () {
       item.username = 'humblebeast';
       item.userId = 'Micah White';
-      expect(item.toJson()['at'], 'humblebeast');
+      expect(item.toJson()['username'], 'humblebeast');
       expect(item.toJson()['id'], 'Micah White');
     });
     test('updating twitter using value setter should update json', () {
       item.value = 'humblebeast';
-      expect(item.toJson()['at'], 'humblebeast');
+      expect(item.toJson()['username'], 'humblebeast');
     });
     test('updating key should update json', () {
       item.key = '69';
@@ -57,7 +57,7 @@ void main() {
   group('creating TwitterItem from json', () {
     setUp(() {
       Map<String, dynamic> map = Map();
-      map['at'] = 'humblebeast';
+      map['username'] = 'humblebeast';
       map['id'] = 'Micah White';
       item = TwitterItem.fromJson(map);
     });
