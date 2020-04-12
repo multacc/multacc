@@ -5,6 +5,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:hive/hive.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 
+import 'package:multacc/database/type_ids.dart';
 import 'package:multacc/items/facebook.dart';
 import 'package:multacc/items/twitter.dart';
 import 'package:multacc/items/email.dart';
@@ -202,6 +203,8 @@ extension MultaccItemTypeInfo on MultaccItemType {
 
 /// Hive adapter for MultaccItem
 class MultaccItemAdapter extends TypeAdapter<MultaccItem> {
+  final typeId = MULTACC_ITEM_TYPE_ID;
+
   MultaccItem read(BinaryReader reader) {
     String json = reader.readString();
     return MultaccItem.fromDB(jsonDecode(json));

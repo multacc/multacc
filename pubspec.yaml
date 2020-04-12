@@ -47,9 +47,11 @@ dependencies:
   google_sign_in: any
   firebase_dynamic_links: any
 
+  # dart helpers
   http: any
   intl: any
   enum_to_string: any
+  dartx: any
 
 dev_dependencies:
   hive_generator: any
@@ -60,6 +62,9 @@ dev_dependencies:
     sdk: flutter
 
   flutter_launcher_icons: any
+
+dependency_overrides:
+  dartx: ^0.3.0
 
 # generate app icons using `flutter pub run flutter_launcher_icons:main`
 flutter_icons:
