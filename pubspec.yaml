@@ -37,7 +37,7 @@ dependencies:
   flutter_mobx: any
   mobx_codegen: any
   get_it: any
-  hive: any
+  hive: 1.2.0
   hive_flutter: any
   image_picker: any
 
