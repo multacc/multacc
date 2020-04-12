@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:multacc/database/type_ids.dart';
 
 import 'package:multacc/items/item.dart';
 import 'package:multacc/database/contact_model.dart';
@@ -10,8 +11,8 @@ class DatabaseInterface {
   Future<void> init() async {
     await Hive.initFlutter();
 
-    Hive.registerAdapter(MultaccContactAdapter());
-    Hive.registerAdapter(MultaccItemAdapter());
+    Hive.registerAdapter(MultaccContactAdapter(), MULTACC_CONTACT_TYPE_ID);
+    Hive.registerAdapter(MultaccItemAdapter(), MULTACC_ITEM_TYPE_ID);
 
     await Hive.openBox<MultaccContact>('contacts');
   }
