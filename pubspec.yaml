@@ -37,8 +37,8 @@ dependencies:
   flutter_mobx: any
   mobx_codegen: any
   get_it: any
-  hive: 1.2.0
-  hive_flutter: any
+  hive: ^1.4.1+1
+  hive_flutter: ^0.3.0+2
   image_picker: any
 
   # network APIs
@@ -52,8 +52,8 @@ dependencies:
   enum_to_string: any
 
 dev_dependencies:
-  hive_generator: any
-  build_runner: any
+  hive_generator: ^0.7.0+2
+  build_runner: ^1.8.1
   test: any
 
   flutter_test:
