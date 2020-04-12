@@ -10,8 +10,8 @@ class DatabaseInterface {
   Future<void> init() async {
     await Hive.initFlutter();
 
-    Hive.registerAdapter(MultaccContactAdapter(), 0);
-    Hive.registerAdapter(MultaccItemAdapter(), 1);
+    Hive.registerAdapter(MultaccContactAdapter());
+    Hive.registerAdapter(MultaccItemAdapter());
 
     await Hive.openBox<MultaccContact>('contacts');
   }
