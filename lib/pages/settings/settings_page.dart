@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_package_manager/flutter_package_manager.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:get_it/get_it.dart';
@@ -18,6 +19,8 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   SharedPreferences prefs;
 
+  static const platform = const MethodChannel('com.flutter.sms/default-sms');
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +38,11 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           children: <Widget>[
             _buildPhoneAppTile(context),
+            RaisedButton(
+              child: Text('Set Default SMS App'),
+              onPressed: _defaultSMS,
+            ),
+            // Text(_batteryLevel),  
             // @todo Add setting for redirecting calls to preferred dialer through multacc
           ],
         ),
@@ -93,5 +101,38 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       prefs.setString('PHONE_APP', value);
     });
+  }
+
+  // String _batteryLevel = 'Unknown battery level.';
+
+  // Future<void> _getBatteryLevel() async {
+  //   String batteryLevel;
+  //   try {
+  //     final int result = await platform.invokeMethod('getBatteryLevel');
+  //     batteryLevel = 'Battery level at $result % .';
+  //   } on PlatformException catch (e) {
+  //     batteryLevel = "Failed to get battery level: '${e.message}'.";
+  //   }
+
+  //   setState(() {
+  //     _batteryLevel = batteryLevel;
+  //   });
+  // }
+
+  Future<void> _defaultSMS() async {
+    // int value;
+
+    try {
+      await platform.invokeMethod('defaultSMS');
+    } catch (e) {
+      print(e);
+    }
+
+    // print(value);
+
+    // setState(() {
+    //   _batteryLevel = batteryLevel;
+    // });
+
   }
 }
