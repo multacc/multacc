@@ -24,18 +24,16 @@ class MainActivity: FlutterActivity() {
   override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
     super.configureFlutterEngine(flutterEngine)
 
-	  MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
-      	call, result ->
-        if(call.method == "defaultSMS"){
-          val setSmsAppIntent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
-          setSmsAppIntent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, packageName)
-          startActivityForResult(setSmsAppIntent, 1)
-        }
-       	else {
-        	result.notImplemented()
-      	}
+    MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
+      call, result ->
+      if(call.method == "defaultSMS"){
+        val setSmsAppIntent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
+        setSmsAppIntent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, packageName)
+        startActivityForResult(setSmsAppIntent, 1)
+      }
+      else {
+        result.notImplemented()
+      }
     }
-
   }
-
 }
