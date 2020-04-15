@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -13,6 +14,7 @@ import 'package:multacc/items/phone.dart';
 import 'package:multacc/database/contact_model.dart';
 import 'package:multacc/pages/contacts/contacts_data.dart';
 import 'package:multacc/common/avatars.dart';
+import 'package:sliding_sheet/sliding_sheet.dart';
 
 class ContactFormPage extends StatefulWidget {
   final MultaccContact contact;
@@ -26,16 +28,18 @@ class ContactFormPage extends StatefulWidget {
 class _ContactForm extends State<ContactFormPage> {
   ContactsData contactsData;
   MultaccContact contact;
+  bool newContact = false;
   List<String> phoneLabels = [
+    'phone',
     'home',
     'work',
     'school',
-    'phone',
     'mobile',
     'main',
     'home fax',
     'work fax',
     'pager',
+    'other'
   ];
   List<String> emailLabels = [
     'home',
@@ -66,7 +70,13 @@ class _ContactForm extends State<ContactFormPage> {
   @override
   void initState() {
     super.initState();
-    items = List.from(contact.multaccItems);
+    if(contact.multaccItems == null) {
+      newContact = true;
+      items.add(MultaccItemType.Phone.createItem());
+      items.add(MultaccItemType.Email.createItem());
+    }
+    else
+      items = List.from(contact.multaccItems);
     avatar = contact.avatar;
     contactsData = GetIt.I.get<ContactsData>();
     db = GetIt.I.get<DatabaseInterface>();
@@ -75,6 +85,7 @@ class _ContactForm extends State<ContactFormPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      bottom: false,
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -82,7 +93,7 @@ class _ContactForm extends State<ContactFormPage> {
             icon: Icon(Icons.close, color: Colors.grey, size: 30),
           ),
           centerTitle: false,
-          title: Text('Edit contact', style: kHeaderTextStyle),
+          title: newContact ? Text('Create contact', style: kHeaderTextStyle) : Text('Edit contact', style: kHeaderTextStyle),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: saveChanges,
@@ -100,7 +111,7 @@ class _ContactForm extends State<ContactFormPage> {
                 _buildName(),
                 ...items.map((item) => _buildItems(item)),
                 // @todo Refactor messy input field logic
-                ...MultaccItemType.values.map((type) => _buildAddItem(type))
+                _buildAddItem(),
               ],
             ),
           ),
@@ -205,7 +216,7 @@ class _ContactForm extends State<ContactFormPage> {
             SizedBox(
               width: 60,
               child: IconButton(
-                onPressed: () => deleteItem(item),
+                onPressed: () =>  setState(() {items.remove(item);}),
                 icon: Icon(Icons.close, color: Colors.grey),
               ),
             ),
@@ -251,39 +262,52 @@ class _ContactForm extends State<ContactFormPage> {
     );
   }
 
-  Widget _buildAddItem(MultaccItemType type) {
-    List<Widget> rowWidgets = [
-      SizedBox(height: 50, width: 60, child: null),
-      Icon(Icons.add, color: kPrimaryColor),
-      SizedBox(width: 20),
-      Text('Add ', style: TextStyle(color: kPrimaryColor)),
-    ];
-    if (type.isInputtable) {
-      rowWidgets.add(Text(type.name, style: TextStyle(color: kPrimaryColor)));
-    }
-    if (type.isConnectable) {
-      Connector connector = type.connector;
-      // @todo Allow connecting items when adding
-    }
+  Widget _buildAddItem() {
     return Column(
       children: <Widget>[
         SizedBox(height: 30, child: null),
         InkWell(
-          onTap: () {
-            setState(() {
-              items.add(type.createItem());
-            });
-          },
-          child: Row(children: rowWidgets),
+          onTap: showItemTypes,
+          child: Row(children: [
+              SizedBox(height: 50, width: 60, child: null),
+              Icon(Icons.add, color: kPrimaryColor),
+              SizedBox(width: 20),
+              Text('Add Contact Info', style: TextStyle(color: kPrimaryColor)),
+            ],
+          ),
         ),
+        SizedBox(height: 100, width: 60, child: null),
       ],
     );
   }
 
-  void deleteItem(MultaccItem item) {
-    setState(() {
-      items.remove(item);
-    });
+  void showItemTypes() {
+    showSlidingBottomSheet(
+      context,
+      builder: (context) => SlidingSheetDialog(
+        elevation: 8.0,
+        cornerRadius: 16.0,
+        color: kBackgroundColor,
+        builder: (context, state) => Material(
+          child: Column(
+            children: <Widget>[
+              ...MultaccItemType.values.map((type) => ListTile(
+                  onTap: () {
+                    setState(() {items.add(type.createItem());});
+                    Navigator.of(context).pop();
+                  },
+                  leading: type.icon,
+                  title: Text(type.name),
+                ),
+              ),
+              SizedBox(height: 40),
+            ],
+          ),
+        ),
+        headerBuilder: (_, __) => // drag handle
+            Padding(padding: EdgeInsets.only(top: 16.0), child: Icon(Icons.maximize, color: Colors.grey)),
+      ),
+    );
   }
 
   void saveChanges() {
@@ -292,9 +316,9 @@ class _ContactForm extends State<ContactFormPage> {
       form.currentState.save();
 
       items.forEach((item) {
-        if (item is PhoneItem) {
+        if (item is PhoneItem && item.humanReadableValue != '') {
           phoneItems.add(item.toItem());
-        } else if (item is EmailItem) {
+        } else if (item is EmailItem && item.humanReadableValue != '') {
           emailItems.add(item.toItem());
         }
       });
@@ -303,10 +327,14 @@ class _ContactForm extends State<ContactFormPage> {
       contact.phones = phoneItems;
       contact.emails = emailItems;
 
-      // @todo Allow adding new contact
-
-      // Update the base contact on device
-      ContactsService.updateContact(contact);
+      if (newContact) {
+        // Create a new base contact on device
+        ContactsService.addContact(contact);
+      }
+      else {
+        // Update the base contact on device
+        ContactsService.updateContact(contact);
+      }
 
       // Sync local db with device contacts
       contactsData.getAllContacts();

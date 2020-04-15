@@ -43,9 +43,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
     contactsData = GetIt.I.get<ContactsData>();
-
-    // userContact = contactsData.allContacts[0] ?? null;
-
+    userContact = MultaccContact();
     initDynamicLinks();
 
     _tabController.addListener(() {
@@ -126,10 +124,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           // @todo Allow adding new contact
           switch (_tabController.index) {
             case 0:
-              // Navigator.of(context).push(MaterialPageRoute(
-              //   fullscreenDialog: true,
-              //   builder: (context) => ContactFormPage(),
-              // ));
+              Navigator.of(context).push(MaterialPageRoute(
+                fullscreenDialog: true,
+                builder: (context) => ContactFormPage(MultaccContact()),
+              ));
               break;
           }
         },
