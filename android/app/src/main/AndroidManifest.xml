@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.multacc">
     
     <application
-        android:label="multacc"
+        android:label="Multacc"
         android:icon="@mipmap/launcher_icon"
         android:requestLegacyExternalStorage="true" >
         <activity
