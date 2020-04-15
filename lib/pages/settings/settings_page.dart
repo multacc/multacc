@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:multacc/common/constants.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage() {
@@ -19,7 +20,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   SharedPreferences prefs;
 
-  static const platform = const MethodChannel('com.flutter.sms/default-sms');
+  static const platform = const MethodChannel('com.multacc/sms-handler');
 
   @override
   void initState() {
@@ -42,7 +43,6 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Text('Set Default SMS App'),
               onPressed: _defaultSMS,
             ),
-            // Text(_batteryLevel),  
             // @todo Add setting for redirecting calls to preferred dialer through multacc
           ],
         ),
@@ -103,36 +103,15 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
-  // String _batteryLevel = 'Unknown battery level.';
-
-  // Future<void> _getBatteryLevel() async {
-  //   String batteryLevel;
-  //   try {
-  //     final int result = await platform.invokeMethod('getBatteryLevel');
-  //     batteryLevel = 'Battery level at $result % .';
-  //   } on PlatformException catch (e) {
-  //     batteryLevel = "Failed to get battery level: '${e.message}'.";
-  //   }
-
-  //   setState(() {
-  //     _batteryLevel = batteryLevel;
-  //   });
-  // }
 
   Future<void> _defaultSMS() async {
-    // int value;
+
+    while(!await Permission.sms.request().isGranted){}
 
     try {
       await platform.invokeMethod('defaultSMS');
     } catch (e) {
       print(e);
     }
-
-    // print(value);
-
-    // setState(() {
-    //   _batteryLevel = batteryLevel;
-    // });
-
   }
 }
