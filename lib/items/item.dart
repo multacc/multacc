@@ -121,7 +121,7 @@ enum MultaccItemType {
 
 extension MultaccItemTypeInfo on MultaccItemType {
   /// Get icon or image asset to display
-  dynamic get icon {
+  Icon get icon {
     switch (this) {
       case MultaccItemType.Twitter:
         return Icon(MaterialCommunityIcons.twitter);
@@ -131,12 +131,16 @@ extension MultaccItemTypeInfo on MultaccItemType {
         return Icon(MaterialCommunityIcons.instagram);
       case MultaccItemType.Facebook:
         return Icon(MaterialCommunityIcons.facebook);
+      case MultaccItemType.Discord:
+        return Icon(MaterialCommunityIcons.discord);
       case MultaccItemType.Phone:
         return Icon(Icons.phone);
       case MultaccItemType.Email:
         return Icon(Icons.email);
       case MultaccItemType.URL:
         return Icon(Icons.public);
+      case MultaccItemType.Text:
+        return Icon(MaterialCommunityIcons.text_short);
       default:
         return Icon(Icons.person);
     }

@@ -106,7 +106,7 @@ class _ContactsPageState extends State<ContactsPage> with WidgetsBindingObserver
                     appContext: context,
                     onPressed: () => Navigator.of(context).push(MaterialPageRoute(
                       fullscreenDialog: true,
-                      builder: (context) => ContactFormPage(contactsData.allContacts[index]),
+                      builder: (context) => ContactFormPage(contact: contactsData.allContacts[index]),
                     )),
                   ),
                 )

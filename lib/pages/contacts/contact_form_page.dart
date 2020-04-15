@@ -1,8 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:contacts_service/contacts_service.dart';
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -14,12 +15,12 @@ import 'package:multacc/items/phone.dart';
 import 'package:multacc/database/contact_model.dart';
 import 'package:multacc/pages/contacts/contacts_data.dart';
 import 'package:multacc/common/avatars.dart';
-import 'package:sliding_sheet/sliding_sheet.dart';
 
 class ContactFormPage extends StatefulWidget {
   final MultaccContact contact;
+  final bool isNewContact;
 
-  ContactFormPage(this.contact);
+  ContactFormPage({this.contact, this.isNewContact = false});
 
   @override
   _ContactForm createState() => _ContactForm(contact);
@@ -28,7 +29,7 @@ class ContactFormPage extends StatefulWidget {
 class _ContactForm extends State<ContactFormPage> {
   ContactsData contactsData;
   MultaccContact contact;
-  bool newContact = false;
+
   List<String> phoneLabels = [
     'phone',
     'home',
@@ -70,14 +71,14 @@ class _ContactForm extends State<ContactFormPage> {
   @override
   void initState() {
     super.initState();
-    if(contact.multaccItems == null) {
-      newContact = true;
+    if (widget.isNewContact) {
+      contact = MultaccContact();
       items.add(MultaccItemType.Phone.createItem());
       items.add(MultaccItemType.Email.createItem());
-    }
-    else
+    } else {
       items = List.from(contact.multaccItems);
-    avatar = contact.avatar;
+      avatar = contact.avatar;
+    }
     contactsData = GetIt.I.get<ContactsData>();
     db = GetIt.I.get<DatabaseInterface>();
   }
@@ -93,7 +94,7 @@ class _ContactForm extends State<ContactFormPage> {
             icon: Icon(Icons.close, color: Colors.grey, size: 30),
           ),
           centerTitle: false,
-          title: newContact ? Text('Create contact', style: kHeaderTextStyle) : Text('Edit contact', style: kHeaderTextStyle),
+          title: Text(widget.isNewContact ? 'Create contact' : 'Edit contact', style: kHeaderTextStyle),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: saveChanges,
@@ -216,7 +217,7 @@ class _ContactForm extends State<ContactFormPage> {
             SizedBox(
               width: 60,
               child: IconButton(
-                onPressed: () =>  setState(() {items.remove(item);}),
+                onPressed: () => setState(() => items.remove(item)),
                 icon: Icon(Icons.close, color: Colors.grey),
               ),
             ),
@@ -253,7 +254,6 @@ class _ContactForm extends State<ContactFormPage> {
                       ),
                     ),
                     Spacer(),
-                    // SizedBox(width: 60, child: null),
                   ],
                 ),
               )
@@ -263,50 +263,37 @@ class _ContactForm extends State<ContactFormPage> {
   }
 
   Widget _buildAddItem() {
-    return Column(
-      children: <Widget>[
-        SizedBox(height: 30, child: null),
-        InkWell(
-          onTap: showItemTypes,
-          child: Row(children: [
-              SizedBox(height: 50, width: 60, child: null),
-              Icon(Icons.add, color: kPrimaryColor),
-              SizedBox(width: 20),
-              Text('Add Contact Info', style: TextStyle(color: kPrimaryColor)),
-            ],
-          ),
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 24.0),
+      child: FlatButton(
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 48.0),
+        onPressed: showItemTypes,
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.add, color: kPrimaryColor),
+            ),
+            Text('Add Contact Info', style: TextStyle(color: kPrimaryColor)),
+          ],
         ),
-        SizedBox(height: 100, width: 60, child: null),
-      ],
+      ),
     );
   }
 
   void showItemTypes() {
-    showSlidingBottomSheet(
-      context,
-      builder: (context) => SlidingSheetDialog(
-        elevation: 8.0,
-        cornerRadius: 16.0,
-        color: kBackgroundColor,
-        builder: (context, state) => Material(
-          child: Column(
-            children: <Widget>[
-              ...MultaccItemType.values.map((type) => ListTile(
-                  onTap: () {
-                    setState(() {items.add(type.createItem());});
-                    Navigator.of(context).pop();
-                  },
-                  leading: type.icon,
-                  title: Text(type.name),
-                ),
-              ),
-              SizedBox(height: 40),
-            ],
-          ),
-        ),
-        headerBuilder: (_, __) => // drag handle
-            Padding(padding: EdgeInsets.only(top: 16.0), child: Icon(Icons.maximize, color: Colors.grey)),
-      ),
+    MultaccItemType selectedItem = MultaccItemType.values.first;
+    showMaterialSelectionPicker(
+      context: context,
+      title: 'Contact Info Type',
+      items: MultaccItemType.values.map((e) => e.name).toList(),
+      icons: MultaccItemType.values.map((e) => e.icon).toList(),
+      headerColor: kBackgroundColorLight,
+      selectedItem: selectedItem.name,
+      onChanged: (e) {
+        selectedItem = EnumToString.fromString(MultaccItemType.values, e);
+        setState(() => items.add(selectedItem.createItem()));
+      },
     );
   }
 
@@ -327,12 +314,9 @@ class _ContactForm extends State<ContactFormPage> {
       contact.phones = phoneItems;
       contact.emails = emailItems;
 
-      if (newContact) {
-        // Create a new base contact on device
+      if (widget.isNewContact) {
         ContactsService.addContact(contact);
-      }
-      else {
-        // Update the base contact on device
+      } else {
         ContactsService.updateContact(contact);
       }
 

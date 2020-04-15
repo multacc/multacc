@@ -17,7 +17,7 @@ class InstagramItem extends MultaccItem {
 
   toMap() => {'username': username, 'id': userId};
 
-  get humanReadableValue => '@${username ?? ''}';
+  get humanReadableValue => (username ?? '') == '' ? '' : '@$username';
 
   get type => MultaccItemType.Instagram;
 

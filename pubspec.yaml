@@ -20,6 +20,7 @@ dependencies:
   liquid_pull_to_refresh: any
   bubble: any
   draggable_floating_button: any
+  flutter_material_pickers: any
 
   # device APIs
   contacts_service: any
@@ -29,6 +30,7 @@ dependencies:
   android_intent: any
   flutter_package_manager: any
   path_provider: any
+  image_picker: any
 
   # state management / data
   provider: any
@@ -39,7 +41,6 @@ dependencies:
   get_it: any
   hive: ^1.4.1+1
   hive_flutter: ^0.3.0+2
-  image_picker: any
 
   # network APIs
   firebase_core: any
@@ -47,6 +48,7 @@ dependencies:
   google_sign_in: any
   firebase_dynamic_links: any
 
+  # misc
   http: any
   intl: any
   enum_to_string: any
