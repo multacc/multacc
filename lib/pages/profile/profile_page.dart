@@ -54,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute<Null>(
                 builder: (BuildContext context) {
-                  return ContactFormPage(contact);
+                  return ContactFormPage(contact: contact);
                 },
                 fullscreenDialog: true
               ));
