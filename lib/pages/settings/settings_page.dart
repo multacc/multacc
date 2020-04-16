@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_package_manager/flutter_package_manager.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:get_it/get_it.dart';
 import 'package:multacc/common/constants.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage() {
@@ -17,6 +19,8 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   SharedPreferences prefs;
+
+  static const platform = const MethodChannel('com.multacc/sms-handler');
 
   @override
   void initState() {
@@ -35,6 +39,10 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           children: <Widget>[
             _buildPhoneAppTile(context),
+            RaisedButton(
+              child: Text('Set Default SMS App'),
+              onPressed: _defaultSMS,
+            ),
             // @todo Add setting for redirecting calls to preferred dialer through multacc
           ],
         ),
@@ -93,5 +101,17 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       prefs.setString('PHONE_APP', value);
     });
+  }
+
+
+  Future<void> _defaultSMS() async {
+
+    try {
+      await platform.invokeMethod('defaultSMS');
+    } catch (e) {
+      print(e);
+    }
+
+    while(!await Permission.sms.request().isGranted){}
   }
 }
