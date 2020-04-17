@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:contacts_service/contacts_service.dart';
@@ -56,7 +57,6 @@ class MultaccContact extends Contact {
     this.suffix = baseContact.suffix;
     // @todo Get IM, notes, etc. from base contact
 
-
     // Multacc additional contact data
     // @todo Use a field other than identifier for clientKey (#26)
     clientKey = identifier; // Key in client-side database
@@ -103,4 +103,21 @@ class MultaccContact extends Contact {
         this.prefix == baseContact.prefix &&
         this.suffix == baseContact.suffix);
   }
+
+  MultaccContact.fromJson(Map<String, dynamic> json)
+      : clientKey = json['clientKey'],
+        serverKey = json['serverKey'],
+        multaccItems = (json['multaccItems'] as List).map((jsonItem) => MultaccItem.fromDB(jsonItem)).toList(),
+        displayName = json['displayName'],
+        avatar = base64.decode(json['avatar']),
+        birthday = DateTime.parse(json['birthday']);
+
+  Map<String, dynamic> toJson() => {
+        'clientKey': clientKey,
+        'serverKey': serverKey,
+        'multaccItems': multaccItems.map((item) => item.toJson()).toList(),
+        'displayName': displayName,
+        'avatar': base64.encode(avatar),
+        'birthday': birthday.toIso8601String()
+      };
 }
