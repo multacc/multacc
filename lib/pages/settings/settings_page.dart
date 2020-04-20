@@ -43,6 +43,11 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Text('Set Default SMS App'),
               onPressed: _defaultSMS,
             ),
+            RaisedButton(
+              child: Text('Send Text'),
+              onPressed: _sendText,
+            ),
+            
             // @todo Add setting for redirecting calls to preferred dialer through multacc
           ],
         ),
@@ -103,7 +108,6 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
-
   Future<void> _defaultSMS() async {
 
     try {
@@ -113,5 +117,20 @@ class _SettingsPageState extends State<SettingsPage> {
     }
 
     while(!await Permission.sms.request().isGranted){}
+  }
+
+  void _sendText() async {
+    
+    var sendMap = <String, String> {
+      "message" : "Please respond to this message", "num" : "2056758459"
+    };
+
+    try {
+      var result = await platform.invokeMethod('sendText', sendMap);
+      print(result);
+    } catch (e) {
+      print(e);
+    }
+
   }
 }

@@ -137,4 +137,7 @@ class _GroupmeBubbleState extends State<GroupmeBubble> {
       ),
     );
   }
+
+  
 }
+
