@@ -43,6 +43,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Text('Set Default SMS App'),
               onPressed: _defaultSMS,
             ),
+            //@todo remove this button
             RaisedButton(
               child: Text('Send Text'),
               onPressed: _sendText,
