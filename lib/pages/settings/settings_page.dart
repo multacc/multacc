@@ -47,7 +47,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Text('Send Text'),
               onPressed: _sendText,
             ),
-            
+            Text("Sends a text to Micah"),
             // @todo Add setting for redirecting calls to preferred dialer through multacc
           ],
         ),
@@ -120,9 +120,9 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _sendText() async {
-    
     var sendMap = <String, String> {
-      "message" : "Please respond to this message", "num" : "2056758459"
+      //This sends a message to Micah.
+      "message" : "Please respond to this message", "num" : "6159454680"
     };
 
     try {

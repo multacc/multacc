@@ -4,8 +4,7 @@ import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugins.GeneratedPluginRegistrant;
-
+import io.flutter.plugins.GeneratedPluginRegistrant
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
@@ -19,6 +18,15 @@ import android.telephony.SmsMessage
 import android.os.Bundle
 import android.content.BroadcastReceiver
 import android.widget.Toast
+import android.content.ContentResolver
+import android.content.ContentValues
+import android.util.Base64
+import javax.crypto.*
+import javax.crypto.spec.SecretKeySpec
+import javax.crypto.spec.PBEKeySpec
+import java.util.Random
+import java.security.SecureRandom
+import android.net.Uri
 
 import android.util.Log
 import io.flutter.plugin.common.PluginRegistry.Registrar
@@ -36,23 +44,6 @@ class MainActivity: FlutterActivity() {
         setSmsAppIntent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, packageName)
         startActivityForResult(setSmsAppIntent, 1)
       }
-      // else if (call.method == "encryptSMS"){
-      //   // Encrypts string and encode in Base64
-      //   @Throws(Exception::class)
-      //   fun encrypt(data: String): String {
-      //       val encrypted = cryptoOperation(Cipher.ENCRYPT_MODE, data.toByteArray())
-      //       return Base64.encodeToString(encrypted, Base64.DEFAULT)
-      //   } 
-      // }
-      // else if (call.method == "decryptSMS"){
-      //   // Decrypts string encoded in Base64
-      //   @Throws(Exception::class)
-      //   fun decrypt(encryptedData: String): String {
-      //       val encrypted = Base64.decode( encryptedData, Base64.DEFAULT )
-      //       val decrypted = cryptoOperation(Cipher.DECRYPT_MODE, encrypted)
-      //       return String(decrypted)
-      //   }
-      // }
       else if (call.method == "sendText"){
         val arguments = call.arguments<Map<String, Any>>()
 
@@ -71,6 +62,7 @@ class MainActivity: FlutterActivity() {
   }
 }
 
+
 class SmsReceiver : BroadcastReceiver() {
   override fun onReceive(context: Context?, intent: Intent?) {
     // Get SMS map from Intent
@@ -88,4 +80,80 @@ class SmsReceiver : BroadcastReceiver() {
         putSmsToDatabase(contentResolver, message)
     }
   }
+
+  fun putSmsToDatabase(contentResolver: ContentResolver, sms: SmsMessage){
+    var SMS_URI = "content://sms"
+    var MESSAGE_IS_NOT_READ = 0
+    var MESSAGE_TYPE_INBOX = 1
+    var MESSAGE_IS_NOT_SEEN = 0
+    var PASSWORD = "password"
+    
+    // Create SMS row
+    var values = ContentValues()
+    values.put( "address", sms.getOriginatingAddress() )
+    values.put( "date", sms.getTimestampMillis() )
+    values.put( "read", MESSAGE_IS_NOT_READ )
+    values.put( "status", sms.getStatus() )
+    values.put( "type", MESSAGE_TYPE_INBOX )
+    values.put( "seen", MESSAGE_IS_NOT_SEEN )
+    try{
+        var encryptedPassword = sms.getMessageBody().toString()
+        // var encryptedPassword : String = encrypt( PASSWORD, sms.getMessageBody().toString() );
+        values.put("body", encryptedPassword )
+    }
+    catch (e: Exception) { 
+        e.printStackTrace()
+    }
+
+    // Push row into the SMS table
+    contentResolver.insert( Uri.parse(SMS_URI), values )
+  }
+
+  //Encrypting stuff that we might want to use later, but didn't bother implementing for now
+  //because if you switch back to old SMS app, the message text is scrambled
+  var CIPHER_ALGORITHM = "AES"
+  var RANDOM_KEY_SIZE = 128
+  var RANDOM_GENERATOR_ALGORITHM = "SHA1PRNG"
+
+  @Throws(Exception::class)
+  fun encrypt(password: String, data: String) : String {
+    var secretKey = generateKey(password.toByteArray())
+    var clear = data.toByteArray()
+
+    var secretKeySpec : SecretKeySpec = SecretKeySpec( secretKey, CIPHER_ALGORITHM )
+    var cipher : Cipher = Cipher.getInstance( CIPHER_ALGORITHM )
+    cipher.init( Cipher.ENCRYPT_MODE, secretKeySpec )
+
+    var encrypted = cipher.doFinal(clear)
+    var encryptedString : String = Base64.encodeToString( encrypted, Base64.DEFAULT )
+
+    return encryptedString
+  }
+
+  // Decrypts string encoded in Base64
+  @Throws(Exception::class)
+  fun decrypt(password : String, encryptedData : String ) : String {
+      var secretKey = generateKey( password.toByteArray() )
+
+      var secretKeySpec : SecretKeySpec = SecretKeySpec( secretKey, CIPHER_ALGORITHM )
+      var cipher : Cipher = Cipher.getInstance( CIPHER_ALGORITHM )
+      cipher.init( Cipher.DECRYPT_MODE, secretKeySpec )
+
+      var encrypted = Base64.decode( encryptedData, Base64.DEFAULT )
+      var decrypted = cipher.doFinal( encrypted )
+
+      return decrypted.toString()
+  }
+
+  @Throws(Exception::class)
+  fun generateKey(seed : ByteArray) : ByteArray {
+      var keyGenerator : KeyGenerator = KeyGenerator.getInstance( CIPHER_ALGORITHM )
+      var secureRandom : SecureRandom = SecureRandom.getInstance( RANDOM_GENERATOR_ALGORITHM )
+      secureRandom.setSeed( seed )
+      keyGenerator.init( RANDOM_KEY_SIZE, secureRandom )
+      var secretKey : SecretKey = keyGenerator.generateKey()
+      return secretKey.getEncoded()
+  }
 }
+
+
