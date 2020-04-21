@@ -27,6 +27,7 @@ import javax.crypto.spec.PBEKeySpec
 import java.util.Random
 import java.security.SecureRandom
 import android.net.Uri
+import android.app.role.RoleManager
 
 import android.util.Log
 import io.flutter.plugin.common.PluginRegistry.Registrar
@@ -40,9 +41,28 @@ class MainActivity: FlutterActivity() {
     MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
       call, result ->
       if(call.method == "defaultSMS"){
-        val setSmsAppIntent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
-        setSmsAppIntent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, packageName)
-        startActivityForResult(setSmsAppIntent, 1)
+        // val setSmsAppIntent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
+        // setSmsAppIntent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, packageName)
+        // startActivityForResult(setSmsAppIntent, 1)
+
+         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            var mContext : Context= getApplicationContext()
+            var roleManager : RoleManager = mContext.getSystemService(Context.ROLE_SERVICE) as RoleManager
+            // check if the app is having permission to be as default SMS app
+            var isRoleAvailable = roleManager.isRoleAvailable(RoleManager.ROLE_SMS)
+            // if (isRoleAvailable){
+                // check whether your app is already holding the default SMS app role.
+                var isRoleHeld = roleManager.isRoleHeld(RoleManager.ROLE_SMS)
+                // if (isRoleHeld){
+                    var roleRequestIntent = roleManager.createRequestRoleIntent(RoleManager.ROLE_SMS)
+                    startActivityForResult(roleRequestIntent,2)
+            //     }
+            // }
+        } else {
+            val setSmsAppIntent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
+            setSmsAppIntent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, packageName)
+            startActivityForResult(setSmsAppIntent, 234)
+        }
       }
       else if (call.method == "sendText"){
         val arguments = call.arguments<Map<String, Any>>()
@@ -61,7 +81,6 @@ class MainActivity: FlutterActivity() {
     }
   }
 }
-
 
 class SmsReceiver : BroadcastReceiver() {
   override fun onReceive(context: Context?, intent: Intent?) {
