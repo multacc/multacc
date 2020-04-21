@@ -111,13 +111,12 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _defaultSMS() async {
 
+   
     try {
       await platform.invokeMethod('defaultSMS');
     } catch (e) {
       print(e);
     }
-
-    while(!await Permission.sms.request().isGranted){}
   }
 
   void _sendText() async {
