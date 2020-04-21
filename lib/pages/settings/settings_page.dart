@@ -31,7 +31,8 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Settings', style: kHeaderTextStyle), centerTitle: true),
+      appBar: AppBar(
+          title: Text('Settings', style: kHeaderTextStyle), centerTitle: true),
       backgroundColor: kBackgroundColor,
       body: Container(
         margin: EdgeInsets.all(8.0),
@@ -66,11 +67,13 @@ class _SettingsPageState extends State<SettingsPage> {
           FlutterPackageManager.getPackageInfo(GOOGLE_VOICE_PACKAGE),
           FlutterPackageManager.getPackageInfo(GOOGLE_DUO_PACKAGE)
         ]),
-        builder: (context, AsyncSnapshot<List<PackageInfo>> snapshot) => ExpansionTile(
+        builder: (context, AsyncSnapshot<List<PackageInfo>> snapshot) =>
+            ExpansionTile(
           title: Text('Phone app'),
           children: <Widget>[
             RadioListTile(
-              secondary: snapshot.data?.first?.getAppIcon() ?? Icon(Icons.phone),
+              secondary:
+                  snapshot.data?.first?.getAppIcon() ?? Icon(Icons.phone),
               title: Text('Default'),
               value: 'default',
               controlAffinity: ListTileControlAffinity.trailing,
@@ -110,27 +113,19 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _defaultSMS() async {
-
-<<<<<<< HEAD
-=======
-   
->>>>>>> e8e7c16f14ef6e4ea871e2df4f9eba8e23b4f77e
     try {
       await platform.invokeMethod('defaultSMS');
     } catch (e) {
       print(e);
     }
-<<<<<<< HEAD
 
-    while(!await Permission.sms.request().isGranted){};
-=======
->>>>>>> e8e7c16f14ef6e4ea871e2df4f9eba8e23b4f77e
+    while (!await Permission.sms.request().isGranted) {}
   }
 
   void _sendText() async {
-    var sendMap = <String, String> {
+    var sendMap = <String, String>{
       //This sends a message to Micah.
-      "message" : "Please respond to this message", "num" : "6159454680"
+      "message": "Please respond to this message", "num": "6159454680"
     };
 
     try {
@@ -139,6 +134,5 @@ class _SettingsPageState extends State<SettingsPage> {
     } catch (e) {
       print(e);
     }
-
   }
 }
