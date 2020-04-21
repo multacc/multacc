@@ -46,14 +46,14 @@ class MainActivity: FlutterActivity() {
             var roleManager : RoleManager = mContext.getSystemService(Context.ROLE_SERVICE) as RoleManager
             // check if the app is having permission to be as default SMS app
             var isRoleAvailable = roleManager.isRoleAvailable(RoleManager.ROLE_SMS)
-            // if (isRoleAvailable){
+            if (isRoleAvailable){
                 // check whether your app is already holding the default SMS app role.
                 var isRoleHeld = roleManager.isRoleHeld(RoleManager.ROLE_SMS)
-                // if (isRoleHeld){
+                if (!isRoleHeld){
                     var roleRequestIntent = roleManager.createRequestRoleIntent(RoleManager.ROLE_SMS)
                     startActivityForResult(roleRequestIntent,2)
-            //     }
-            // }
+                }
+            }
         } else {
             val setSmsAppIntent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
             setSmsAppIntent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, packageName)
