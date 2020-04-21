@@ -18,6 +18,18 @@ class MessagesPage extends StatefulWidget {
 }
 
 class _MessagesPageState extends State<MessagesPage> {
+  ChatsData chatsData;
+  String _messageDraft; // currently being composed
+  TextEditingController _textController;
+
+  @override
+  void initState() {
+    super.initState();
+    chatsData = GetIt.I.get<ChatsData>();
+    _textController = TextEditingController();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +53,7 @@ class _MessagesPageState extends State<MessagesPage> {
 
   Widget _buildMessagesList() {
     return Observer(builder: (context) {
-      List<GroupmeMessage> messages = GetIt.I.get<ChatsData>().messages;
+      List<GroupmeMessage> messages = chatsData.messages;
       return ListView.builder(
         reverse: true,
         itemCount: messages.length,
@@ -67,16 +79,26 @@ class _MessagesPageState extends State<MessagesPage> {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: TextField(
+                controller: _textController,
                 decoration: InputDecoration.collapsed(hintText: 'Type a message'),
                 textCapitalization: TextCapitalization.sentences,
                 textInputAction: TextInputAction.send,
+                onChanged: (text) => setState(() => _messageDraft = text),
+                onSubmitted: (text) => sendMessage(text: text),
               ),
             ),
           ),
-          Padding(padding: EdgeInsets.symmetric(horizontal: 8.0), child: Icon(Icons.send)),
+          // Padding(padding: EdgeInsets.symmetric(horizontal: 8.0), child: Icon(Icons.send)),
+          IconButton(icon: Icon(Icons.send), onPressed: sendMessage)
         ],
       ),
     );
+  }
+
+  sendMessage({String text}) async {
+    String _message = text ?? _messageDraft ?? '';
+    if (_message != '') await chatsData.sendMessage(widget.otherUserId, _message);
+    _textController.clear();
   }
 }
 
