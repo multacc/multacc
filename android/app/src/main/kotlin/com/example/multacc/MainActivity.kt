@@ -41,10 +41,6 @@ class MainActivity: FlutterActivity() {
     MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
       call, result ->
       if(call.method == "defaultSMS"){
-        // val setSmsAppIntent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
-        // setSmsAppIntent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, packageName)
-        // startActivityForResult(setSmsAppIntent, 1)
-
          if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
             var mContext : Context= getApplicationContext()
             var roleManager : RoleManager = mContext.getSystemService(Context.ROLE_SERVICE) as RoleManager
@@ -61,7 +57,7 @@ class MainActivity: FlutterActivity() {
         } else {
             val setSmsAppIntent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
             setSmsAppIntent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, packageName)
-            startActivityForResult(setSmsAppIntent, 234)
+            startActivityForResult(setSmsAppIntent, 1)
         }
       }
       else if (call.method == "sendText"){
