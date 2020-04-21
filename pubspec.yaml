@@ -1,7 +1,7 @@
 name: multacc
 description: multiple accounts
 
-version: 1.0.0+2
+version: 1.0.0+3
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -31,6 +31,8 @@ dependencies:
   flutter_package_manager: any
   path_provider: any
   image_picker: any
+  workmanager: any
+  flutter_local_notifications: any
 
   # state management / data
   provider: any
@@ -52,6 +54,7 @@ dependencies:
   http: any
   intl: any
   enum_to_string: any
+  uuid: any
 
 dev_dependencies:
   hive_generator: ^0.7.0+2
