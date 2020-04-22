@@ -31,8 +31,6 @@ dependencies:
   flutter_package_manager: any
   path_provider: any
   image_picker: any
-  workmanager: any
-  flutter_local_notifications: any
 
   # state management / data
   provider: any
