@@ -63,6 +63,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_launcher_icons: any
+  flutter_native_splash: any
 
 # generate app icons using `flutter pub run flutter_launcher_icons:main`
 flutter_icons:
@@ -71,6 +72,12 @@ flutter_icons:
   image_path: "assets/icon.png"
   adaptive_icon_background: "#303030"
   adaptive_icon_foreground: "assets/logo.png"
+
+# generate splash screen using `flutter pub run flutter_native_splash:create`
+flutter_native_splash:
+  image: assets/icon.png
+  color: "#303030"
+  android_disable_fullscreen: true
 
 flutter:
   uses-material-design: true

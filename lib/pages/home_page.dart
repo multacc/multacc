@@ -75,17 +75,18 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: _auth.onAuthStateChanged,
-      builder: (context, snapshot) => snapshot.hasData ? _buildHomePageBody(context, snapshot.data) : _buildLoginPage(),
+      builder: (context, snapshot) => snapshot.hasData ? _buildHomePageBody(context, snapshot.data) : _buildLoginPage(snapshot)
     );
-    // return _currentUser == null ? _buildLoginPage() : _buildHomePageBody(context);
   }
 
-  Widget _buildLoginPage() {
+  Widget _buildLoginPage(AsyncSnapshot snapshot) {
     return Scaffold(
       backgroundColor: kBackgroundColor,
       body: Container(
         width: double.infinity,
-        child: Column(
+        child: snapshot.connectionState == ConnectionState.waiting
+          ? CircularProgressIndicator()
+          : Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Image.asset('assets/logo.png', height: 200),

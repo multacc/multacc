@@ -10,6 +10,7 @@ import 'package:multacc/pages/home_page.dart';
 import 'package:multacc/pages/contacts/contacts_data.dart';
 import 'package:multacc/pages/chats/chats_data.dart';
 import 'package:multacc/database/database_interface.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
