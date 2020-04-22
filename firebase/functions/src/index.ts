@@ -1,22 +1,30 @@
 import * as functions from "firebase-functions";
 import {CallableContext} from "firebase-functions/lib/providers/https";
+import {MultaccContact} from "./schema";
+import {getStoredContact, storeContact} from "./storage";
 
 export const sendContact = functions.https.onCall((data: any, context: CallableContext) => {
-  const jsonContact: string = data;
+  const contact: MultaccContact = data;
+
+  // @todo Validate contact against interface
+  // @body I assume it will be easier to validate with a cloud function than to use a firestore security rule
+  // @body since we already have an interface in schema.ts and there exist methods to validate objects against TypeScript
+  // @body interfaces at runtime, such as https://github.com/gristlabs/ts-interface-checker
+
+  // @todo Associate stored contact with user
+  // @body This will allow the contact to be updated/deleted in the future
+
+  // @todo URL expiration for shared contacts
+  // @body Customizable by the sharer
+
+
   const uid: string | undefined = context.auth?.uid;
-  console.log('Received contact: ' + jsonContact + ' from user ' + uid);
-  return {
-    url: 'https://multa.cc/whatever'
-  };
+  console.log("user " + uid + " uploaded a contact");
+
+  // Store the contact in the database and return id
+  return storeContact(contact);
 });
 
-export const receiveContact = functions.https.onCall((data: any, context: CallableContext) => {
-  // const contactId: string = data.id; // "whatever" if we got here from multa.cc/whatever
-  return {
-    serverKey: null,
-    multaccItems: null,
-    displayName: null,
-    avatar: null,
-    birthday: null
-  };
-});
+export const receiveContact = functions.https.onCall((data: any, context: CallableContext) => getStoredContact(data));
+
+// @todo Create cloud function to follow someone

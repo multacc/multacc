@@ -52,6 +52,7 @@ dependencies:
   http: any
   intl: any
   enum_to_string: any
+  uuid: ^2.0.4
 
 dev_dependencies:
   hive_generator: ^0.7.0+2
