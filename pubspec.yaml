@@ -1,7 +1,7 @@
 name: multacc
 description: multiple accounts
 
-version: 1.0.0+3
+version: 1.0.0+4
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -45,12 +45,14 @@ dependencies:
   firebase_auth: any
   google_sign_in: any
   firebase_dynamic_links: any
+  cloud_functions: ^0.4.2+3
 
   # misc
   http: any
   intl: any
   enum_to_string: any
-  uuid: any
+  uuid: ^2.0.4
+  qr_flutter: ^3.1.0
 
 dev_dependencies:
   hive_generator: ^0.7.0+2
