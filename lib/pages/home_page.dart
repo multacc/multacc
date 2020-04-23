@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   void initDynamicLinks() async {
     // Deep link back into app to save groupme access token
-    FirebaseDynamicLinks.instance.onLink(onSuccess: (dynamicLink) async {
+    FirebaseDynamicLinks.instance.onLink(onSuccess: (PendingDynamicLinkData dynamicLink) async {
       final Uri deepLink = dynamicLink?.link;
 
       if (deepLink != null) {
@@ -65,6 +65,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           GetIt.I.get<SharedPreferences>().setString('GROUPME_TOKEN', groupmeToken);
           GetIt.I.get<ChatsData>().getAllChats(groupmeToken: groupmeToken);
           // @todo Refactor deeplink logic when adding more platforms
+        } else {
+          deepLink.path.trim('/')
         }
       }
     }, onError: (OnLinkErrorException e) async {

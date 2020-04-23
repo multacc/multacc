@@ -30,7 +30,7 @@ export const sendContact = functions.https.onCall((data: any, context: CallableC
   // @body multa.cc links should automatically open the app if it is installed. This can be accomplished a couple ways;
   // @body we could use a Dynamic Link with the web link as the fallback url (we would still need to generate another
   // @body Dynamic Link on this page since we wouldn't want the first link to redirect users to Google Play, though we
-  // @body may want to look into Google Play Instant), or we could use normal Android App Links or Deep Links to
+  // @body may want to look into Google Play Instant), or we could use normal Android App Links or plain Deep Links to
   // @body make the app handle multa.cc links. The latter may be preferable because it allows us to manage the multa.cc
   // @body links directly in our database rather than through the Dynamic Links SDK, which might get a little messy
   // @body with link expiration. Reading list:
