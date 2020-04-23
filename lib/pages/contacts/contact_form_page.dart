@@ -37,8 +37,8 @@ class _ContactForm extends State<ContactFormPage> {
     'school',
     'mobile',
     'main',
-    'home fax',
-    'work fax',
+    'fax home',
+    'fax work',
     'pager',
     'other'
   ];
