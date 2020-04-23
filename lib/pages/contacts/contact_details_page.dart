@@ -4,6 +4,7 @@ import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:multacc/common/avatars.dart';
+import 'package:multacc/common/constants.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:multacc/items/email.dart';
 import 'package:multacc/items/facebook.dart';
@@ -118,6 +119,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
           builder: (context) => ContactFormPage(
             contact: contact,
             isNewContact: isNewContact,
+            isProfile: contact.clientKey == PROFILE_CONTACT_KEY,
           ),
         )),
         child: Row(

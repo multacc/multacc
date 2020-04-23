@@ -72,7 +72,7 @@ class _ContactForm extends State<ContactFormPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.isNewContact || contact == null) {
+    if ((!widget.isProfile && widget.isNewContact) || contact == null) {
       contact = MultaccContact(clientKey: Uuid().v4());
       items.add(MultaccItemType.Phone.createItem());
       items.add(MultaccItemType.Email.createItem());
@@ -94,7 +94,7 @@ class _ContactForm extends State<ContactFormPage> {
             icon: Icon(Icons.close, color: Colors.grey, size: 30),
           ),
           centerTitle: false,
-          title: Text(widget.isNewContact ? 'Create contact' : 'Edit contact',
+          title: Text(widget.isProfile ? 'Profile' : widget.isNewContact ? 'Create contact' : 'Edit contact',
               style: kHeaderTextStyle),
         ),
         floatingActionButton: FloatingActionButton(
