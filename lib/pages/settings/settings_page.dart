@@ -122,7 +122,6 @@ class _SettingsPageState extends State<SettingsPage> {
     } catch (e) {
       print(e);
     }
-    print("\n\n\nthis is where we flop\n\n\n");
     while (!await Permission.sms.request().isGranted) {}
   }
 
@@ -135,7 +134,7 @@ class _SettingsPageState extends State<SettingsPage> {
       print(e);
     }
 
-    print(str[5]);
+    print(str[0]);
   }
 
   void _sendText() async {

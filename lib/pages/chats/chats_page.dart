@@ -19,6 +19,7 @@ class _ChatsPageState extends State<ChatsPage> {
   void initState() {
     super.initState();
     chatsData = GetIt.I.get<ChatsData>();
+    chatsData.printChats();
   }
 
   @override
