@@ -5,5 +5,24 @@
       "npm --prefix \"$RESOURCE_DIR\" run build"
     ],
     "source": "functions"
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "!/static/**",
+        "function": "displayContact"
+      },
+      {
+        "source": "/",
+        "destination": "https://multacc.com",
+        "type": 302
+      }
+    ]
   }
 }

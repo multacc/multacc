@@ -2,6 +2,7 @@ import * as functions from "firebase-functions";
 import {CallableContext} from "firebase-functions/lib/providers/https";
 import {MultaccContact} from "./schema";
 import {getStoredContact, storeContact} from "./storage";
+import {contactPage} from "./web";
 
 export const sendContact = functions.https.onCall((data: any, context: CallableContext) => {
   const contact: MultaccContact = data;
@@ -28,3 +29,13 @@ export const sendContact = functions.https.onCall((data: any, context: CallableC
 export const receiveContact = functions.https.onCall((data: any, context: CallableContext) => getStoredContact(data));
 
 // @todo Create cloud function to follow someone
+
+export const displayContact = functions.https.onRequest(async (req, res) => {
+  const key: string = req.path.replace(/^\/+|\/+$/g, '');
+  const contact: MultaccContact | undefined = await getStoredContact(key);
+  if (!contact) {
+    res.status(404).send();
+  } else {
+    res.status(200).send(contactPage(contact, key));
+  }
+});
