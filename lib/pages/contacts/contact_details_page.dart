@@ -37,10 +37,10 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
     contact.multaccItems.forEach((item) {
       switch (item.type) {
         case MultaccItemType.Phone:
-          phoneShortcut = _buildShortcutIcon(Icons.phone, "Call", () => (item as PhoneItem).launchApp());
+          phoneShortcut = _buildShortcutIcon(Icons.phone, "Call", () => item.launchApp());
           break;
         case MultaccItemType.Email:
-          emailShortcut = _buildShortcutIcon(Icons.email, "Email", () => (item as EmailItem).launchApp());
+          emailShortcut = _buildShortcutIcon(Icons.email, "Email", () => item.launchApp());
           break;
         default:
           break;
