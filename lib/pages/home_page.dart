@@ -10,6 +10,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:multacc/database/database_interface.dart';
 import 'package:multacc/pages/contacts/contact_details_page.dart';
 import 'package:multacc/pages/contacts/contact_form_page.dart';
+import 'package:multacc/pages/profile/share_page.dart';
+import 'package:multacc/sharing/send.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:multacc/database/contact_model.dart';
 import 'package:multacc/pages/contacts/contacts_data.dart';
 import 'package:multacc/common/auth.dart';
@@ -141,6 +145,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 builder: (context) => ContactFormPage(isNewContact: true)
               ));
               break;
+
+            case 2:
+              shareProfile();
+              break;
           }
         },
       ),
@@ -206,6 +214,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   Widget _buildTab(String title, int index) {
     return Tab(child: _MultaccTab(title, _tabController.index == index));
+  }
+
+  Future<void> shareProfile() async {
+    final url = await ContactSender.send(userContact);
+    Navigator.of(context).push(MaterialPageRoute(
+      fullscreenDialog: true,
+      builder: (context) => SharePage(url),
+    ));
   }
 }
 

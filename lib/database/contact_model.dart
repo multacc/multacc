@@ -95,7 +95,7 @@ class MultaccContact extends Contact {
         listEquals(this.emails?.toList(), baseContact.emails?.toList()) &&
         this.familyName == baseContact.familyName &&
         this.givenName == baseContact.givenName &&
-        this.identifier == baseContact.identifier &&
+        // this.identifier == baseContact.identifier &&
         this.jobTitle == baseContact.jobTitle &&
         this.middleName == baseContact.middleName &&
         listEquals(this.phones?.toList(), baseContact.phones?.toList()) &&

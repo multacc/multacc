@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:multacc/pages/contacts/contact_details_page.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:multacc/common/theme.dart';
@@ -15,7 +16,6 @@ import 'package:multacc/items/phone.dart';
 import 'package:multacc/database/contact_model.dart';
 import 'package:multacc/pages/contacts/contacts_data.dart';
 import 'package:multacc/common/avatars.dart';
-import 'package:multacc/pages/contacts/contact_details_page.dart';
 
 class ContactFormPage extends StatefulWidget {
   final MultaccContact contact;
@@ -94,7 +94,8 @@ class _ContactForm extends State<ContactFormPage> {
             icon: Icon(Icons.close, color: Colors.grey, size: 30),
           ),
           centerTitle: false,
-          title: Text(widget.isNewContact ? 'Create contact' : 'Edit contact', style: kHeaderTextStyle),
+          title: Text(widget.isNewContact ? 'Create contact' : 'Edit contact',
+              style: kHeaderTextStyle),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: saveChanges,
