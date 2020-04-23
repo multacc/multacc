@@ -58,7 +58,7 @@ void main() {
       map['username'] = 'John Cena';
       item = FacebookItem.fromJson(map);
     });
-    test('username address should be loaded from json', () {
+    test('username should be loaded from json', () {
       expect(item.username, 'John Cena');
     });
   });
