@@ -319,11 +319,14 @@ class _ContactForm extends State<ContactFormPage> {
       if (widget.isNewContact) {
         contactsData.addContact(contact);
         Navigator.of(context).pop();
-        if (!widget.isProfile) Navigator.of(context).push(MaterialPageRoute(builder: (_) => ContactDetailsPage(contact)));
       } else {
         contactsData.updateContact(contact);
         Navigator.of(context).pop();
+        Navigator.of(context).pop();
       }
+
+      // hacky way to refresh contact details page
+      if (!widget.isProfile) Navigator.of(context).push(MaterialPageRoute(builder: (_) => ContactDetailsPage(contact)));
     }
   }
 }
