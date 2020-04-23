@@ -42,7 +42,7 @@ class MainActivity: FlutterActivity() {
       call, result ->
       if(call.method == "defaultSMS"){
          if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-            var mContext : Context= getApplicationContext()
+            var mContext : Context = getApplicationContext()
             var roleManager : RoleManager = mContext.getSystemService(Context.ROLE_SERVICE) as RoleManager
             // check if the app is having permission to be as default SMS app
             var isRoleAvailable = roleManager.isRoleAvailable(RoleManager.ROLE_SMS)
@@ -66,8 +66,12 @@ class MainActivity: FlutterActivity() {
         val msg: String = arguments["message"] as String
         val num: String = arguments["num"] as String
 
+        val contentResolver : ContentResolver = getApplicationContext().contentResolver
+
         val smsManager = SmsManager.getDefault() as SmsManager
         smsManager.sendTextMessage(num, null, msg, null, null)
+
+        putSentSmsToDatabase(contentResolver, num, msg)
 
         result.success(5)
       }
@@ -75,6 +79,30 @@ class MainActivity: FlutterActivity() {
         result.notImplemented()
       }
     }
+  }
+
+  fun putSentSmsToDatabase(contentResolver: ContentResolver, num: String, msg: String){
+    var SMS_URI = "content://sms"
+    var MESSAGE_IS_READ = 1
+    var MESSAGE_TYPE_OUTBOX = 0
+    var MESSAGE_IS_SEEN = 1
+    var PASSWORD = "password"
+    
+    // Create SMS row
+    var values = ContentValues()
+    values.put("address", num)
+    values.put("read", MESSAGE_IS_READ )
+    values.put("type", MESSAGE_TYPE_OUTBOX )
+    values.put("seen", MESSAGE_IS_SEEN )
+    try{
+        values.put("body", msg)
+    }
+    catch (e: Exception) { 
+        e.printStackTrace()
+    }
+
+    // Push row into the SMS table
+    contentResolver.insert( Uri.parse(SMS_URI), values )
   }
 }
 
@@ -114,7 +142,7 @@ class SmsReceiver : BroadcastReceiver() {
     try{
         var encryptedPassword = sms.getMessageBody().toString()
         // var encryptedPassword : String = encrypt( PASSWORD, sms.getMessageBody().toString() );
-        values.put("body", encryptedPassword )
+        values.put("body", encryptedPassword)
     }
     catch (e: Exception) { 
         e.printStackTrace()
