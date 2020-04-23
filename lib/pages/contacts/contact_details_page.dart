@@ -42,13 +42,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
         case MultaccItemType.Email:
           emailShortcut = _buildShortcutIcon(Icons.email, "Email", () => (item as EmailItem).launchApp());
           break;
-        case MultaccItemType.Facebook:
-          return IconButton(
-            icon: Icon(MaterialCommunityIcons.facebook_messenger),
-            onPressed: () => (item as FacebookItem).launchMessenger(),
-          );
         default:
-          return Text('');
+          break;
       }
     });
   }
