@@ -15,7 +15,7 @@
     ],
     "rewrites": [
       {
-        "source": "!/static/**",
+        "source": "/*",
         "function": "displayContact"
       },
       {
