@@ -189,7 +189,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return <Widget>[
       ContactsPage(),
       ChatsPage(),
-      ContactDetailsPage(userContact, withoutScaffold: true),
+      ContactDetailsPage(userContact, withoutScaffold: true, isProfile: true),
     ];
   }
 

@@ -72,7 +72,7 @@ class _ContactForm extends State<ContactFormPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.isNewContact || contact == null) {
+    if ((!widget.isProfile && widget.isNewContact) || contact == null) {
       contact = MultaccContact(clientKey: Uuid().v4());
       items.add(MultaccItemType.Phone.createItem());
       items.add(MultaccItemType.Email.createItem());
@@ -94,7 +94,7 @@ class _ContactForm extends State<ContactFormPage> {
             icon: Icon(Icons.close, color: Colors.grey, size: 30),
           ),
           centerTitle: false,
-          title: Text(widget.isNewContact ? 'Create contact' : 'Edit contact', style: kHeaderTextStyle),
+          title: Text(widget.isProfile ? 'Profile' : widget.isNewContact ? 'Create contact' : 'Edit contact', style: kHeaderTextStyle),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: saveChanges,
@@ -315,16 +315,17 @@ class _ContactForm extends State<ContactFormPage> {
       contact.emails = emailItems;
       contact.displayName = '${contact.givenName} ${contact.familyName}';
 
-      if (widget.isNewContact) {
+      if (widget.isProfile) {
+        contactsData.updateProfile(contact);
+      } else if (widget.isNewContact) {
         contactsData.addContact(contact);
-        Navigator.of(context).pop();
       } else {
         contactsData.updateContact(contact);
-        Navigator.of(context).pop();
         Navigator.of(context).pop();
       }
 
       // hacky way to refresh contact details page
+      Navigator.of(context).pop();
       if (!widget.isProfile) Navigator.of(context).push(MaterialPageRoute(builder: (_) => ContactDetailsPage(contact)));
     }
   }

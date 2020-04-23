@@ -16,8 +16,9 @@ import 'package:multacc/pages/contacts/contacts_data.dart';
 class ContactDetailsPage extends StatefulWidget {
   final MultaccContact contact;
   final bool withoutScaffold;
+  final bool isProfile;
 
-  ContactDetailsPage(this.contact, {this.withoutScaffold = false});
+  ContactDetailsPage(this.contact, {this.withoutScaffold = false, this.isProfile = false});
 
   @override
   _ContactDetailsPageState createState() => _ContactDetailsPageState(contact);
@@ -120,6 +121,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
           builder: (context) => ContactFormPage(
             contact: contact,
             isNewContact: isNewContact,
+            isProfile: widget.isProfile
           ),
         )),
         child: Row(
