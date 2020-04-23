@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import {CallableContext} from "firebase-functions/lib/providers/https";
 import {MultaccContact} from "./schema";
-import {getStoredContact, storeContact} from "./storage";
+import {getStoredContact, storeContact, trimSlashes} from "./storage";
 import {contactPage} from "./web";
 
 export const sendContact = functions.https.onCall((data: any, context: CallableContext) => {
@@ -38,10 +38,10 @@ export const sendContact = functions.https.onCall((data: any, context: CallableC
   // @body https://developer.android.com/training/app-links/verify-site-associations
 });
 
-export const receiveContact = functions.https.onCall((data: any, context: CallableContext) => getStoredContact(data));
+export const receiveContact = functions.https.onCall((data: any, context: CallableContext) => getStoredContact(data.id));
 
 export const displayContact = functions.https.onRequest(async (req, res) => {
-  const key: string = req.path.replace(/^\/+|\/+$/g, '');
+  const key: string = trimSlashes(req.path);
   const contact: MultaccContact | undefined = await getStoredContact(key);
   if (!contact) {
     res.status(404).send();

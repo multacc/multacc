@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get_it/get_it.dart';
+import 'package:multacc/sharing/receive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:multacc/database/database_interface.dart';
@@ -66,7 +67,15 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           GetIt.I.get<ChatsData>().getAllChats(groupmeToken: groupmeToken);
           // @todo Refactor deeplink logic when adding more platforms
         } else {
-          deepLink.path.trim('/')
+          MultaccContact contact = await ContactReceiver.receive(deepLink.path);
+          print(contact);
+          if (contact != null) {
+            // Display the received contact
+            Navigator.of(context).push(MaterialPageRoute(
+              fullscreenDialog: true,
+              builder: (context) => ContactDetailsPage(contact),
+            ));
+          }
         }
       }
     }, onError: (OnLinkErrorException e) async {

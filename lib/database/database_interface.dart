@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:multacc/items/item.dart';
 import 'package:multacc/database/contact_model.dart';
+import 'package:uuid/uuid.dart';
 
 class DatabaseInterface {
   Box<MultaccContact> get contactsBox => Hive.box<MultaccContact>('contacts');

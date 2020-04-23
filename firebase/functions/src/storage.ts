@@ -18,10 +18,11 @@ export async function storeContact(contact: MultaccContact): Promise<string> {
 
 /**
  * Get a stored contact from the database
- * @param id The firestore document id for contact document
+ * @param untrimmedId The firestore document id for contact document
  * @return Stored contact
  */
-export async function getStoredContact(id: string): Promise<MultaccContact | undefined> {
+export async function getStoredContact(untrimmedId: string): Promise<MultaccContact | undefined> {
+  const id = trimSlashes(untrimmedId);
   return db.collection('sharedContacts').doc(id).get().then(doc => {
     if (doc.data() === undefined) {
       return undefined;
@@ -36,4 +37,8 @@ export async function getStoredContact(id: string): Promise<MultaccContact | und
     console.error(err);
     return undefined;
   });
+}
+
+export function trimSlashes(path: string): string {
+  return path.replace(/^\/+|\/+$/g, '');
 }

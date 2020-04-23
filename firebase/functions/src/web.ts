@@ -7,7 +7,8 @@ export function contactPage(contact: MultaccContact, key: string) {
   <title>${title(contact, '|')}</title>
   <link rel="stylesheet" href="/static/style.css">
   <div class="deeplink"><a href="${generateDynamicLink(contact, key)}">Open in Multacc</a></div>
-  <ul class="contacts">
+  <aside>TODO: Use Flutter web to display contact information (<a href="https://github.com/multacc/multacc/issues/164">#164</a>)</aside>
+  <ul class="item_metadata">
   `;
   contact.multaccItems.forEach((item) => {
     html += '<li>';
@@ -25,7 +26,7 @@ function generateDynamicLink(contact: MultaccContact, key: string): string {
     efr: "1",
     st: title(contact, 'at'),
     sd: "Contact information shared with Multacc",
-    // TODO: si --> avatar
+    // TODO: si: avatar
   });
 }
 

@@ -107,10 +107,16 @@ class MultaccContact extends Contact {
   MultaccContact.fromJson(Map<String, dynamic> json)
       : clientKey = json['clientKey'],
         serverKey = json['serverKey'],
-        multaccItems = (json['multaccItems'] as List).map((jsonItem) => MultaccItem.fromDB(jsonItem)).toList(),
+        multaccItems = (json['multaccItems'] as List)
+            .map((jsonItem) => MultaccItem.fromDB(Map<String, dynamic>.from(jsonItem)))
+            .toList(),
         displayName = json['displayName'],
-        avatar = base64.decode(json['avatar']),
-        birthday = DateTime.parse(json['birthday']);
+        avatar = json['avatar'] == null ? null : base64.decode(json['avatar']),
+        birthday = json['birthday'] == null
+            ? null
+            : json['birthday'] is Map
+                ? DateTime.fromMillisecondsSinceEpoch(json['birthday']['_seconds'])
+                : DateTime.parse(json['birthday'].toString());
 
   Map<String, dynamic> toJson() => {
         'clientKey': clientKey,
