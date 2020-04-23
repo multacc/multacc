@@ -32,7 +32,7 @@ class MultaccContact extends Contact {
   @HiveField(4)
   DateTime birthday;
 
-  MultaccContact();
+  MultaccContact({this.clientKey});
 
   // Construct a Multacc contact from a Contact
   MultaccContact.fromContact(Contact baseContact) {
@@ -86,7 +86,7 @@ class MultaccContact extends Contact {
     return 'Contact';
   }
 
-  // Returns true if the base contact fields match
+  /// Returns true if the base contact fields match
   bool equalsBaseContact(Contact baseContact) {
     return (listEquals(this.avatar, baseContact.avatar) &&
         this.birthday?.millisecondsSinceEpoch == baseContact.birthday?.millisecondsSinceEpoch &&

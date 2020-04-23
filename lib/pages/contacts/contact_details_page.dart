@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:multacc/common/avatars.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:multacc/items/email.dart';
 import 'package:multacc/items/facebook.dart';
-import 'package:multacc/items/instagram.dart';
 import 'package:multacc/items/item.dart';
 import 'package:multacc/items/phone.dart';
 import 'package:multacc/database/contact_model.dart';
+import 'package:multacc/pages/contacts/contact_form_page.dart';
+import 'package:multacc/pages/contacts/contacts_data.dart';
 
 class ContactDetailsPage extends StatefulWidget {
   final MultaccContact contact;
+  final bool withoutScaffold;
 
-  ContactDetailsPage(this.contact);
+  ContactDetailsPage(this.contact, {this.withoutScaffold = false});
 
   @override
   _ContactDetailsPageState createState() => _ContactDetailsPageState(contact);
@@ -27,8 +30,30 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColor);
+    return widget.withoutScaffold
+        ? _showBody()
+        : Scaffold(
+            appBar: AppBar(
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () => _deleteContact(contact),
+                ),
+              ],
+            ),
+            body: _showBody(),
+            floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.edit),
+              backgroundColor: kPrimaryColor,
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                fullscreenDialog: true,
+                builder: (context) => ContactFormPage(contact: contact),
+              )),
+            ),
+          );
+  }
 
+  Container _showBody() {
     return Container(
       child: Column(
         children: <Widget>[
@@ -36,6 +61,28 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
           _buildName(),
           // _buildShortcutsRow(),
           _buildContactItemsList(),
+        ],
+      ),
+    );
+  }
+
+  void _deleteContact(MultaccContact contact) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        title: Text('Delete this contact?'),
+        content: Text('${contact.displayName} will be permanently removed'),
+        actions: <Widget>[
+          FlatButton(child: Text('Cancel'), onPressed: () => Navigator.of(context).pop()),
+          FlatButton(
+            child: Text('Delete'),
+            onPressed: () {
+              GetIt.I.get<ContactsData>().deleteContact(contact);
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
+          )
         ],
       ),
     );
@@ -112,11 +159,6 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
         return IconButton(
           icon: Icon(MaterialCommunityIcons.facebook_messenger),
           onPressed: () => (item as FacebookItem).launchMessenger(),
-        );
-      case MultaccItemType.Instagram:
-        return IconButton(
-          icon: Icon(SimpleLineIcons.paper_plane),
-          onPressed: () => (item as InstagramItem).launchDirectMessage(),
         );
       default:
         return Text('');

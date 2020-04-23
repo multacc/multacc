@@ -4,9 +4,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get_it/get_it.dart';
-import 'package:multacc/pages/contacts/contact_form_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:multacc/database/database_interface.dart';
+import 'package:multacc/pages/contacts/contact_details_page.dart';
+import 'package:multacc/pages/contacts/contact_form_page.dart';
 import 'package:multacc/database/contact_model.dart';
 import 'package:multacc/pages/contacts/contacts_data.dart';
 import 'package:multacc/common/auth.dart';
@@ -14,7 +16,6 @@ import 'package:multacc/common/bottom_bar.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:multacc/pages/chats/chats_page.dart';
 import 'package:multacc/pages/contacts/contacts_page.dart';
-import 'package:multacc/pages/profile/profile_page.dart';
 
 import 'chats/chats_data.dart';
 
@@ -43,7 +44,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
     contactsData = GetIt.I.get<ContactsData>();
-    // userContact = MultaccContact();
+    userContact = GetIt.I.get<DatabaseInterface>().getContact('profile') ?? MultaccContact(clientKey: "profile");
     initDynamicLinks();
 
     _tabController.addListener(() {
@@ -126,7 +127,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             case 0:
               Navigator.of(context).push(MaterialPageRoute(
                 fullscreenDialog: true,
-                builder: (context) => ContactFormPage(isNewContact: true),
+                builder: (context) => ContactFormPage(isNewContact: true)
               ));
               break;
           }
@@ -188,13 +189,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return <Widget>[
       ContactsPage(),
       ChatsPage(),
-      ProfilePage(userContact),
+      ContactDetailsPage(userContact, withoutScaffold: true),
     ];
   }
 
   Widget _buildTab(String title, int index) {
     return Tab(child: _MultaccTab(title, _tabController.index == index));
   }
+
 }
 
 class _MultaccTab extends StatefulWidget {

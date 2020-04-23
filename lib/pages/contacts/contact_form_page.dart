@@ -6,21 +6,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:multacc/common/theme.dart';
-import 'package:multacc/database/database_interface.dart';
 import 'package:multacc/items/email.dart';
 import 'package:multacc/items/item.dart';
 import 'package:multacc/items/phone.dart';
 import 'package:multacc/database/contact_model.dart';
 import 'package:multacc/pages/contacts/contacts_data.dart';
 import 'package:multacc/common/avatars.dart';
+import 'package:multacc/pages/contacts/contact_details_page.dart';
 
 class ContactFormPage extends StatefulWidget {
   final MultaccContact contact;
   final bool isNewContact;
+  final bool isProfile;
 
-  ContactFormPage({this.contact, this.isNewContact = false});
+  ContactFormPage({this.contact, this.isNewContact = false, this.isProfile = false});
 
   @override
   _ContactForm createState() => _ContactForm(contact);
@@ -48,7 +50,6 @@ class _ContactForm extends State<ContactFormPage> {
     'school',
   ];
   final form = GlobalKey<FormState>();
-  DatabaseInterface db;
 
   // @todo Refactor MultaccItem so base items are handled more cleanly
   // @body Becomes important if we end up using other base contact fields (see #15)
@@ -71,8 +72,8 @@ class _ContactForm extends State<ContactFormPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.isNewContact) {
-      contact = MultaccContact();
+    if (widget.isNewContact || contact == null) {
+      contact = MultaccContact(clientKey: Uuid().v4());
       items.add(MultaccItemType.Phone.createItem());
       items.add(MultaccItemType.Email.createItem());
     } else {
@@ -80,7 +81,6 @@ class _ContactForm extends State<ContactFormPage> {
       avatar = contact.avatar;
     }
     contactsData = GetIt.I.get<ContactsData>();
-    db = GetIt.I.get<DatabaseInterface>();
   }
 
   @override
@@ -297,7 +297,7 @@ class _ContactForm extends State<ContactFormPage> {
     );
   }
 
-  void saveChanges() {
+  void saveChanges() async {
     if (form.currentState.validate()) {
       contact.avatar = avatar;
       form.currentState.save();
@@ -313,17 +313,16 @@ class _ContactForm extends State<ContactFormPage> {
       contact.multaccItems = items;
       contact.phones = phoneItems;
       contact.emails = emailItems;
+      contact.displayName = '${contact.givenName} ${contact.familyName}';
 
       if (widget.isNewContact) {
-        ContactsService.addContact(contact);
+        contactsData.addContact(contact);
+        Navigator.of(context).pop();
+        if (!widget.isProfile) Navigator.of(context).push(MaterialPageRoute(builder: (_) => ContactDetailsPage(contact)));
       } else {
-        ContactsService.updateContact(contact);
+        contactsData.updateContact(contact);
+        Navigator.of(context).pop();
       }
-
-      // Sync local db with device contacts
-      contactsData.getAllContacts();
-
-      Navigator.of(context).pop();
     }
   }
 }
