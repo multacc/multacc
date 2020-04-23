@@ -78,7 +78,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
   Widget _showBody() {
     final items = contact.multaccItems.where((item) => (item.humanReadableValue ?? '') != '').toList();
     return Container(
-      child: Column(
+      child: ListView(
+        physics: AlwaysScrollableScrollPhysics(),
         children: <Widget>[
           Avatars.buildContactAvatar(memoryImage: contact.avatar, radius: 40.0),
           _buildName(),
@@ -94,6 +95,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       child: ListView.separated(
+        physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: items.length,
         separatorBuilder: (BuildContext context, int index) => Divider(),
@@ -169,7 +171,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
   Widget _buildName() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Text(contact.name, style: kHeaderTextStyle),
+      child: Text(contact.name, style: kHeaderTextStyle, textAlign: TextAlign.center),
     );
   }
 
