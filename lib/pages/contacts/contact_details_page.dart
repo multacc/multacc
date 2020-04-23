@@ -16,8 +16,9 @@ import 'package:multacc/pages/contacts/contacts_data.dart';
 class ContactDetailsPage extends StatefulWidget {
   final MultaccContact contact;
   final bool withoutScaffold;
+  final bool isProfile;
 
-  ContactDetailsPage(this.contact, {this.withoutScaffold = false});
+  ContactDetailsPage(this.contact, {this.withoutScaffold = false, this.isProfile = false});
 
   @override
   _ContactDetailsPageState createState() => _ContactDetailsPageState(contact);
@@ -25,8 +26,32 @@ class ContactDetailsPage extends StatefulWidget {
 
 class _ContactDetailsPageState extends State<ContactDetailsPage> {
   final MultaccContact contact;
+  Widget phoneShortcut;
+  Widget emailShortcut;
 
   _ContactDetailsPageState(this.contact);
+
+  @override
+  void initState() {
+    super.initState();
+    contact.multaccItems.forEach((item) {
+      switch (item.type) {
+        case MultaccItemType.Phone:
+          phoneShortcut = _buildShortcutIcon(Icons.phone, "Call", () => (item as PhoneItem).launchApp());
+          break;
+        case MultaccItemType.Email:
+          emailShortcut = _buildShortcutIcon(Icons.email, "Email", () => (item as EmailItem).launchApp());
+          break;
+        case MultaccItemType.Facebook:
+          return IconButton(
+            icon: Icon(MaterialCommunityIcons.facebook_messenger),
+            onPressed: () => (item as FacebookItem).launchMessenger(),
+          );
+        default:
+          return Text('');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +84,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
         children: <Widget>[
           Avatars.buildContactAvatar(memoryImage: contact.avatar, radius: 40.0),
           _buildName(),
-          // _buildShortcutsRow(),
+          widget.isProfile ? Container() : _buildShortcutsRow(),
           _buildContactItemsList(),
         ],
       ),
@@ -109,35 +134,36 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
     );
   }
 
-  // @todo Fix the terrible contact shortcuts row
   Widget _buildShortcutsRow() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
+    return Container(
+      height: 70,
+      decoration: BoxDecoration(
+        border: Border.symmetric(vertical: BorderSide(width: 1, color: Colors.grey[800]))
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          _buildContactShortCut(icon: Icons.phone),
-          _buildContactShortCut(icon: Icons.message),
-          _buildContactShortCut(icon: Icons.videocam),
-          _buildContactShortCut(icon: Icons.email),
-          _buildContactShortCut(icon: Icons.dashboard),
+          phoneShortcut != null ? phoneShortcut : _buildShortcutIcon(Icons.phone, "Call", () {}, disabled: true),
+          _buildShortcutIcon(Icons.message, "Text", () {}, disabled: true),
+          emailShortcut != null ? emailShortcut : _buildShortcutIcon(Icons.email, "Email", () {}, disabled: true),
         ],
       ),
     );
   }
 
-  Widget _buildContactShortCut({IconData icon}) {
-    return SizedBox.fromSize(
-      size: Size(40, 40),
-      child: ClipOval(
-        child: Material(
-          color: kBackgroundColorLight,
-          child: InkWell(
-            onTap: () {},
-            child: Icon(icon, size: 25),
-          ),
-        ),
-      ),
+  Widget _buildShortcutIcon(IconData icon, String helperText, Function ontap, {bool disabled = false}) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(50),
+      onTap: ontap,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(padding: EdgeInsets.only(bottom: 3), child: Icon(icon, color: disabled ? Colors.grey[600] : Colors.white),),
+          Text(helperText, style: TextStyle(fontSize: 12, color: disabled ? Colors.grey[600] : Colors.white)),
+          SizedBox(width: 50)
+        ]
+      )
     );
   }
 
