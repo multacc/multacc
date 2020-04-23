@@ -13,7 +13,7 @@ export async function storeContact(contact: MultaccContact): Promise<string> {
   // @todo Store items separately from contact when sharing
   // @body This will be useful when we have sharing templates, so multiple templates are automatically updated
   // @body when an item is changed.
-  return db.collection('sharedContacts').add(contact).then(docRef => docRef.id);
+  return db.collection('sharedContacts').add(contact).then((docRef) => docRef.id);
 }
 
 /**

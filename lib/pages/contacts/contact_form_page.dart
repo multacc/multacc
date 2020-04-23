@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:multacc/pages/profile/share_page.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:multacc/common/theme.dart';
 import 'package:multacc/database/database_interface.dart';
@@ -15,12 +17,14 @@ import 'package:multacc/items/phone.dart';
 import 'package:multacc/database/contact_model.dart';
 import 'package:multacc/pages/contacts/contacts_data.dart';
 import 'package:multacc/common/avatars.dart';
+import 'package:multacc/sharing/send.dart';
 
 class ContactFormPage extends StatefulWidget {
   final MultaccContact contact;
   final bool isNewContact;
+  final bool isProfile;
 
-  ContactFormPage({this.contact, this.isNewContact = false});
+  ContactFormPage({this.contact, this.isNewContact = false, this.isProfile = false});
 
   @override
   _ContactForm createState() => _ContactForm(contact);
@@ -71,7 +75,7 @@ class _ContactForm extends State<ContactFormPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.isNewContact) {
+    if (widget.isNewContact || contact == null) {
       contact = MultaccContact();
       items.add(MultaccItemType.Phone.createItem());
       items.add(MultaccItemType.Email.createItem());
@@ -88,18 +92,19 @@ class _ContactForm extends State<ContactFormPage> {
     return SafeArea(
       bottom: false,
       child: Scaffold(
-        appBar: AppBar(
+        appBar: widget.isProfile ? null : AppBar(
           leading: IconButton(
             onPressed: Navigator.of(context).pop,
             icon: Icon(Icons.close, color: Colors.grey, size: 30),
           ),
           centerTitle: false,
-          title: Text(widget.isNewContact ? 'Create contact' : 'Edit contact', style: kHeaderTextStyle),
+          title: Text(widget.isNewContact ? 'Create contact' : 'Edit contact',
+              style: kHeaderTextStyle),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: saveChanges,
+          onPressed: widget.isProfile ? shareProfile : saveChanges,
           backgroundColor: kPrimaryColor,
-          child: Icon(Icons.save),
+          child: widget.isProfile ? Icon(Icons.share) : Icon(Icons.save),
         ),
         body: Form(
           key: form,
@@ -297,6 +302,16 @@ class _ContactForm extends State<ContactFormPage> {
     );
   }
 
+  Future<void> shareProfile() async {
+    // @todo Also save changes if we do not share the profile
+    saveChanges();
+    final String url = await ContactSender.send(contact);
+    Navigator.of(context).push(MaterialPageRoute(
+      fullscreenDialog: true,
+      builder: (context) => SharePage(url),
+    ));
+  }
+
   void saveChanges() {
     if (form.currentState.validate()) {
       contact.avatar = avatar;
@@ -314,11 +329,22 @@ class _ContactForm extends State<ContactFormPage> {
       contact.phones = phoneItems;
       contact.emails = emailItems;
 
-      if (widget.isNewContact) {
-        ContactsService.addContact(contact);
-      } else {
+      // @todo Clean up display name
+      contact.displayName = contact.givenName + ' ' + contact.familyName;
+
+      // @todo Save new contacts created in multacc to native contacts app
+      // @body This requires a way to sync their id with the id in the database
+      // @body Possibly blocked on #26 depending on whether we can get identifier back out of
+      // @body contact after saving without losing the MultaccItems in the process
+//      if (!widget.isProfile && widget.isNewContact) {
+//        ContactsService.addContact(contact);
+//      }
+      if (!widget.isProfile && !widget.isNewContact) {
         ContactsService.updateContact(contact);
       }
+
+      if (widget.isProfile) contact.clientKey ??= widget.isProfile ? "profile" : Uuid().v4();
+      db.addContact(contact);
 
       // Sync local db with device contacts
       contactsData.getAllContacts();

@@ -31,7 +31,9 @@ class _ContactsPageState extends State<ContactsPage> with WidgetsBindingObserver
   Widget build(BuildContext context) {
     return Observer(
       builder: (_) {
-        contactsData.allContacts.sort((a, b) => a.name.compareTo(b.name));
+        contactsData.allContacts
+          ..removeWhere((contact) => contact.clientKey == 'profile')
+          ..sort((a, b) => a.name.compareTo(b.name));
         return ListTileTheme(
           selectedColor: kPrimaryColor,
           child: LiquidPullToRefresh(

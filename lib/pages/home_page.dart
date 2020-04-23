@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get_it/get_it.dart';
+import 'package:multacc/database/database_interface.dart';
 import 'package:multacc/pages/contacts/contact_form_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,7 +44,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
     contactsData = GetIt.I.get<ContactsData>();
-    // userContact = MultaccContact();
+    userContact = GetIt.I.get<DatabaseInterface>().getContact('profile');
     initDynamicLinks();
 
     _tabController.addListener(() {
@@ -119,7 +120,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       key: globalScaffoldKey,
       floatingActionButton: FloatingActionButton(
         backgroundColor: kPrimaryColor,
-        child: Icon(_tabController.index == 2 ? Icons.share : Icons.add),
+        child: Icon(_tabController.index == 2 ? Icons.share : Icons.add), // @todo Make this the actual share button
         onPressed: () {
           switch (_tabController.index) {
             case 0:
@@ -187,7 +188,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return <Widget>[
       ContactsPage(),
       ChatsPage(),
-      ProfilePage(userContact),
+      ContactFormPage(contact: userContact, isProfile: true, isNewContact: userContact == null),
     ];
   }
 

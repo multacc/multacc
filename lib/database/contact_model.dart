@@ -117,7 +117,7 @@ class MultaccContact extends Contact {
         'serverKey': serverKey,
         'multaccItems': multaccItems.map((item) => item.toJson()).toList(),
         'displayName': displayName,
-        'avatar': base64.encode(avatar),
-        'birthday': birthday.toIso8601String()
+        'avatar': avatar == null ? null : base64.encode(avatar),
+        'birthday': birthday?.toIso8601String()
       };
 }
