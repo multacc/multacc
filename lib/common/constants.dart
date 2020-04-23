@@ -5,3 +5,5 @@ const ANDROID_DIALER_PACKAGE = 'com.google.android.dialer';
 const GOOGLE_DUO_PACKAGE = 'com.google.android.apps.tachyon';
 const GOOGLE_VOICE_PACKAGE = 'com.google.android.apps.googlevoice';
 const GOOGLE_VOICE_INTENT_ACTIVITY = 'com.google.android.apps.voice.home.androidintents.AndroidIntentActivity';
+
+const PROFILE_CONTACT_KEY = 'profile';

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:contacts_service/contacts_service.dart';
@@ -32,7 +33,7 @@ class MultaccContact extends Contact {
   @HiveField(4)
   DateTime birthday;
 
-  MultaccContact({this.clientKey});
+  MultaccContact({this.clientKey}) : multaccItems = [];
 
   // Construct a Multacc contact from a Contact
   MultaccContact.fromContact(Contact baseContact) {
@@ -55,7 +56,6 @@ class MultaccContact extends Contact {
     this.prefix = baseContact.prefix;
     this.suffix = baseContact.suffix;
     // @todo Get IM, notes, etc. from base contact
-
 
     // Multacc additional contact data
     // @todo Use a field other than identifier for clientKey (#26)
@@ -83,7 +83,7 @@ class MultaccContact extends Contact {
         return item.humanReadableValue;
       }
     }
-    return 'Contact';
+    return '';
   }
 
   /// Returns true if the base contact fields match
@@ -95,7 +95,7 @@ class MultaccContact extends Contact {
         listEquals(this.emails?.toList(), baseContact.emails?.toList()) &&
         this.familyName == baseContact.familyName &&
         this.givenName == baseContact.givenName &&
-        this.identifier == baseContact.identifier &&
+        // this.identifier == baseContact.identifier &&
         this.jobTitle == baseContact.jobTitle &&
         this.middleName == baseContact.middleName &&
         listEquals(this.phones?.toList(), baseContact.phones?.toList()) &&
@@ -103,4 +103,27 @@ class MultaccContact extends Contact {
         this.prefix == baseContact.prefix &&
         this.suffix == baseContact.suffix);
   }
+
+  MultaccContact.fromJson(Map<String, dynamic> json)
+      : clientKey = json['clientKey'],
+        serverKey = json['serverKey'],
+        multaccItems = (json['multaccItems'] as List)
+            .map((jsonItem) => MultaccItem.fromDB(Map<String, dynamic>.from(jsonItem)))
+            .toList(),
+        displayName = json['displayName'],
+        avatar = json['avatar'] == null ? null : base64.decode(json['avatar']),
+        birthday = json['birthday'] == null
+            ? null
+            : json['birthday'] is Map
+                ? DateTime.fromMillisecondsSinceEpoch(json['birthday']['_seconds'])
+                : DateTime.parse(json['birthday'].toString());
+
+  Map<String, dynamic> toJson() => {
+        'clientKey': clientKey,
+        'serverKey': serverKey,
+        'multaccItems': multaccItems.map((item) => item.toJson()).toList(),
+        'displayName': displayName,
+        'avatar': avatar == null ? null : base64.encode(avatar),
+        'birthday': birthday?.toIso8601String()
+      };
 }
