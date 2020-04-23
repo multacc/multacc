@@ -1,3 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;1,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap');
+
 html {
-    background-color: red;
+    background-color: #303030;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+}
+
+div.deeplink {
+    margin: 1em;
+}
+
+div.deeplink>a {
+    display: block;
+    background-color: #1eb980;
+    padding: 1em;
+    font-size: 24pt;
+    color: #212121 !important;
+    text-decoration: none;
+    border-radius: 10pt;
+}
+
+aside {
+    color: #fff;
+    font-style: italic;
+    font-weight: 300;
+    margin-top: 4em;
+}
+
+aside strong {
+    font-weight: 400;
+    font-style: normal;
+}
+
+aside a {
+    color: #1eb980;
+}
+
+ul.item_metadata {
+    font-family: 'Roboto Mono', monospace;
+    color: #757575;
+    list-style-type: none;
+    padding: 0;
+    text-align: left;
+    width: 100%;
+    margin-top: 4em;
+    font-size: 80%;
+}
+
+ul.item_metadata:before {
+    content: 'Debug information\A';
+}
+
+ul.item_metadata>li:before {
+    content: '* ';
 }

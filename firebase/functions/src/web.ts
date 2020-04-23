@@ -5,9 +5,11 @@ export function contactPage(contact: MultaccContact, key: string) {
   let html = `
   <!DOCTYPE html>
   <title>${title(contact, '|')}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/static/style.css">
   <div class="deeplink"><a href="${generateDynamicLink(contact, key)}">Open in Multacc</a></div>
-  <aside>TODO: Use Flutter web to display contact information (<a href="https://github.com/multacc/multacc/issues/164">#164</a>)</aside>
+  <aside><strong>TODO:</strong> Use Flutter web to display contact information (<a href="https://github.com/multacc/multacc/issues/164">#164</a>)</aside>
   <ul class="item_metadata">
   `;
   contact.multaccItems.forEach((item) => {
