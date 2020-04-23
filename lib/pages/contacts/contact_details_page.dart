@@ -53,19 +53,6 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
           );
   }
 
-  Container _showBody() {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Avatars.buildContactAvatar(memoryImage: contact.avatar, radius: 40.0),
-          _buildName(),
-          // _buildShortcutsRow(),
-          _buildContactItemsList(),
-        ],
-      ),
-    );
-  }
-
   void _deleteContact(MultaccContact contact) {
     showDialog(
       context: context,
@@ -88,16 +75,30 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
     );
   }
 
-  Widget _buildContactItemsList() {
+  Widget _showBody() {
+    final items = contact.multaccItems.where((item) => (item.humanReadableValue ?? '') != '').toList();
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Avatars.buildContactAvatar(memoryImage: contact.avatar, radius: 40.0),
+          _buildName(),
+          // _buildShortcutsRow(),
+          _buildContactItemsList(items),
+          _buildAddInfoButton(isNewContact: items.isEmpty),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContactItemsList(List<MultaccItem> items) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       child: ListView.separated(
-        physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        itemCount: contact.multaccItems.length,
+        itemCount: items.length,
         separatorBuilder: (BuildContext context, int index) => Divider(),
         itemBuilder: (BuildContext context, int index) {
-          final item = contact.multaccItems.elementAt(index);
+          final item = items.elementAt(index);
           return ListTile(
             title: Text(item.humanReadableValue ?? ''),
             trailing: _buildTrailing(item),
@@ -105,6 +106,30 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
             onTap: item.isLaunchable ? item.launchApp : null,
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildAddInfoButton({bool isNewContact = false}) {
+    return Container(
+      child: FlatButton(
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 48.0),
+        onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => ContactFormPage(
+            contact: contact,
+            isNewContact: isNewContact,
+          ),
+        )),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.add, color: kPrimaryColor),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Add Info', style: TextStyle(color: kPrimaryColor)),
+            ),
+          ],
+        ),
       ),
     );
   }
