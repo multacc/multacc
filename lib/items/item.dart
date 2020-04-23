@@ -95,7 +95,7 @@ abstract class MultaccItem {
   /// Get item type (from MultaccItemType enum; index will be stored in database)
   MultaccItemType get type;
 
-  /// Get human-readable item type (Snapchat, etc.) to display
+  /// Get human-readable item value such as phone number or email address
   String get humanReadableValue => '';
 
   /// Get item icon
