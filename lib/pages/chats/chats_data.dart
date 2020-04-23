@@ -26,13 +26,15 @@ abstract class _ChatsData with Store {
   List<GroupmeChat> allChats = [];
   
   @observable
-  List<GroupmeMessage> messages = []; // messages for the currently open thread
+  /// Direct messages for the currently open thread
+  ObservableList<GroupmeMessage> messages = ObservableList<GroupmeMessage>();
 
   void updateGroupmeToken({String token}) {
     _groupmeToken = token ?? GetIt.I.get<SharedPreferences>().getString('GROUPME_TOKEN');
   }
 
   @action
+  /// Fetches a list of GroupMe DM threads
   Future<List<GroupmeChat>> getAllChats({String groupmeToken}) async {
     updateGroupmeToken(token: groupmeToken);
     http.Response response = await _httpClient.get('$GROUPME_API_URL/chats?token=$_groupmeToken');
@@ -40,12 +42,26 @@ abstract class _ChatsData with Store {
   }
 
   @action
+  /// Fetches GroupmeMe DMs for a particular conversation thread (most recent 20)
   Future<List<GroupmeMessage>> getMessages(String otherUserId) async {
     http.Response response = await _httpClient.get('$GROUPME_API_URL/direct_messages?other_user_id=$otherUserId&token=$_groupmeToken');
-    return messages = jsonDecode(response.body)['response']['direct_messages'].map<GroupmeMessage>((json) => GroupmeMessage.fromJson(json)).toList();
+    messages.clear();
+    messages.addAll(jsonDecode(response.body)['response']['direct_messages'].map<GroupmeMessage>((json) => GroupmeMessage.fromJson(json)).toList());
+    return messages;
+  }
+
+  @action
+  /// Fetches the "next" 20 GroupMe DMs in a thread (used when scrolling up). Returns false if unable to load more messages
+  Future<bool> getMoreMessages(String otherUserId) async {
+    http.Response response = await _httpClient.get('$GROUPME_API_URL/direct_messages?other_user_id=$otherUserId&token=$_groupmeToken&before_id=${messages.last.id}');
+    List<GroupmeMessage> olderMessages = jsonDecode(response.body)['response']['direct_messages'].map<GroupmeMessage>((json) => GroupmeMessage.fromJson(json)).toList();
+    if (olderMessages.isEmpty) return false;
+    messages.addAll(olderMessages);
+    return true;
   }
   
   @action
+  /// Sends a GroupMe DM (text) and updates list of messages
   sendMessage(String otherUserId, String text) async {
     Map message = {
       'direct_message': {
