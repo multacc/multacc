@@ -18,6 +18,25 @@ class MessagesPage extends StatefulWidget {
 }
 
 class _MessagesPageState extends State<MessagesPage> {
+  ChatsData chatsData;
+  String _messageDraft; // currently being composed
+  TextEditingController _textController;
+  ScrollController _scrollController;
+  bool hasMoreMessages = true;
+
+  @override
+  void initState() {
+    super.initState();
+    chatsData = GetIt.I.get<ChatsData>();
+    _textController = TextEditingController();
+    _scrollController = ScrollController()
+      ..addListener(() async {
+        if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+          await chatsData.getMoreMessages(widget.otherUserId);
+        }
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +60,9 @@ class _MessagesPageState extends State<MessagesPage> {
 
   Widget _buildMessagesList() {
     return Observer(builder: (context) {
-      List<GroupmeMessage> messages = GetIt.I.get<ChatsData>().messages;
+      List<GroupmeMessage> messages = chatsData.messages.toList();
       return ListView.builder(
+        controller: _scrollController,
         reverse: true,
         itemCount: messages.length,
         itemBuilder: (context, index) {
@@ -62,21 +82,31 @@ class _MessagesPageState extends State<MessagesPage> {
       margin: EdgeInsets.only(top: 8.0),
       child: Row(
         children: <Widget>[
+          // @todo Add support for sending photos in chat
           Padding(padding: EdgeInsets.symmetric(horizontal: 8.0), child: Icon(Icons.image)),
           Flexible(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: TextField(
+                controller: _textController,
                 decoration: InputDecoration.collapsed(hintText: 'Type a message'),
                 textCapitalization: TextCapitalization.sentences,
                 textInputAction: TextInputAction.send,
+                onChanged: (text) => setState(() => _messageDraft = text),
+                onSubmitted: (text) => sendMessage(text: text),
               ),
             ),
           ),
-          Padding(padding: EdgeInsets.symmetric(horizontal: 8.0), child: Icon(Icons.send)),
+          IconButton(icon: Icon(Icons.send), onPressed: sendMessage)
         ],
       ),
     );
+  }
+
+  void sendMessage({String text}) async {
+    String _message = text ?? _messageDraft ?? '';
+    if (_message != '') await chatsData.sendMessage(widget.otherUserId, _message);
+    _textController.clear();
   }
 }
 
@@ -126,12 +156,13 @@ class _GroupmeBubbleState extends State<GroupmeBubble> {
   Widget _showTimestamp() {
     DateTime timestamp = DateTime.fromMillisecondsSinceEpoch(widget.message.timestamp * 1000);
     bool isToday = timestamp.day == DateTime.now().day && timestamp.month == DateTime.now().month;
-    
+    bool isThisYear = timestamp.year == DateTime.now().year;
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Text(
-        DateFormat(isToday ? 'HH:mm' : 'MMM dd, HH:mm').format(timestamp),
+        DateFormat('${!isToday ? 'MMM dd ' : ''}${!isThisYear ? 'yyyy, ' : ''}HH:mm').format(timestamp),
         style: kTinyTextStyle.copyWith(color: Colors.grey),
         textAlign: widget.isSelf ? TextAlign.right : TextAlign.left,
       ),

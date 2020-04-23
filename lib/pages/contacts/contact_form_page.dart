@@ -6,18 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:multacc/pages/profile/share_page.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:multacc/common/theme.dart';
-import 'package:multacc/database/database_interface.dart';
 import 'package:multacc/items/email.dart';
 import 'package:multacc/items/item.dart';
 import 'package:multacc/items/phone.dart';
 import 'package:multacc/database/contact_model.dart';
 import 'package:multacc/pages/contacts/contacts_data.dart';
 import 'package:multacc/common/avatars.dart';
-import 'package:multacc/sharing/send.dart';
+import 'package:multacc/pages/contacts/contact_details_page.dart';
 
 class ContactFormPage extends StatefulWidget {
   final MultaccContact contact;
@@ -52,7 +50,6 @@ class _ContactForm extends State<ContactFormPage> {
     'school',
   ];
   final form = GlobalKey<FormState>();
-  DatabaseInterface db;
 
   // @todo Refactor MultaccItem so base items are handled more cleanly
   // @body Becomes important if we end up using other base contact fields (see #15)
@@ -76,7 +73,7 @@ class _ContactForm extends State<ContactFormPage> {
   void initState() {
     super.initState();
     if (widget.isNewContact || contact == null) {
-      contact = MultaccContact();
+      contact = MultaccContact(clientKey: Uuid().v4());
       items.add(MultaccItemType.Phone.createItem());
       items.add(MultaccItemType.Email.createItem());
     } else {
@@ -84,7 +81,6 @@ class _ContactForm extends State<ContactFormPage> {
       avatar = contact.avatar;
     }
     contactsData = GetIt.I.get<ContactsData>();
-    db = GetIt.I.get<DatabaseInterface>();
   }
 
   @override
@@ -92,19 +88,18 @@ class _ContactForm extends State<ContactFormPage> {
     return SafeArea(
       bottom: false,
       child: Scaffold(
-        appBar: widget.isProfile ? null : AppBar(
+        appBar: AppBar(
           leading: IconButton(
             onPressed: Navigator.of(context).pop,
             icon: Icon(Icons.close, color: Colors.grey, size: 30),
           ),
           centerTitle: false,
-          title: Text(widget.isNewContact ? 'Create contact' : 'Edit contact',
-              style: kHeaderTextStyle),
+          title: Text(widget.isNewContact ? 'Create contact' : 'Edit contact', style: kHeaderTextStyle),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: widget.isProfile ? shareProfile : saveChanges,
+          onPressed: saveChanges,
           backgroundColor: kPrimaryColor,
-          child: widget.isProfile ? Icon(Icons.share) : Icon(Icons.save),
+          child: Icon(Icons.save),
         ),
         body: Form(
           key: form,
@@ -302,17 +297,7 @@ class _ContactForm extends State<ContactFormPage> {
     );
   }
 
-  Future<void> shareProfile() async {
-    // @todo Also save changes if we do not share the profile
-    saveChanges();
-    final String url = await ContactSender.send(contact);
-    Navigator.of(context).push(MaterialPageRoute(
-      fullscreenDialog: true,
-      builder: (context) => SharePage(url),
-    ));
-  }
-
-  void saveChanges() {
+  void saveChanges() async {
     if (form.currentState.validate()) {
       contact.avatar = avatar;
       form.currentState.save();
@@ -328,28 +313,16 @@ class _ContactForm extends State<ContactFormPage> {
       contact.multaccItems = items;
       contact.phones = phoneItems;
       contact.emails = emailItems;
+      contact.displayName = '${contact.givenName} ${contact.familyName}';
 
-      // @todo Clean up display name
-      contact.displayName = contact.givenName + ' ' + contact.familyName;
-
-      // @todo Save new contacts created in multacc to native contacts app
-      // @body This requires a way to sync their id with the id in the database
-      // @body Possibly blocked on #26 depending on whether we can get identifier back out of
-      // @body contact after saving without losing the MultaccItems in the process
-//      if (!widget.isProfile && widget.isNewContact) {
-//        ContactsService.addContact(contact);
-//      }
-      if (!widget.isProfile && !widget.isNewContact) {
-        ContactsService.updateContact(contact);
+      if (widget.isNewContact) {
+        contactsData.addContact(contact);
+        Navigator.of(context).pop();
+        if (!widget.isProfile) Navigator.of(context).push(MaterialPageRoute(builder: (_) => ContactDetailsPage(contact)));
+      } else {
+        contactsData.updateContact(contact);
+        Navigator.of(context).pop();
       }
-
-      if (widget.isProfile) contact.clientKey ??= widget.isProfile ? "profile" : Uuid().v4();
-      db.addContact(contact);
-
-      // Sync local db with device contacts
-      contactsData.getAllContacts();
-
-      Navigator.of(context).pop();
     }
   }
 }

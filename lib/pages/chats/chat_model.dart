@@ -35,6 +35,6 @@ class GroupmeMessage {
     name = json['name'],
     senderId = json['sender_id'],
     avatarUrl = json['avatar_url'],
-    text = json['text'],
+    text = json['text'] ?? '',
     timestamp = json['created_at'];
 }

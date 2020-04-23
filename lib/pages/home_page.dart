@@ -4,10 +4,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get_it/get_it.dart';
-import 'package:multacc/database/database_interface.dart';
-import 'package:multacc/pages/contacts/contact_form_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:multacc/database/database_interface.dart';
+import 'package:multacc/pages/contacts/contact_details_page.dart';
+import 'package:multacc/pages/contacts/contact_form_page.dart';
 import 'package:multacc/database/contact_model.dart';
 import 'package:multacc/pages/contacts/contacts_data.dart';
 import 'package:multacc/common/auth.dart';
@@ -15,7 +16,6 @@ import 'package:multacc/common/bottom_bar.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:multacc/pages/chats/chats_page.dart';
 import 'package:multacc/pages/contacts/contacts_page.dart';
-import 'package:multacc/pages/profile/profile_page.dart';
 
 import 'chats/chats_data.dart';
 
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
     contactsData = GetIt.I.get<ContactsData>();
-    userContact = GetIt.I.get<DatabaseInterface>().getContact('profile');
+    userContact = GetIt.I.get<DatabaseInterface>().getContact('profile') ?? MultaccContact(clientKey: "profile");
     initDynamicLinks();
 
     _tabController.addListener(() {
@@ -78,17 +78,18 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: _auth.onAuthStateChanged,
-      builder: (context, snapshot) => snapshot.hasData ? _buildHomePageBody(context, snapshot.data) : _buildLoginPage(),
+      builder: (context, snapshot) => snapshot.hasData ? _buildHomePageBody(context, snapshot.data) : _buildLoginPage(snapshot)
     );
-    // return _currentUser == null ? _buildLoginPage() : _buildHomePageBody(context);
   }
 
-  Widget _buildLoginPage() {
+  Widget _buildLoginPage(AsyncSnapshot snapshot) {
     return Scaffold(
       backgroundColor: kBackgroundColor,
       body: Container(
         width: double.infinity,
-        child: Column(
+        child: snapshot.connectionState == ConnectionState.waiting
+          ? CircularProgressIndicator()
+          : Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Image.asset('assets/logo.png', height: 200),
@@ -122,13 +123,13 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       key: globalScaffoldKey,
       floatingActionButton: FloatingActionButton(
         backgroundColor: kPrimaryColor,
-        child: Icon(_tabController.index == 2 ? Icons.share : Icons.add), // @todo Make this the actual share button
+        child: Icon(_tabController.index == 2 ? Icons.share : Icons.add),
         onPressed: () {
           switch (_tabController.index) {
             case 0:
               Navigator.of(context).push(MaterialPageRoute(
                 fullscreenDialog: true,
-                builder: (context) => ContactFormPage(isNewContact: true),
+                builder: (context) => ContactFormPage(isNewContact: true)
               ));
               break;
           }
@@ -190,7 +191,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return <Widget>[
       ContactsPage(),
       ChatsPage(),
-      ContactFormPage(contact: userContact, isProfile: true, isNewContact: userContact == null),
+      ContactDetailsPage(userContact, withoutScaffold: true),
     ];
   }
 

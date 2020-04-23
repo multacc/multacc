@@ -55,7 +55,7 @@ class _ChatsPageState extends State<ChatsPage> {
     int daysSince = DateTime.now().difference(moment).inDays;
     if (daysSince > 1 && daysSince < 6) {
       pattern = 'E, H:mm';
-    } else {
+    } else if (daysSince >= 6) {
       pattern = 'MMMd';
     }
 
@@ -63,7 +63,7 @@ class _ChatsPageState extends State<ChatsPage> {
   }
 
   Widget _buildAvatar(String url) {
-    if (url == null) return CircleAvatar(child: Icon(Icons.person), backgroundColor: kBackgroundColorLight);
+    if ((url ?? '') == '') return CircleAvatar(child: Icon(Icons.person), backgroundColor: kBackgroundColorLight);
     return CircleAvatar(backgroundImage: NetworkImage(url));
   }
 

@@ -19,12 +19,16 @@ class DatabaseInterface {
   void addContact(MultaccContact contact) {
     contactsBox.put(contact.clientKey, contact);
   }
+  
+  Future<void> deleteContact(MultaccContact contact) {
+    return contactsBox.delete(contact.clientKey);
+  }
 
   MultaccContact getContact(String key) {
     return contactsBox.get(key);
   }
 
-  Iterable<MultaccContact> getAllContacts() {
-    return contactsBox.values;
+  Iterable<MultaccContact> getCachedContacts() {
+    return contactsBox.values.where((contact) => contact.clientKey != 'profile');
   }
 }

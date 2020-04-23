@@ -1,7 +1,7 @@
 name: multacc
 description: multiple accounts
 
-version: 1.0.0+2
+version: 1.0.0+4
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -16,10 +16,8 @@ dependencies:
   google_fonts: any
   flutter_icons: any
   flutter_svg: any
-  sliding_sheet: any
   liquid_pull_to_refresh: any
   bubble: any
-  draggable_floating_button: any
   flutter_material_pickers: any
 
   # device APIs
@@ -65,6 +63,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_launcher_icons: any
+  flutter_native_splash: any
 
 # generate app icons using `flutter pub run flutter_launcher_icons:main`
 flutter_icons:
@@ -73,6 +72,12 @@ flutter_icons:
   image_path: "assets/icon.png"
   adaptive_icon_background: "#303030"
   adaptive_icon_foreground: "assets/logo.png"
+
+# generate splash screen using `flutter pub run flutter_native_splash:create`
+flutter_native_splash:
+  image: assets/icon.png
+  color: "#303030"
+  android_disable_fullscreen: true
 
 flutter:
   uses-material-design: true
