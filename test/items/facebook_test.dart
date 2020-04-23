@@ -9,15 +9,15 @@ void main() {
     setUp(() {
       item = FacebookItem();
     });
-    test('initial key should be null', () {
-      expect(item.key, null);
+    test('initial key should be nonempty', () {
+      expect(item.key, isNotEmpty);
     });
     test('facebook should be null in json', () {
       expect(item.toJson()['username'], '');
       expect(item.toJson()['id'], null);
     });
-    test('key should initially be null in json', () {
-      expect(item.toJson()[ITEM_KEY_KEY], null);
+    test('key should initially be nonempty in json', () {
+      expect(item.toJson()[ITEM_KEY_KEY], isNotEmpty);
     });
     test('updating username using field should update json', () {
       item.username = 'Micah White';

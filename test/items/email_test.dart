@@ -9,15 +9,15 @@ void main() {
     setUp(() {
       item = EmailItem();
     });
-//    test('initial key should be null', () {
-////      expect(item.key, null);
-////    });
+    test('initial key should be non-empty', () {
+      expect(item.key, isNotEmpty);
+    });
     test('email should be null in json', () {
       expect(item.toJson()['email'], null);
     });
-//    test('key should initially be null in json', () {
-//      expect(item.toJson()[ITEM_KEY_KEY], null);
-//    });
+    test('key should initially be non-empty in json', () {
+      expect(item.toJson()[ITEM_KEY_KEY], isNotEmpty);
+    });
     test('updating email using field should update json', () {
       item.email = 'abc@ijk.xyz';
       expect(item.toJson()['email'], 'abc@ijk.xyz');

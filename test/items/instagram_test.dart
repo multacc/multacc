@@ -9,15 +9,15 @@ void main() {
     setUp(() {
       item = InstagramItem();
     });
-    test('initial key should be null', () {
-      expect(item.key, null);
+    test('initial key should be nonempty', () {
+      expect(item.key, isNotEmpty);
     });
     test('instagram should be null in json', () {
       expect(item.toJson()['username'], null);
       expect(item.toJson()['id'], null);
     });
-    test('key should initially be null in json', () {
-      expect(item.toJson()[ITEM_KEY_KEY], null);
+    test('key should initially be nonempty in json', () {
+      expect(item.toJson()[ITEM_KEY_KEY], isNotEmpty);
     });
     test('updating username using field should update json', () {
       item.username = 'MicahWhite';
