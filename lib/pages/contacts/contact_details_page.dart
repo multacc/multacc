@@ -147,16 +147,14 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
     );
   }
 
-  Widget _buildShortcutIcon(IconData icon, String helperText, Function ontap, {bool disabled = false}) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(50),
-      onTap: ontap,
+  Widget _buildShortcutIcon(IconData icon, String helperText, Function onPressed, {bool disabled = false}) {
+    return FlatButton(
+      onPressed: onPressed,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Padding(padding: EdgeInsets.only(bottom: 3), child: Icon(icon, color: disabled ? Colors.grey[600] : Colors.white),),
           Text(helperText, style: TextStyle(fontSize: 12, color: disabled ? Colors.grey[600] : Colors.white)),
-          SizedBox(width: 50)
         ]
       )
     );
