@@ -33,7 +33,7 @@ class MultaccContact extends Contact {
   @HiveField(4)
   DateTime birthday;
 
-  MultaccContact({this.clientKey});
+  MultaccContact({this.clientKey}) : multaccItems = [];
 
   // Construct a Multacc contact from a Contact
   MultaccContact.fromContact(Contact baseContact) {
@@ -83,7 +83,7 @@ class MultaccContact extends Contact {
         return item.humanReadableValue;
       }
     }
-    return 'Contact';
+    return '';
   }
 
   /// Returns true if the base contact fields match

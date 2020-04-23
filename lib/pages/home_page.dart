@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get_it/get_it.dart';
+import 'package:multacc/common/constants.dart';
 import 'package:multacc/sharing/receive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -49,7 +50,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
     contactsData = GetIt.I.get<ContactsData>();
-    userContact = GetIt.I.get<DatabaseInterface>().getContact('profile') ?? MultaccContact(clientKey: "profile");
+    userContact = GetIt.I.get<DatabaseInterface>().getContact(PROFILE_CONTACT_KEY) ??
+        MultaccContact(clientKey: PROFILE_CONTACT_KEY);
     initDynamicLinks();
 
     _tabController.addListener(() {
@@ -90,9 +92,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: _auth.onAuthStateChanged,
-      builder: (context, snapshot) => snapshot.hasData ? _buildHomePageBody(context, snapshot.data) : _buildLoginPage(snapshot)
-    );
+        stream: _auth.onAuthStateChanged,
+        builder: (context, snapshot) =>
+            snapshot.hasData ? _buildHomePageBody(context, snapshot.data) : _buildLoginPage(snapshot));
   }
 
   Widget _buildLoginPage(AsyncSnapshot snapshot) {
@@ -140,10 +142,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         onPressed: () {
           switch (_tabController.index) {
             case 0:
-              Navigator.of(context).push(MaterialPageRoute(
-                fullscreenDialog: true,
-                builder: (context) => ContactFormPage(isNewContact: true)
-              ));
+              Navigator.of(context).push(
+                  MaterialPageRoute(fullscreenDialog: true, builder: (context) => ContactFormPage(isNewContact: true)));
               break;
 
             case 2:
