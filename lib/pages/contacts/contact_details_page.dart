@@ -84,7 +84,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
         children: <Widget>[
           Avatars.buildContactAvatar(memoryImage: contact.avatar, radius: 40.0),
           _buildName(),
-          widget.isProfile ? Container() : _buildShortcutsRow(),
+          if (!widget.isProfile) _buildShortcutsRow(),
           _buildContactItemsList(),
         ],
       ),
