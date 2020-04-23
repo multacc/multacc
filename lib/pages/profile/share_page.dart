@@ -42,10 +42,11 @@ class _Share extends State<SharePage> {
               child: QrImage(
                 data: url,
                 version: QrVersions.auto,
-                embeddedImage: AssetImage('assets/logo.png'),
+                backgroundColor: Colors.white,
+//                embeddedImage: AssetImage('assets/logo.png'),
               )
             ),
-            Text(url),
+            Text(url), // @todo Add a button to copy url after creating share link
           ],
         ),
       ),
