@@ -43,4 +43,11 @@ abstract class _ContactsData with Store {
       }
     });
   }
+
+  @action
+  Future<void> deleteContact(MultaccContact contact) async {
+    allContacts.remove(contact);
+    await _contactsBox.delete(contact.clientKey);
+    ContactsService.deleteContact(contact);
+  }
 }

@@ -1,12 +1,11 @@
-import 'package:draggable_floating_button/draggable_floating_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:multacc/common/avatars.dart';
 import 'package:multacc/common/theme.dart';
+import 'package:multacc/database/contact_model.dart';
 import 'package:multacc/pages/contacts/contact_form_page.dart';
-import 'package:sliding_sheet/sliding_sheet.dart';
 import 'contact_details_page.dart';
 import 'contacts_data.dart';
 
@@ -80,42 +79,55 @@ class _ContactsPageState extends State<ContactsPage> with WidgetsBindingObserver
       } else if (selectedContacts.length > 0) {
         selectedContacts.add(index);
       } else {
-        showSlidingBottomSheet(
-          context,
-          builder: (context) => SlidingSheetDialog(
-            elevation: 8.0,
-            cornerRadius: 16.0,
-            color: kBackgroundColor,
-            snapSpec: const SnapSpec(
-              snap: true,
-              snappings: [0.6, 1.0],
-              positioning: SnapPositioning.relativeToAvailableSpace,
-            ),
-            builder: (context, state) => ContactDetailsPage(contactsData.allContacts[index]),
-            headerBuilder: (_, __) => // drag handle
-                Padding(padding: EdgeInsets.all(16.0), child: Icon(Icons.maximize, color: Colors.grey)),
-            footerBuilder: (context, state) => Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: DraggableFloatingActionButton(
-                    offset: Offset(200, 200),
-                    backgroundColor: kPrimaryColor,
-                    child: Icon(Icons.edit),
-                    appContext: context,
-                    onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                      fullscreenDialog: true,
-                      builder: (context) => ContactFormPage(contact: contactsData.allContacts[index]),
-                    )),
+        MultaccContact contact = contactsData.allContacts[index];
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+              appBar: AppBar(
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () => _deleteContact(contact),
                   ),
-                )
-              ],
+                ],
+              ),
+              body: ContactDetailsPage(contactsData.allContacts[index]),
+              floatingActionButton: FloatingActionButton(
+                child: Icon(Icons.edit),
+                backgroundColor: kPrimaryColor,
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                  fullscreenDialog: true,
+                  builder: (context) => ContactFormPage(contact: contact),
+                )),
+              ),
             ),
           ),
         );
       }
     });
+  }
+
+  void _deleteContact(MultaccContact contact) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        title: Text('Delete this contact?'),
+        content: Text('${contact.displayName} will be permanently removed'),
+        actions: <Widget>[
+          FlatButton(child: Text('Cancel'), onPressed: () => Navigator.of(context).pop()),
+          FlatButton(
+            child: Text('Delete'),
+            onPressed: () {
+              contactsData.deleteContact(contact);
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      ),
+    );
+    ;
   }
 
   // Quietly refresh contacts when returning to foreground
