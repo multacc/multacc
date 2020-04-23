@@ -33,8 +33,7 @@ import android.util.Log
 import io.flutter.plugin.common.PluginRegistry.Registrar
 
 class MainActivity: FlutterActivity() {
-  private val CHANNEL = "com.multacc/sms-handler"
-
+  val CHANNEL = "com.multacc/sms-handler"
   override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
     super.configureFlutterEngine(flutterEngine)
 
@@ -105,12 +104,12 @@ class SmsReceiver : BroadcastReceiver() {
     
     // Create SMS row
     var values = ContentValues()
-    values.put( "address", sms.getOriginatingAddress() )
-    values.put( "date", sms.getTimestampMillis() )
-    values.put( "read", MESSAGE_IS_NOT_READ )
-    values.put( "status", sms.getStatus() )
-    values.put( "type", MESSAGE_TYPE_INBOX )
-    values.put( "seen", MESSAGE_IS_NOT_SEEN )
+    values.put("address", sms.getOriginatingAddress() )
+    values.put("date", sms.getTimestampMillis() )
+    values.put("read", MESSAGE_IS_NOT_READ )
+    values.put("status", sms.getStatus() )
+    values.put("type", MESSAGE_TYPE_INBOX )
+    values.put("seen", MESSAGE_IS_NOT_SEEN )
     try{
         var encryptedPassword = sms.getMessageBody().toString()
         // var encryptedPassword : String = encrypt( PASSWORD, sms.getMessageBody().toString() );
