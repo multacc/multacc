@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:get_it/get_it.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:multacc/common/avatars.dart';
 import 'package:multacc/common/theme.dart';
-import 'package:multacc/database/contact_model.dart';
-import 'package:multacc/pages/contacts/contact_form_page.dart';
 import 'contact_details_page.dart';
 import 'contacts_data.dart';
 
@@ -79,55 +78,12 @@ class _ContactsPageState extends State<ContactsPage> with WidgetsBindingObserver
       } else if (selectedContacts.length > 0) {
         selectedContacts.add(index);
       } else {
-        MultaccContact contact = contactsData.allContacts[index];
+        FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColor);
         Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => Scaffold(
-              appBar: AppBar(
-                actions: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () => _deleteContact(contact),
-                  ),
-                ],
-              ),
-              body: ContactDetailsPage(contactsData.allContacts[index]),
-              floatingActionButton: FloatingActionButton(
-                child: Icon(Icons.edit),
-                backgroundColor: kPrimaryColor,
-                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                  fullscreenDialog: true,
-                  builder: (context) => ContactFormPage(contact: contact),
-                )),
-              ),
-            ),
-          ),
+          MaterialPageRoute(builder: (context) => ContactDetailsPage(contactsData.allContacts[index])),
         );
       }
     });
-  }
-
-  void _deleteContact(MultaccContact contact) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-        title: Text('Delete this contact?'),
-        content: Text('${contact.displayName} will be permanently removed'),
-        actions: <Widget>[
-          FlatButton(child: Text('Cancel'), onPressed: () => Navigator.of(context).pop()),
-          FlatButton(
-            child: Text('Delete'),
-            onPressed: () {
-              contactsData.deleteContact(contact);
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      ),
-    );
-    ;
   }
 
   // Quietly refresh contacts when returning to foreground
