@@ -50,6 +50,10 @@ class _SettingsPageState extends State<SettingsPage> {
               onPressed: _sendText,
             ),
             Text("Sends a text to Micah"),
+            RaisedButton(
+              child: Text('Read Text'),
+              onPressed: _readText,
+            ),
             // @todo Add setting for redirecting calls to preferred dialer through multacc
           ],
         ),
@@ -118,8 +122,20 @@ class _SettingsPageState extends State<SettingsPage> {
     } catch (e) {
       print(e);
     }
-
+    print("\n\n\nthis is where we flop\n\n\n");
     while (!await Permission.sms.request().isGranted) {}
+  }
+
+  void _readText() async {
+    List<dynamic> str;
+
+    try {
+      str = await platform.invokeMethod('readTexts');
+    } catch (e) {
+      print(e);
+    }
+
+    print(str[5]);
   }
 
   void _sendText() async {

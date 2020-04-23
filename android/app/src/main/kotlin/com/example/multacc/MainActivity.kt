@@ -28,6 +28,10 @@ import java.util.Random
 import java.security.SecureRandom
 import android.net.Uri
 import android.app.role.RoleManager
+import android.database.Cursor
+// import android.support.v4.app.ActivityCompat
+// import android.support.v7.app.AppCompatActivity
+// import android.content.pm.PackageManager
 
 import android.util.Log
 import io.flutter.plugin.common.PluginRegistry.Registrar
@@ -74,6 +78,29 @@ class MainActivity: FlutterActivity() {
         putSentSmsToDatabase(contentResolver, num, msg)
 
         result.success(5)
+      }
+      else if (call.method == "readTexts") {
+
+        var msgs = mutableListOf<String>()
+
+        var cursor : Cursor = getContentResolver().query(Uri.parse("content://sms"), null, null, null, null)!!
+
+        if (cursor.moveToFirst()) { // must check the result to prevent exception
+            do {
+              var msgData : String = ""
+              for(idx in 0 until cursor.getColumnCount())
+              {
+                  msgData += " " + cursor.getColumnName(idx) + ":" + cursor.getString(idx);
+              }
+            
+              msgs.add(msgData)
+
+            } while (cursor.moveToNext());
+        } else {
+          // empty box, no SMS
+        }
+
+        result.success(msgs)
       }
       else {
         result.notImplemented()
