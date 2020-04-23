@@ -16,10 +16,8 @@ dependencies:
   google_fonts: any
   flutter_icons: any
   flutter_svg: any
-  sliding_sheet: any
   liquid_pull_to_refresh: any
   bubble: any
-  draggable_floating_button: any
   flutter_material_pickers: any
 
   # device APIs

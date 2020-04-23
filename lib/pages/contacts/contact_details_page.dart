@@ -29,24 +29,21 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
   Widget build(BuildContext context) {
     FlutterStatusbarcolor.setNavigationBarColor(kBackgroundColor);
 
-    return Material(
-      child: Container(
-        height: MediaQuery.of(context).size.height / 1.2, // @todo Fix ContactDetails height for scrolling
-        child: Column(
-          children: <Widget>[
-            Avatars.buildContactAvatar(memoryImage: contact.avatar, radius: 40.0),
-            _buildName(),
-            // _buildShortcutsRow(),
-            _buildContactItemsList(),
-          ],
-        ),
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Avatars.buildContactAvatar(memoryImage: contact.avatar, radius: 40.0),
+          _buildName(),
+          // _buildShortcutsRow(),
+          _buildContactItemsList(),
+        ],
       ),
     );
   }
 
   Widget _buildContactItemsList() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       child: ListView.separated(
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
