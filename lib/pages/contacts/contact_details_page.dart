@@ -17,8 +17,9 @@ import 'package:multacc/pages/contacts/contacts_data.dart';
 class ContactDetailsPage extends StatefulWidget {
   final MultaccContact contact;
   final bool withoutScaffold;
+  final bool isProfile;
 
-  ContactDetailsPage(this.contact, {this.withoutScaffold = false});
+  ContactDetailsPage(this.contact, {this.withoutScaffold = false, this.isProfile = false});
 
   @override
   _ContactDetailsPageState createState() => _ContactDetailsPageState(contact);
@@ -79,7 +80,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
   Widget _showBody() {
     final items = contact.multaccItems.where((item) => (item.humanReadableValue ?? '') != '').toList();
     return Container(
-      child: Column(
+      child: ListView(
+        physics: AlwaysScrollableScrollPhysics(),
         children: <Widget>[
           Avatars.buildContactAvatar(memoryImage: contact.avatar, radius: 40.0),
           _buildName(),
@@ -95,6 +97,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       child: ListView.separated(
+        physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: items.length,
         separatorBuilder: (BuildContext context, int index) => Divider(),
@@ -119,7 +122,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
           builder: (context) => ContactFormPage(
             contact: contact,
             isNewContact: isNewContact,
-            isProfile: contact.clientKey == PROFILE_CONTACT_KEY,
+            isProfile: widget.isProfile
           ),
         )),
         child: Row(
@@ -171,7 +174,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
   Widget _buildName() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Text(contact.name, style: kHeaderTextStyle),
+      child: Text(contact.name, style: kHeaderTextStyle, textAlign: TextAlign.center),
     );
   }
 
