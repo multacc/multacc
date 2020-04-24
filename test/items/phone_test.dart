@@ -9,14 +9,14 @@ void main() {
     setUp(() {
       item = PhoneItem();
     });
-    test('initial key should be null', () {
-      expect(item.key, null);
+    test('initial key should be nonempty', () {
+      expect(item.key, isNotEmpty);
     });
     test('phone should be null in json', () {
       expect(item.toJson()['no'], null);
     });
-    test('key should initially be null in json', () {
-      expect(item.toJson()[ITEM_KEY_KEY], null);
+    test('key should initially be nonempty in json', () {
+      expect(item.toJson()[ITEM_KEY_KEY], isNotEmpty);
     });
     test('updating phone using field should update json', () {
       item.phone = '205-123-4567';

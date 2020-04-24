@@ -1,8 +1,10 @@
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:multacc/common/constants.dart';
 
 import 'package:multacc/items/item.dart';
 import 'package:multacc/database/contact_model.dart';
+import 'package:uuid/uuid.dart';
 
 class DatabaseInterface {
   Box<MultaccContact> get contactsBox => Hive.box<MultaccContact>('contacts');
@@ -29,6 +31,6 @@ class DatabaseInterface {
   }
 
   Iterable<MultaccContact> getCachedContacts() {
-    return contactsBox.values.where((contact) => contact.clientKey != 'profile');
+    return contactsBox.values.where((contact) => contact.clientKey != PROFILE_CONTACT_KEY);
   }
 }

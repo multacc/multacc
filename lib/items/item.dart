@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:hive/hive.dart';
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:multacc/database/type_ids.dart';
 import 'package:multacc/items/facebook.dart';
@@ -15,6 +16,7 @@ import 'package:multacc/items/text.dart';
 import 'package:multacc/items/instagram.dart';
 import 'package:multacc/items/snapchat.dart';
 
+// must match functions/src/schema.ts
 const ITEM_TYPE_KEY = '_t';
 const ITEM_KEY_KEY = '_id';
 
@@ -23,7 +25,7 @@ abstract class MultaccItem {
   /// Multacc item key for database
   String key;
 
-  MultaccItem() : key = null;
+  MultaccItem() : key = Uuid().v4();
 
   /// Use this constructor to create a MultaccItem using database values
   factory MultaccItem.fromDB(Map<String, dynamic> json) {
@@ -64,6 +66,9 @@ abstract class MultaccItem {
         throw new FormatException('Type ${json[ITEM_TYPE_KEY]} is not recognized');
     }
     item.key = json[ITEM_KEY_KEY];
+    if ((item.key ?? '') == '') {
+      item.key = Uuid().v4();
+    }
     return item;
   }
 
@@ -80,6 +85,7 @@ abstract class MultaccItem {
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = toMap();
     map[ITEM_TYPE_KEY] = EnumToString.parse(type);
+    key = ((key ?? '') == '') ? Uuid().v4() : key;
     map[ITEM_KEY_KEY] = key;
     return map;
   }
@@ -95,7 +101,7 @@ abstract class MultaccItem {
   /// Get item type (from MultaccItemType enum; index will be stored in database)
   MultaccItemType get type;
 
-  /// Get human-readable item type (Snapchat, etc.) to display
+  /// Get human-readable item value such as phone number or email address
   String get humanReadableValue => '';
 
   /// Get item icon

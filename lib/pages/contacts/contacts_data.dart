@@ -78,6 +78,11 @@ abstract class _ContactsData with Store {
   }
 
   @action
+  Future<void> updateProfile(MultaccContact profile) async {
+    _db.addContact(profile);
+  }
+
+  @action
   Future<void> deleteContact(MultaccContact contact) async {
     allContacts.remove(contact);
     _db.deleteContact(contact);
