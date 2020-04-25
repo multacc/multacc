@@ -33,8 +33,8 @@ Overall:
 - `mobx` for global state management (and `mobx_codegen` for generating code)
 - `hive` for local database (and `hive_generator` for generating code)
 - `get_it` as the service locator for global singletons
-* `contacts_service` for accessing device (native) contacts
-* firebase for backend needs
+- `contacts_service` for accessing device (native) contacts
+- firebase for backend needs
 
 ## Build & run
 - Generate mobx code using build runner: `flutter pub run build_runner build`
