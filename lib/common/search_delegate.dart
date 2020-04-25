@@ -58,10 +58,7 @@ class BottomBarSearchDelegate extends SearchDelegate<String> {
           leading: Avatars.buildContactAvatar(memoryImage: contact.avatar),
           title: Text(contact.name),
           onTap: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => Scaffold(
-              appBar: AppBar(), // for back button
-              body: ContactDetailsPage(contact),
-            ),
+            builder: (_) => ContactDetailsPage(contact),
           )),
         );
       },
