@@ -117,7 +117,7 @@ class MultaccBottomBarState extends State<MultaccBottomBar> {
               ListTile(
                 leading: Icon(Icons.security),
                 title: Text('Privacy policy'),
-                onTap: () {},
+                onTap: () => launch('https://github.com/multacc/multacc/wiki/Privacy-Policy'),
               ),
             ],
           ),
