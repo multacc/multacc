@@ -1,35 +1,41 @@
-# multacc
+# Multacc
 A flutter app that integrates communication platforms and lets you consolidate all your contact info into a single "profile".
 
-## structure
-- assets: fonts, icons, etc
-- lib
-  - main.dart: sets up colors, bottom bar, navigation
-  - pages: contains folders for every screen
-  - common: constants, styles, routes, common widgets/logic, etc
-  - database: interface for hivedb
-  - items: data models
-- test: unit tests, widget tests
-- .github/workflows: automated tests/build using github actions
+### Main Files: Project Structure
 
-## state management
-- Use mobx for state management: define services for all data
-- Use hivedb to store shared prefs
-- Use `GetIt.I` to make data persist globally in a singleton
-- Use provider package where mobx is not suitable
-- See "lifting state up"
+  ```sh
+  ├── assets/
+  ├── pubspec.yaml *** "flutter pub get"
+  ├── test/  ** "flutter test"
+  ├── firebase/
+  │   ├── functions/
+  ├── android/
+  ├── ios/
+  ├── lib
+  │   ├── pages/ *** has folders for every screen
+  │   │   └── home_page.dart
+  │   ├── common/
+  │   ├── database/
+  │   ├── sharing/
+  │   ├── items/
+  │   └── main.dart
+  └── README.md
+  ```
 
-## conventions
-- Tab width = 2 spaces
-- All constants either use SCREAMING_CAPS or start with k
-- Line length is 120
-- Single quotes for strings
-- Dart/Prettier automatically formats the code if there are proper trailing commas
+Overall:
+* `common/` contains constants, common widgets, auth, etc
+* `pages/home_page.dart`is where much of the app initialization and navigation logic is located
+* `main.dart` has code that must be run before the first widget is randered
+* `firebase/functions` and `lib/sharing/` have the code for all sharing funtionality
+* `android/` and `ios/` are where platform-specific code go
 
-## build & run
-- Generate mobx code using build runner: `flutter packages pub run build_runner build -v`
+## Important libraries used
+- `mobx` for global state management (and `mobx_codegen` for generating code)
+- `hive` for local database (and `hive_generator` for generating code)
+- `get_it` as the service locator for global singletons
+* `contacts_service` for accessing device (native) contacts
+* firebase for backend needs
+
+## Build & run
+- Generate mobx code using build runner: `flutter pub run build_runner build`
 - Debug app using IDE or run `flutter run`
-
-### misc
-- Use `beta` channel of flutter and run `flutter config --enable-web` to be able to debug in Chrome
-- Run `flutter pub run flutter_launcher_icons:main` to generate app icons (see pubspec.yaml)
