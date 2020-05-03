@@ -1,4 +1,4 @@
-name: test
+name: tests
 
 on:
   push:
@@ -6,10 +6,9 @@ on:
   pull_request:
     branches: [ master ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macOS-latest
 
     steps:
       - uses: actions/checkout@v1
@@ -27,7 +26,6 @@ jobs:
       - name: Copy google-services.json to android/app
         run: 'cp "${{ steps.write_file.outputs.filePath }}" "android/app/"'
 
-      - name: Run tests
       - uses: subosito/flutter-action@v1
         with:
           channel: 'beta'
