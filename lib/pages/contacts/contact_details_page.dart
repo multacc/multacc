@@ -4,7 +4,6 @@ import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:multacc/common/avatars.dart';
-import 'package:multacc/common/constants.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:multacc/items/email.dart';
 import 'package:multacc/items/facebook.dart';
@@ -83,7 +82,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
       child: ListView(
         physics: AlwaysScrollableScrollPhysics(),
         children: <Widget>[
-          Avatars.buildContactAvatar(memoryImage: contact.avatar, radius: 40.0),
+          _buildContactAvatar(),
           _buildName(),
           // _buildShortcutsRow(),
           _buildContactItemsList(items),
@@ -92,6 +91,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
       ),
     );
   }
+
+  Widget _buildContactAvatar() => Center(child: Avatars.buildContactAvatar(memoryImage: contact.avatar, radius: 40.0));
 
   Widget _buildContactItemsList(List<MultaccItem> items) {
     return Padding(
@@ -122,7 +123,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
           builder: (context) => ContactFormPage(
             contact: contact,
             isNewContact: isNewContact,
-            isProfile: widget.isProfile
+            isProfile: widget.isProfile,
           ),
         )),
         child: Row(
