@@ -39,5 +39,8 @@ class Auth {
     }
   }
 
-  Future<void> signOut() => _firebaseAuth.signOut();
+  Future<void> signOut() async {
+    _firebaseAuth.signOut();
+    if (await _googleSignIn.isSignedIn()) _googleSignIn.signOut();
+  }
 }
