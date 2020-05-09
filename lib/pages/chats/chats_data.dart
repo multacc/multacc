@@ -29,8 +29,16 @@ abstract class _ChatsData with Store {
   /// Direct messages for the currently open thread
   ObservableList<GroupmeMessage> messages = ObservableList<GroupmeMessage>();
 
-  void updateGroupmeToken({String token}) {
-    _groupmeToken = token ?? GetIt.I.get<SharedPreferences>().getString('GROUPME_TOKEN');
+  /// Updates groupme token if provided (and uses it to fetch user id if null)
+  void updateGroupmeToken({String token}) async {
+    SharedPreferences prefs = GetIt.I.get<SharedPreferences>();
+    _groupmeToken = token ?? prefs.getString('GROUPME_TOKEN');
+
+    // @todo Store groupme id in profile
+    if (!prefs.containsKey('GROUPME_ID')) {
+      http.Response response = await _httpClient.get('$GROUPME_API_URL/users/me?token=$_groupmeToken');
+      prefs.setString('GROUPME_ID', jsonDecode(response.body)['response']['user_id']);
+    }
   }
 
   @action

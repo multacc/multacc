@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:multacc/common/foreground_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,6 +44,8 @@ void main() async {
   if (prefs.containsKey('GROUPME_TOKEN')) {
     chatsData.getAllChats(groupmeToken: prefs.getString('GROUPME_TOKEN'));
   }
+
+  Foreground.instance.startForegroundService();
 }
 
 class MyApp extends StatelessWidget {

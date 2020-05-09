@@ -103,32 +103,32 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       body: Container(
         width: double.infinity,
         child: snapshot.connectionState == ConnectionState.waiting
-          ? CircularProgressIndicator()
-          : Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset('assets/logo.png', height: 200),
-            SizedBox(height: 20),
-            RaisedButton(
-              padding: EdgeInsets.all(16.0),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-              color: kBackgroundColorLight,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+            ? CircularProgressIndicator()
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(right: 8.0), child: Icon(FontAwesome.google)),
-                  Text('Sign in with Google', style: kHeaderTextStyle),
+                  Image.asset('assets/logo.png', height: 200),
+                  SizedBox(height: 20),
+                  RaisedButton(
+                    padding: EdgeInsets.all(16.0),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                    color: kBackgroundColorLight,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Padding(padding: const EdgeInsets.only(right: 8.0), child: Icon(FontAwesome.google)),
+                        Text('Sign in with Google', style: kHeaderTextStyle),
+                      ],
+                    ),
+                    onPressed: _auth.signinWithGoogle,
+                  ),
+                  FlatButton(
+                    child: Text('Skip', style: kBodyTextStyle),
+                    onPressed: _auth.signInAnonymously,
+                    padding: EdgeInsets.all(8.0),
+                  ),
                 ],
               ),
-              onPressed: _auth.signinWithGoogle,
-            ),
-            FlatButton(
-              child: Text('Skip', style: kBodyTextStyle),
-              onPressed: _auth.signInAnonymously,
-              padding: EdgeInsets.all(8.0),
-            ),
-          ],
-        ),
       ),
     );
   }

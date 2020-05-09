@@ -1,7 +1,7 @@
 name: multacc
 description: multiple accounts
 
-version: 0.0.5+7
+version: 0.0.6
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -29,6 +29,10 @@ dependencies:
   flutter_package_manager: any
   path_provider: any
   image_picker: any
+  flutter_local_notifications: ^1.4.3
+  flutter_foreground_plugin:
+    git:
+      url: git://github.com/multacc/flutter_foreground_service_plugin.git
 
   # state management / data
   provider: any
@@ -46,6 +50,7 @@ dependencies:
   google_sign_in: any
   firebase_dynamic_links: any
   cloud_functions: ^0.4.2+3
+  web_socket_channel: ^1.1.0
 
   # misc
   http: any
