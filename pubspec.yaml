@@ -29,10 +29,6 @@ dependencies:
   flutter_package_manager: any
   path_provider: any
   image_picker: any
-  flutter_local_notifications: ^1.4.3
-  flutter_foreground_plugin:
-    git:
-      url: git://github.com/multacc/flutter_foreground_service_plugin.git
 
   # state management / data
   provider: any
@@ -51,6 +47,8 @@ dependencies:
   firebase_dynamic_links: any
   cloud_functions: ^0.4.2+3
   web_socket_channel: ^1.1.0
+  cached_network_image: ^2.2.0+1
+  flutter_cache_manager: ^1.2.2
 
   # misc
   http: any
@@ -58,6 +56,15 @@ dependencies:
   enum_to_string: any
   uuid: ^2.0.4
   qr_flutter: ^3.1.0
+
+  flutter_foreground_plugin:
+    git:
+      url: git://github.com/multacc/flutter_foreground_service_plugin.git
+
+  flutter_local_notifications:
+    git:
+      url: git://github.com/multacc/flutter_local_notifications.git
+      path: flutter_local_notifications
 
 dev_dependencies:
   hive_generator: ^0.7.0+2

@@ -3,6 +3,7 @@ const GROUPME_API_URL = 'https://api.groupme.com/v3';
 const GROUPME_PUSH_URL = 'https://push.groupme.com/faye';
 const GROUPME_WEBSOCKET_HOST = 'wss://push.groupme.com/faye';
 
+const MULTACC_PACKAGE = 'com.multacc';
 const ANDROID_DIALER_PACKAGE = 'com.google.android.dialer';
 const GOOGLE_DUO_PACKAGE = 'com.google.android.apps.tachyon';
 const GOOGLE_VOICE_PACKAGE = 'com.google.android.apps.googlevoice';

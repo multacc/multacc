@@ -52,8 +52,8 @@ abstract class _ChatsData with Store {
   @action
   /// Fetches GroupmeMe DMs for a particular conversation thread (most recent 20)
   Future<List<GroupmeMessage>> getMessages(String otherUserId) async {
-    http.Response response = await _httpClient.get('$GROUPME_API_URL/direct_messages?other_user_id=$otherUserId&token=$_groupmeToken');
     messages.clear();
+    http.Response response = await _httpClient.get('$GROUPME_API_URL/direct_messages?other_user_id=$otherUserId&token=$_groupmeToken');
     messages.addAll(jsonDecode(response.body)['response']['direct_messages'].map<GroupmeMessage>((json) => GroupmeMessage.fromJson(json)).toList());
     return messages;
   }

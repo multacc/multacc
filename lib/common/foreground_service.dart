@@ -55,7 +55,17 @@ class Foreground {
           var data = jsonDecode(e)[0]['data'];
           var message = data['subject'];
           if (data['type'] == 'direct_message.create' && message['sender_id'] != groupmeUserid) {
-            Notifications.instance.show(title: message['name'], message: message['text']);
+            Notifications.instance.show(
+              type: NotificationType.Groupme,
+              name: message['name'],
+              message: message['text'],
+              iconUri: message['avatar_url'],
+              payload: jsonEncode({
+                'name': message['name'],
+                'sender_id': message['sender_id'],
+                'platform': 'groupme',
+              }),
+            );
           }
         } catch (ex) {
           print(ex);

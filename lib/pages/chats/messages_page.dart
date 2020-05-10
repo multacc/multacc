@@ -28,6 +28,8 @@ class _MessagesPageState extends State<MessagesPage> {
   void initState() {
     super.initState();
     chatsData = GetIt.I.get<ChatsData>();
+    chatsData.getMessages(widget.otherUserId);
+
     _textController = TextEditingController();
     _scrollController = ScrollController()
       ..addListener(() async {
