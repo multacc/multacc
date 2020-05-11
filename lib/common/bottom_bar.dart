@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -82,7 +83,7 @@ class MultaccBottomBarState extends State<MultaccBottomBar> {
                 data: Theme.of(context).copyWith(accentColor: Colors.white),
                 child: ExpansionTile(
                   leading: widget._user?.photoUrl != null
-                      ? CircleAvatar(backgroundImage: NetworkImage(widget._user.photoUrl))
+                      ? CircleAvatar(backgroundImage: CachedNetworkImageProvider(widget._user.photoUrl))
                       : CircleAvatar(child: Icon(Icons.person), foregroundColor: kBackgroundColorLight),
                   title: Text(widget._user?.displayName ?? 'Anonymous'),
                   subtitle: Text(widget._user?.email ?? 'You are not signed in',
@@ -117,7 +118,7 @@ class MultaccBottomBarState extends State<MultaccBottomBar> {
               ListTile(
                 leading: Icon(Icons.security),
                 title: Text('Privacy policy'),
-                onTap: () => launch('https://github.com/multacc/multacc/wiki/Privacy-Policy'),
+                onTap: () => launch('https://multacc.com/privacy-policy'),
               ),
             ],
           ),

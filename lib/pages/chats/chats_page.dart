@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -64,11 +65,10 @@ class _ChatsPageState extends State<ChatsPage> {
 
   Widget _buildAvatar(String url) {
     if ((url ?? '') == '') return CircleAvatar(child: Icon(Icons.person), backgroundColor: kBackgroundColorLight);
-    return CircleAvatar(backgroundImage: NetworkImage(url));
+    return CircleAvatar(backgroundImage: CachedNetworkImageProvider(url));
   }
 
   void _showMessagesPage(String otherUserName, String otherUserId) {
-    chatsData.getMessages(otherUserId);
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => MessagesPage(otherUserName, otherUserId)));
   }
 }

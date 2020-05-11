@@ -29,8 +29,16 @@ abstract class _ChatsData with Store {
   /// Direct messages for the currently open thread
   ObservableList<GroupmeMessage> messages = ObservableList<GroupmeMessage>();
 
-  void updateGroupmeToken({String token}) {
-    _groupmeToken = token ?? GetIt.I.get<SharedPreferences>().getString('GROUPME_TOKEN');
+  /// Updates groupme token if provided (and uses it to fetch user id if null)
+  void updateGroupmeToken({String token}) async {
+    SharedPreferences prefs = GetIt.I.get<SharedPreferences>();
+    _groupmeToken = token ?? prefs.getString('GROUPME_TOKEN');
+
+    // @todo Store groupme id in profile
+    if (!prefs.containsKey('GROUPME_ID')) {
+      http.Response response = await _httpClient.get('$GROUPME_API_URL/users/me?token=$_groupmeToken');
+      prefs.setString('GROUPME_ID', jsonDecode(response.body)['response']['user_id']);
+    }
   }
 
   @action
@@ -44,8 +52,8 @@ abstract class _ChatsData with Store {
   @action
   /// Fetches GroupmeMe DMs for a particular conversation thread (most recent 20)
   Future<List<GroupmeMessage>> getMessages(String otherUserId) async {
-    http.Response response = await _httpClient.get('$GROUPME_API_URL/direct_messages?other_user_id=$otherUserId&token=$_groupmeToken');
     messages.clear();
+    http.Response response = await _httpClient.get('$GROUPME_API_URL/direct_messages?other_user_id=$otherUserId&token=$_groupmeToken');
     messages.addAll(jsonDecode(response.body)['response']['direct_messages'].map<GroupmeMessage>((json) => GroupmeMessage.fromJson(json)).toList());
     return messages;
   }

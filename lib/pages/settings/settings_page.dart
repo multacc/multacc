@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_package_manager/flutter_package_manager.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:multacc/common/constants.dart';
 import 'package:multacc/common/theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:multacc/common/foreground_service.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage() {
@@ -34,8 +36,9 @@ class _SettingsPageState extends State<SettingsPage> {
         width: double.infinity,
         child: Column(
           children: <Widget>[
-            _buildPhoneAppTile(context),
+            _buildPhoneAppTile(),
             // @todo Add setting for redirecting calls to preferred dialer through multacc
+            _buildNotificationSettingsTile()
           ],
         ),
       ),
@@ -43,7 +46,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   // @todo Implement iOS version of choosing preferred phone app
-  Widget _buildPhoneAppTile(BuildContext context) {
+  Widget _buildPhoneAppTile() {
     return Theme(
       data: Theme.of(context).copyWith(accentColor: Colors.white),
       child: FutureBuilder(
@@ -53,7 +56,7 @@ class _SettingsPageState extends State<SettingsPage> {
           FlutterPackageManager.getPackageInfo(GOOGLE_DUO_PACKAGE)
         ]),
         builder: (context, AsyncSnapshot<List<PackageInfo>> snapshot) => ExpansionTile(
-          title: Text('Phone app'),
+          title: Text('Phone app', textScaleFactor: 1.0),
           children: <Widget>[
             RadioListTile(
               secondary: snapshot.data?.first?.getAppIcon() ?? Icon(Icons.phone),
@@ -93,5 +96,52 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       prefs.setString('PHONE_APP', value);
     });
+  }
+
+  Widget _buildNotificationSettingsTile() {
+    return Theme(
+      data: Theme.of(context).copyWith(accentColor: Colors.white),
+      child: ExpansionTile(
+        initiallyExpanded: true,
+        title: Text('Notifications', textScaleFactor: 1.0),
+        children: <Widget>[
+          RadioListTile(
+            value: 'off',
+            title: Text('Off'),
+            controlAffinity: ListTileControlAffinity.trailing,
+            groupValue: prefs.getString('PUSH_NOTIFICATIONS') ?? 'off',
+            onChanged: _changeNotificationSetting,
+          ),
+          RadioListTile(
+            isThreeLine: true,
+            value: 'foreground',
+            title: Text('Local notification service'),
+            subtitle: Text('Multacc will keep running after you exit the app to ensure timely delivery of notifications. A persistent silent notification needs to be displayed.'),
+            controlAffinity: ListTileControlAffinity.trailing,
+            groupValue: prefs.getString('PUSH_NOTIFICATIONS'),
+            onChanged: _changeNotificationSetting,
+          ),
+          RadioListTile(
+            value: 'background',
+            title: Text('Push notification service'),
+            controlAffinity: ListTileControlAffinity.trailing,
+            groupValue: prefs.getString('PUSH_NOTIFICATIONS'),
+            onChanged: null, // @todo Implement background notification service
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _changeNotificationSetting(String value) {
+    setState(() {
+      prefs.setString('PUSH_NOTIFICATIONS', value);
+    });
+    
+    if (value == 'foreground') {
+      Foreground.instance.startForegroundService();
+    } else {
+      Foreground.instance.stopForegroundService();
+    }
   }
 }

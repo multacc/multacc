@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get_it/get_it.dart';
 import 'package:multacc/common/constants.dart';
+import 'package:multacc/common/notifications.dart';
 import 'package:multacc/sharing/receive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,8 +14,6 @@ import 'package:multacc/pages/contacts/contact_details_page.dart';
 import 'package:multacc/pages/contacts/contact_form_page.dart';
 import 'package:multacc/pages/profile/share_page.dart';
 import 'package:multacc/sharing/send.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:multacc/database/contact_model.dart';
 import 'package:multacc/pages/contacts/contacts_data.dart';
 import 'package:multacc/common/auth.dart';
@@ -22,6 +21,7 @@ import 'package:multacc/common/bottom_bar.dart';
 import 'package:multacc/common/theme.dart';
 import 'package:multacc/pages/chats/chats_page.dart';
 import 'package:multacc/pages/contacts/contacts_page.dart';
+import 'package:multacc/common/foreground_service.dart';
 
 import 'chats/chats_data.dart';
 
@@ -38,6 +38,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   ContactsData contactsData;
   TabController _tabController;
   MultaccContact userContact;
+  SharedPreferences prefs;
 
   @override
   bool get wantKeepAlive => true;
@@ -49,6 +50,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
+    prefs = GetIt.I.get<SharedPreferences>();
     contactsData = GetIt.I.get<ContactsData>();
     userContact = GetIt.I.get<DatabaseInterface>().getContact(PROFILE_CONTACT_KEY) ??
         MultaccContact(clientKey: PROFILE_CONTACT_KEY);
@@ -59,6 +61,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         setState(() {});
       }
     });
+
+    Notifications.instance.init(context);
+    if (prefs.containsKey('PUSH_NOTIFICATIONS') && prefs.getString('PUSH_NOTIFICATIONS') == 'foreground') {
+      Foreground.instance.startForegroundService();
+    }
   }
 
   void initDynamicLinks() async {
@@ -69,7 +76,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       if (deepLink != null) {
         if (deepLink.path == '/groupme') {
           String groupmeToken = deepLink.queryParameters['access_token'];
-          GetIt.I.get<SharedPreferences>().setString('GROUPME_TOKEN', groupmeToken);
+          prefs.setString('GROUPME_TOKEN', groupmeToken);
           GetIt.I.get<ChatsData>().getAllChats(groupmeToken: groupmeToken);
           // @todo Refactor deeplink logic when adding more platforms
         } else {
@@ -103,32 +110,32 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       body: Container(
         width: double.infinity,
         child: snapshot.connectionState == ConnectionState.waiting
-          ? CircularProgressIndicator()
-          : Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset('assets/logo.png', height: 200),
-            SizedBox(height: 20),
-            RaisedButton(
-              padding: EdgeInsets.all(16.0),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-              color: kBackgroundColorLight,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+            ? CircularProgressIndicator()
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(right: 8.0), child: Icon(FontAwesome.google)),
-                  Text('Sign in with Google', style: kHeaderTextStyle),
+                  Image.asset('assets/logo.png', height: 200),
+                  SizedBox(height: 20),
+                  RaisedButton(
+                    padding: EdgeInsets.all(16.0),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                    color: kBackgroundColorLight,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Padding(padding: const EdgeInsets.only(right: 8.0), child: Icon(FontAwesome.google)),
+                        Text('Sign in with Google', style: kHeaderTextStyle),
+                      ],
+                    ),
+                    onPressed: _auth.signinWithGoogle,
+                  ),
+                  FlatButton(
+                    child: Text('Skip', style: kBodyTextStyle),
+                    onPressed: _auth.signInAnonymously,
+                    padding: EdgeInsets.all(8.0),
+                  ),
                 ],
               ),
-              onPressed: _auth.signinWithGoogle,
-            ),
-            FlatButton(
-              child: Text('Skip', style: kBodyTextStyle),
-              onPressed: _auth.signInAnonymously,
-              padding: EdgeInsets.all(8.0),
-            ),
-          ],
-        ),
       ),
     );
   }
