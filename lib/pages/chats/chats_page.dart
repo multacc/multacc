@@ -64,8 +64,12 @@ class _ChatsPageState extends State<ChatsPage> {
   }
 
   Widget _buildAvatar(String url) {
-    if ((url ?? '') == '') return CircleAvatar(child: Icon(Icons.person), backgroundColor: kBackgroundColorLight);
-    return CircleAvatar(backgroundImage: CachedNetworkImageProvider(url));
+    final defaultAvatar = CircleAvatar(child: Icon(Icons.person), backgroundColor: kBackgroundColorLight);
+    try {
+      return ((url ?? '') == '') ? defaultAvatar : CircleAvatar(backgroundImage: CachedNetworkImageProvider(url));
+    } catch (ex) {
+      return defaultAvatar;
+    }
   }
 
   void _showMessagesPage(String otherUserName, String otherUserId) {
