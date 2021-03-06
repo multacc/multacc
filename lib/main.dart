@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:multacc/common/theme.dart';
 import 'package:multacc/pages/home_page.dart';
@@ -48,16 +49,23 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Multacc',
-      theme: ThemeData.dark().copyWith(
-        primaryColor: kPrimaryColor,
-        accentColor: kPrimaryColorDark,
-        appBarTheme: AppBarTheme.of(context).copyWith(elevation: 0, color: kBackgroundColor),
-        textTheme: GoogleFonts.openSansTextTheme(ThemeData.dark().textTheme),
-      ),
-      home: HomePage(),
-    );
+    return FutureBuilder(
+      future: Firebase.initializeApp(),
+      builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.done) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Multacc',
+          theme: ThemeData.dark().copyWith(
+            primaryColor: kPrimaryColor,
+            accentColor: kPrimaryColorDark,
+            appBarTheme: AppBarTheme.of(context).copyWith(elevation: 0, color: kBackgroundColor),
+            textTheme: GoogleFonts.openSansTextTheme(ThemeData.dark().textTheme),
+          ),
+          home: HomePage(),
+        );
+      }
+      return null;
+    });
   }
 }

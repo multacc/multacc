@@ -89,7 +89,7 @@ class FacebookItem extends MultaccItem {
  
   // @todo More robust Facebook id fetching
   void _fetchId() async {
-    final response = parse((await http.Client().get('https://facebook.com/$username')).body);
+    final response = parse((await http.Client().get(Uri.parse('https://facebook.com/$username'))).body);
     final meta = response.head.getElementsByTagName('meta').firstWhere((meta) => meta.attributes['property'] == 'al:android:url');
     userId = meta.attributes['content'].split('/').last;
   }

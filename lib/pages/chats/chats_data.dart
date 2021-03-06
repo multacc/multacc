@@ -36,7 +36,7 @@ abstract class _ChatsData with Store {
 
     // @todo Store groupme id in profile
     if (!prefs.containsKey('GROUPME_ID')) {
-      http.Response response = await _httpClient.get('$GROUPME_API_URL/users/me?token=$_groupmeToken');
+      http.Response response = await _httpClient.get(Uri.parse('$GROUPME_API_URL/users/me?token=$_groupmeToken'));
       prefs.setString('GROUPME_ID', jsonDecode(response.body)['response']['user_id']);
     }
   }
@@ -45,7 +45,7 @@ abstract class _ChatsData with Store {
   /// Fetches a list of GroupMe DM threads
   Future<List<GroupmeChat>> getAllChats({String groupmeToken}) async {
     updateGroupmeToken(token: groupmeToken);
-    http.Response response = await _httpClient.get('$GROUPME_API_URL/chats?token=$_groupmeToken');
+    http.Response response = await _httpClient.get(Uri.parse('$GROUPME_API_URL/chats?token=$_groupmeToken'));
     return allChats = jsonDecode(response.body)['response'].map<GroupmeChat>((json) => GroupmeChat.fromJson(json)).toList();
   }
 
@@ -53,7 +53,7 @@ abstract class _ChatsData with Store {
   /// Fetches GroupmeMe DMs for a particular conversation thread (most recent 20)
   Future<List<GroupmeMessage>> getMessages(String otherUserId) async {
     messages.clear();
-    http.Response response = await _httpClient.get('$GROUPME_API_URL/direct_messages?other_user_id=$otherUserId&token=$_groupmeToken');
+    http.Response response = await _httpClient.get(Uri.parse('$GROUPME_API_URL/direct_messages?other_user_id=$otherUserId&token=$_groupmeToken'));
     messages.addAll(jsonDecode(response.body)['response']['direct_messages'].map<GroupmeMessage>((json) => GroupmeMessage.fromJson(json)).toList());
     return messages;
   }
@@ -61,7 +61,7 @@ abstract class _ChatsData with Store {
   @action
   /// Fetches the "next" 20 GroupMe DMs in a thread (used when scrolling up). Returns false if unable to load more messages
   Future<bool> getMoreMessages(String otherUserId) async {
-    http.Response response = await _httpClient.get('$GROUPME_API_URL/direct_messages?other_user_id=$otherUserId&token=$_groupmeToken&before_id=${messages.last.id}');
+    http.Response response = await _httpClient.get(Uri.parse('$GROUPME_API_URL/direct_messages?other_user_id=$otherUserId&token=$_groupmeToken&before_id=${messages.last.id}'));
     List<GroupmeMessage> olderMessages = jsonDecode(response.body)['response']['direct_messages'].map<GroupmeMessage>((json) => GroupmeMessage.fromJson(json)).toList();
     if (olderMessages.isEmpty) return false;
     messages.addAll(olderMessages);
@@ -78,7 +78,7 @@ abstract class _ChatsData with Store {
         'text': text,
       }
     };
-    http.Response response = await _httpClient.post('$GROUPME_API_URL/direct_messages?token=$_groupmeToken',
+    http.Response response = await _httpClient.post(Uri.parse('$GROUPME_API_URL/direct_messages?token=$_groupmeToken'),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(message),
     );

@@ -3,7 +3,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:multacc/database/contact_model.dart';
 
 class ContactSender {
-  static final HttpsCallable sendFunction = CloudFunctions.instance.getHttpsCallable(functionName: 'sendContact');
+  static final HttpsCallable sendFunction = FirebaseFunctions.instance.httpsCallable('sendContact');
 
   /// Send a contact and get the link to it
   static Future<String> send(MultaccContact contact) async {

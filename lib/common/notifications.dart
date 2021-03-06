@@ -19,8 +19,8 @@ class Notifications {
   Future<bool> init(BuildContext context) async {
     return localNotificationsPlugin.initialize(
       InitializationSettings(
-        AndroidInitializationSettings('ic_stat_multacc'),
-        IOSInitializationSettings(),
+        android: AndroidInitializationSettings('ic_stat_multacc'),
+        iOS: IOSInitializationSettings(),
       ),
       onSelectNotification: (payload) => onSelectNotification(context, jsonDecode(payload)),
     );
@@ -60,7 +60,7 @@ class Notifications {
         name,
         message,
         NotificationDetails(
-          AndroidNotificationDetails(
+          android: AndroidNotificationDetails(
             DM_CHANNEL_ID,
             DM_CHANNEL_NAME,
             DM_CHANNEL_DESCRIPTION,
@@ -70,7 +70,7 @@ class Notifications {
               messages: [Message(message, DateTime.now(), person)],
             ),
           ),
-          IOSNotificationDetails(),
+          iOS: IOSNotificationDetails(),
         ),
         payload: payload);
   }

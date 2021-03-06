@@ -18,6 +18,6 @@ const kIconTextColor = Colors.white;
 const kPrimaryTextColor = Color(0xFF212121);
 const kSecondaryTextColor = Color(0xFF757575);
 
-final kHeaderTextStyle = GoogleFonts.lato(textStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.w500));
+final kHeaderTextStyle = GoogleFonts.lato(textStyle: TextStyle(fontSize: 22, fontWeight: FontWeight.w500));
 const kBodyTextStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.w300);
 const kTinyTextStyle = TextStyle(fontSize: 12, fontWeight: FontWeight.w200, textBaseline: TextBaseline.alphabetic);

@@ -1,11 +1,9 @@
-import 'dart:convert';
-
 import 'package:cloud_functions/cloud_functions.dart';
 
 import 'package:multacc/database/contact_model.dart';
 
 class ContactReceiver {
-  static final HttpsCallable receiveFunction = CloudFunctions.instance.getHttpsCallable(functionName: 'receiveContact');
+  static final HttpsCallable receiveFunction = FirebaseFunctions.instance.httpsCallable('receiveContact');
 
   /// Send a contact and get the link to it
   static Future<MultaccContact> receive(String id) async {

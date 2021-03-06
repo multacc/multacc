@@ -62,10 +62,10 @@ class _ContactForm extends State<ContactFormPage> {
   Uint8List avatar;
 
   Future getImage() async {
-    var newImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var newImage = await ImagePicker().getImage(source: ImageSource.gallery);
 
-    setState(() {
-      if (newImage != null) avatar = newImage.readAsBytesSync();
+    setState(() async {
+      if (newImage != null) avatar = await newImage.readAsBytes();
     });
   }
 

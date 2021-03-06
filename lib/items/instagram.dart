@@ -48,7 +48,7 @@ class InstagramItem extends MultaccItem {
 
   void _fetchId() async {
     String searchUrl = 'https://www.instagram.com/web/search/topsearch/?context=user&count=0&query=';
-    final response = jsonDecode((await http.Client().get('$searchUrl$username')).body);
+    final response = jsonDecode((await http.Client().get(Uri.parse('$searchUrl$username'))).body);
     userId = response['users'][0]['user']['pk'];
   }
 }

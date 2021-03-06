@@ -1,7 +1,7 @@
 name: multacc
 description: multiple accounts
 
-version: 0.0.6
+version: 0.0.7
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -11,71 +11,71 @@ dependencies:
     sdk: flutter
   
   # UI
-  cupertino_icons: any
-  flutter_statusbarcolor : any
-  google_fonts: any
-  flutter_icons: any
-  flutter_svg: any
-  liquid_pull_to_refresh: any
-  bubble: any
-  flutter_material_pickers: any
+  cupertino_icons: ^1.0.2
+  flutter_statusbarcolor: ^0.2.3
+  google_fonts: ^2.0.0
+  flutter_icons: ^1.1.0
+  flutter_svg: ^0.21.0-nullsafety.0
+  liquid_pull_to_refresh: ^2.0.0
+  bubble: ^1.1.9
+  flutter_material_pickers: #pending https://github.com/codegrue/flutter_material_pickers/issues/24
+    git:
+      url: git://github.com/codegrue/flutter_material_pickers.git
 
   # device APIs
-  contacts_service: any
-  permission_handler: any
-  url_launcher: any
-  shared_preferences: any
-  android_intent: any
-  flutter_package_manager: any
-  path_provider: any
-  image_picker: any
+  contacts_service: ^0.5.0-nullsafety.0
+  permission_handler: ^5.1.0
+  url_launcher: ^6.0.2
+  shared_preferences: ^2.0.3
+  android_intent: ^2.0.0
+  device_apps: ^1.2.0
+  path_provider: ^2.0.1
+  image_picker: ^0.7.2
 
   # state management / data
-  provider: any
-  rxdart: any
-  mobx: any
-  flutter_mobx: any
-  mobx_codegen: any
-  get_it: any
-  hive: ^1.4.1+1
-  hive_flutter: ^0.3.0+2
+  provider: ^5.0.0
+  rxdart: ^0.26.0
+  mobx: ^1.2.1
+  flutter_mobx: ^1.1.0
+  mobx_codegen: ^1.1.2
+  get_it: ^6.0.0
+  hive: ^2.0.0
+  hive_flutter: ^1.0.0
 
   # network APIs
-  firebase_core: any
-  firebase_auth: any
-  google_sign_in: any
-  firebase_dynamic_links: any
-  cloud_functions: ^0.4.2+3
-  web_socket_channel: ^1.1.0
-  cached_network_image: ^2.2.0+1
-  flutter_cache_manager: ^1.2.2
+  firebase_core: ^1.0.0
+  firebase_auth: ^1.0.0
+  google_sign_in: ^5.0.0
+  firebase_dynamic_links: ^0.8.0
+  cloud_functions: ^1.0.0
+  web_socket_channel: ^1.0.9
+  cached_network_image: ^3.0.0-nullsafety
+  flutter_cache_manager: ^3.0.0-nullsafety.0
 
   # misc
-  http: any
-  intl: any
-  enum_to_string: any
-  uuid: ^2.0.4
+  html: ^0.14.0
+  http: ^0.13.0
+  intl: ^0.17.0
+  enum_to_string: ^1.0.14
+  uuid: ^3.0.1
   qr_flutter: ^3.1.0
 
   flutter_foreground_plugin:
     git:
       url: git://github.com/multacc/flutter_foreground_service_plugin.git
 
-  flutter_local_notifications:
-    git:
-      url: git://github.com/multacc/flutter_local_notifications.git
-      path: flutter_local_notifications
+  flutter_local_notifications: ^5.0.0-nullsafety.0
 
 dev_dependencies:
-  hive_generator: ^0.7.0+2
-  build_runner: ^1.8.1
-  test: any
+  hive_generator: ^1.0.0
+  build_runner: ^1.11.5
+  test: ^1.16.5
 
   flutter_test:
     sdk: flutter
 
-  flutter_launcher_icons: any
-  flutter_native_splash: any
+  flutter_launcher_icons: ^0.9.0
+  flutter_native_splash: ^1.0.3
 
 # generate app icons using `flutter pub run flutter_launcher_icons:main`
 flutter_icons:
@@ -97,6 +97,6 @@ flutter:
   assets:
     - assets/
 
-# pending https://github.com/hivedb/hive/issues/276 and  https://github.com/hivedb/hive/issues/203
+# pending https://github.com/Baseflow/flutter-permission-handler/issues/464
 dependency_overrides:
-  dartx: ^0.3.0
+  plugin_platform_interface: ^2.0.0

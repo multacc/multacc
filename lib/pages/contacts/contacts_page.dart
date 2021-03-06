@@ -21,7 +21,7 @@ class _ContactsPageState extends State<ContactsPage> with WidgetsBindingObserver
   void initState() {
     super.initState();
     contactsData = GetIt.I.get<ContactsData>();
-    selectedContacts = List<int>();
+    selectedContacts = [];
     WidgetsBinding.instance.addObserver(this);
   }
 
