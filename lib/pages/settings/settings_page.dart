@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_package_manager/flutter_package_manager.dart';
+import 'package:device_apps/device_apps.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,15 +51,15 @@ class _SettingsPageState extends State<SettingsPage> {
       data: Theme.of(context).copyWith(accentColor: Colors.white),
       child: FutureBuilder(
         future: Future.wait([
-          FlutterPackageManager.getPackageInfo(ANDROID_DIALER_PACKAGE),
-          FlutterPackageManager.getPackageInfo(GOOGLE_VOICE_PACKAGE),
-          FlutterPackageManager.getPackageInfo(GOOGLE_DUO_PACKAGE)
+          DeviceApps.getApp(ANDROID_DIALER_PACKAGE, true),
+          DeviceApps.getApp(GOOGLE_VOICE_PACKAGE, true),
+          DeviceApps.getApp(GOOGLE_DUO_PACKAGE, true)
         ]),
-        builder: (context, AsyncSnapshot<List<PackageInfo>> snapshot) => ExpansionTile(
+        builder: (context, AsyncSnapshot<List<Application>> snapshot) => ExpansionTile(
           title: Text('Phone app', textScaleFactor: 1.0),
           children: <Widget>[
             RadioListTile(
-              secondary: snapshot.data?.first?.getAppIcon() ?? Icon(Icons.phone),
+              // secondary: Image.memory(snapshot.data?.first?.icon) ?? Icon(Icons.phone),
               title: Text('Default'),
               value: 'default',
               controlAffinity: ListTileControlAffinity.trailing,
@@ -69,7 +69,7 @@ class _SettingsPageState extends State<SettingsPage> {
             // Google Voice tile
             if (snapshot.data?.elementAt(1) != null)
               RadioListTile(
-                secondary: snapshot.data[1].getAppIcon(),
+                // secondary: Image.memory(snapshot.data[1].icon),
                 title: Text('Google Voice'),
                 value: 'voice',
                 controlAffinity: ListTileControlAffinity.trailing,
@@ -79,7 +79,7 @@ class _SettingsPageState extends State<SettingsPage> {
             // Google Duo tile
             if (snapshot.data?.last != null)
               RadioListTile(
-                secondary: snapshot.data.last.getAppIcon(),
+                // secondary: Image.memory(snapshot.data.last.icon),
                 title: Text('Google Duo'),
                 value: 'duo',
                 controlAffinity: ListTileControlAffinity.trailing,

@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     );
   }
 
-  Scaffold _buildHomePageBody(BuildContext context, FirebaseUser user) {
+  Scaffold _buildHomePageBody(BuildContext context, User user) {
     return Scaffold(
       key: globalScaffoldKey,
       floatingActionButton: FloatingActionButton(

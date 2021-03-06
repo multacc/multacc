@@ -84,7 +84,7 @@ abstract class MultaccItem {
   /// This is the map from toMap() but with an added pair for type ('t':'Twitter')
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = toMap();
-    map[ITEM_TYPE_KEY] = EnumToString.parse(type);
+    map[ITEM_TYPE_KEY] = EnumToString.convertToString(type);
     key = ((key ?? '') == '') ? Uuid().v4() : key;
     map[ITEM_KEY_KEY] = key;
     return map;
@@ -159,7 +159,7 @@ extension MultaccItemTypeInfo on MultaccItemType {
 
       // Use enum alias by default
       default:
-        return EnumToString.parse(this);
+        return EnumToString.convertToString(this);
     }
   }
 

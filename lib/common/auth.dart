@@ -8,27 +8,27 @@ class Auth {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   GoogleSignIn _googleSignIn = GoogleSignIn(scopes: <String>['email']);
 
-  Stream<FirebaseUser> get onAuthStateChanged => _firebaseAuth.onAuthStateChanged;
+  Stream<User> get onAuthStateChanged => _firebaseAuth.authStateChanges();
 
-  Future<AuthResult> signInAnonymously() => _firebaseAuth.signInAnonymously();
+  Future<UserCredential> signInAnonymously() => _firebaseAuth.signInAnonymously();
 
   Future<AuthCredential> getGoogleSignInCredential() async {
     final googleUser = await _googleSignIn.signIn();
     final googleAuth = await googleUser.authentication;
-    return GoogleAuthProvider.getCredential(
+    return GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
   }
 
-  Future<AuthResult> signinWithGoogle() async {
+  Future<UserCredential> signinWithGoogle() async {
     final credential = await getGoogleSignInCredential();
     return _firebaseAuth.signInWithCredential(credential);
   }
 
-  Future<AuthResult> linkWithGoogleSignIn() async {
+  Future<UserCredential> linkWithGoogleSignIn() async {
     final credential = await getGoogleSignInCredential();
-    final user = await _firebaseAuth.currentUser();
+    final user = _firebaseAuth.currentUser;
     try {
       final result = await user.linkWithCredential(credential);
       return result;

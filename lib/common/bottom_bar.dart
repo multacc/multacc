@@ -19,7 +19,7 @@ Auth _auth = Auth.instance;
 
 /// MultaccBottomBar class containing the logic for FAB, account auth, etc
 class MultaccBottomBar extends StatefulWidget {
-  final FirebaseUser _user;
+  final User _user;
 
   MultaccBottomBar(this._user);
 
@@ -82,8 +82,8 @@ class MultaccBottomBarState extends State<MultaccBottomBar> {
               Theme(
                 data: Theme.of(context).copyWith(accentColor: Colors.white),
                 child: ExpansionTile(
-                  leading: widget._user?.photoUrl != null
-                      ? CircleAvatar(backgroundImage: CachedNetworkImageProvider(widget._user.photoUrl))
+                  leading: widget._user?.photoURL != null
+                      ? CircleAvatar(backgroundImage: CachedNetworkImageProvider(widget._user.photoURL))
                       : CircleAvatar(child: Icon(Icons.person), foregroundColor: kBackgroundColorLight),
                   title: Text(widget._user?.displayName ?? 'Anonymous'),
                   subtitle: Text(widget._user?.email ?? 'You are not signed in',

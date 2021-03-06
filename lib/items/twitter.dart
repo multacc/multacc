@@ -37,7 +37,7 @@ class TwitterItem extends MultaccItem {
   }
 
   void _fetchId() async {
-    final response = parse((await http.Client().get('http://gettwitterid.com/?user_name=$username')).body);
+    final response = parse((await http.Client().get(Uri.parse('http://gettwitterid.com/?user_name=$username'))).body);
     final info = response.body.querySelector('div.info_container > table > tbody > tr');
     userId = info.children.last.getElementsByTagName('p')[0].text;
   }

@@ -77,7 +77,7 @@ class Foreground {
   /// Returns a client id after a handshake with the groupme push API
   Future<String> performGroupmeHandshake() async {
     http.Response response = await http.Client().post(
-      GROUPME_PUSH_URL,
+      Uri.parse(GROUPME_PUSH_URL),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode([
         {
@@ -94,7 +94,7 @@ class Foreground {
   /// Subscribes to all groupme message events for the current user
   Future subscribeToGroupme(String clientId, String accessToken, String userId) async {
     return http.Client().post(
-      GROUPME_PUSH_URL,
+      Uri.parse(GROUPME_PUSH_URL),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({
         "channel": "/meta/subscribe",
